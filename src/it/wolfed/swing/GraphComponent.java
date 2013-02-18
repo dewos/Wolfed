@@ -1,9 +1,5 @@
 package it.wolfed.swing;
 
-import it.wolfed.model.PetriNetGraph;
-import it.wolfed.model.PlaceVertex;
-import it.wolfed.model.TransitionVertex;
-import it.wolfed.model.Vertex;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.handler.mxConnectionHandler;
@@ -11,6 +7,10 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxPoint;
 import it.wolfed.event.AutoUpdateStyleListener;
+import it.wolfed.model.PetriNetGraph;
+import it.wolfed.model.PlaceVertex;
+import it.wolfed.model.TransitionVertex;
+import it.wolfed.model.Vertex;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

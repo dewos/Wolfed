@@ -8,15 +8,15 @@
  */
 package it.wolfed.swing;
 
-import it.wolfed.util.Constants;
-import it.wolfed.util.IterableNodeList;
-import it.wolfed.model.PetriNetGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
+import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operations.Operation;
 import it.wolfed.operations.SequencingOperation;
+import it.wolfed.util.Constants;
+import it.wolfed.util.IterableNodeList;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
