@@ -168,9 +168,11 @@ public final class GraphEditor extends JFrame
 
             for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.NET)))
             {
-                insertGraph(fileXml.getName(), PetriNetGraph.factory(netNode));
+                String defaultId = fileXml.getName().substring(0, fileXml.getName().lastIndexOf('.'));
+                insertGraph(fileXml.getName(), PetriNetGraph.factory(netNode, defaultId));
             }
-        } catch (ParserConfigurationException | SAXException | IOException ex)
+        } 
+        catch (ParserConfigurationException | SAXException | IOException ex)
         {
             ex.printStackTrace();
         }
