@@ -31,12 +31,18 @@ public final class PetriNetGraph extends mxGraph
         setMultigraph(false);
     }
     
-    public static PetriNetGraph factory(Node dom)
+    public static PetriNetGraph factory(Node dom, String defaultId)
     {
         // Xml Mapping 1:1
         String id = dom.getAttributes().getNamedItem(Constants.ID).getTextContent().trim();
         String type = dom.getAttributes().getNamedItem(Constants.TYPE).getTextContent().trim();
-
+        
+        // Fix Woped "noID" behaviour
+        if(id.isEmpty() || id.equals("noID"))
+        {
+            id = defaultId;
+        }
+        
         PetriNetGraph net = new PetriNetGraph(id);
         net.setType(type);
                 
