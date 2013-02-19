@@ -13,22 +13,29 @@ public abstract class Operation
     protected List<PetriNetGraph> inputGraphs;
     protected PetriNetGraph operationGraph;
 
-    public Operation(List<PetriNetGraph> inputGraphs, String name) throws Exception
+    public Operation(String name, List<PetriNetGraph> inputGraphs, int numRequestedGraphs, boolean checkisWorkflow) throws Exception
     {
         this.inputGraphs = inputGraphs;
 
-        for (PetriNetGraph net : this.inputGraphs)
+        if(inputGraphs.size() != numRequestedGraphs)
         {
-            if ( ! net.isWorkFlow())
+            throw new Exception(numRequestedGraphs +" input graph required. " + inputGraphs.size() + " found.");
+        }
+        
+        for (PetriNetGraph net : inputGraphs)
+        {
+            if (checkisWorkflow == true)
             {
-                throw new Exception("WorkFlow required! " + net.getId() + "failed!");
+                if(! net.isWorkFlow())
+                {
+                    throw new Exception("WorkFlow required! " + net.getId() + "failed!");
+                }
             }
 
             name += "_" + net.getId();
         }
 
         this.operationGraph = new PetriNetGraph(name);
-        
         execute();
     }
 

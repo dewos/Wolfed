@@ -15,12 +15,7 @@ public class BasicWorkFlowOperation extends Operation
 {  
     public BasicWorkFlowOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super(inputGraphs, "basic");
-        
-        if(inputGraphs.size() != 1)
-        {
-            throw new Exception("Only one WorkFlow Net required");
-        }
+        super("basic", inputGraphs, 1, false);
     }
 
     @Override

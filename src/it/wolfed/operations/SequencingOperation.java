@@ -9,12 +9,7 @@ public class SequencingOperation extends Operation
 {  
     public SequencingOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super(inputGraphs, "seq");
-        
-        if(inputGraphs.size() != 2)
-        {
-            throw new Exception("Two WorkFlow Net required");
-        }
+        super("seq", inputGraphs, 2, true);
     }
     
     @Override
