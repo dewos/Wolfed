@@ -13,3 +13,6 @@ manifest.mf
 *.war
 *.ear
 /nbproject/
+
+# Git Files #
+.gitignore
