@@ -136,15 +136,14 @@ public abstract class Operation
      * di quello di una rete diversa (valutando il prefisso).
      * 
      * @param sameGraph     il grafo che contiene il vertice
-     * @param sameVertex    l'id da cercare
+     * @param sameVertex    il vertice da cercare
      * @return 
      */
-    public Vertex getSameVertexById(PetriNetGraph sameGraph, Vertex sameVertex)
+    public Vertex getEquivalentVertex(PetriNetGraph sameGraph, Vertex sameVertex)
     {
         return getOperationGraph().getVertexById(getPrefix(sameGraph) + sameVertex.getId());
     }
     
-
     /**
      * Ottiene il prefisso del grafo di input.
      * 
@@ -153,7 +152,7 @@ public abstract class Operation
      */
     public String getPrefix(PetriNetGraph inputGraph)
     {
-        String key = "?_";
+        String prefix = "?_";
         
         for (int i = 0; i < getInputGraphs().size(); i++)
         {
@@ -165,6 +164,6 @@ public abstract class Operation
             }
         }
         
-        return key;
+        return prefix;
     }
 }

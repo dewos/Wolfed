@@ -18,8 +18,8 @@ public class SequencingOperation extends Operation
         PetriNetGraph net0 = getInputGraphs().get(0);
         PetriNetGraph net1 = getInputGraphs().get(1);
 
-        Vertex finalPlaceAsN0 = getSameVertexById(net0, net0.getFinalPlaces().get(0));
-        Vertex initialPlaceAsN1 = getSameVertexById(net1, net1.getInitialPlaces().get(0));
+        Vertex finalPlaceAsN0 = getEquivalentVertex(net0, net0.getFinalPlaces().get(0));
+        Vertex initialPlaceAsN1 = getEquivalentVertex(net1, net1.getInitialPlaces().get(0));
 
         // Sposta tutti gli archi
         for(Object edgeOjb : getOperationGraph().getIncomingEdges(finalPlaceAsN0))
