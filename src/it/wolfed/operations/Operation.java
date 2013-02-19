@@ -13,13 +13,16 @@ public abstract class Operation
     protected List<PetriNetGraph> inputGraphs;
     protected PetriNetGraph operationGraph;
 
-    public Operation(String name, List<PetriNetGraph> inputGraphs, int numRequestedGraphs, boolean checkisWorkflow) throws Exception
+    public Operation(String name, List<PetriNetGraph> inputGraphs, 
+            int numRequestedGraphs, boolean checkisWorkflow) throws Exception
     {
         this.inputGraphs = inputGraphs;
 
         if(inputGraphs.size() != numRequestedGraphs)
         {
-            throw new Exception(numRequestedGraphs +" input graph required. " + inputGraphs.size() + " found.");
+            throw new Exception(
+                numRequestedGraphs + " input graph required. " + inputGraphs.size() + " found."
+            );
         }
         
         for (PetriNetGraph net : inputGraphs)
