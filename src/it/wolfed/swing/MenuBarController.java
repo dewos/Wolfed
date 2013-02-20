@@ -15,9 +15,9 @@ public class MenuBarController extends JMenuBar
     {
         // File
         {
-            JMenu file = new JMenu("File");
-            file.setMnemonic('F');
-            add(file);
+            JMenu fileMenu = new JMenu("File");
+            fileMenu.setMnemonic('F');
+            add(fileMenu);
 
             // New
             JMenuItem newItem = new JMenuItem("New");
@@ -31,7 +31,7 @@ public class MenuBarController extends JMenuBar
                 }
             });
             
-            file.add(newItem);
+            fileMenu.add(newItem);
 
             // Open
             JMenuItem openItem = new JMenuItem("Open");
@@ -45,12 +45,12 @@ public class MenuBarController extends JMenuBar
                 }
             });
             
-            file.add(openItem);
+            fileMenu.add(openItem);
 
             // Open
             JMenuItem saveItem = new JMenuItem("Save");
             saveItem.setMnemonic('v');
-            file.add(saveItem);	
+            fileMenu.add(saveItem);	
 
             // Exit
             JMenuItem exitItem = new JMenuItem("Exit");
@@ -63,7 +63,7 @@ public class MenuBarController extends JMenuBar
                     editor.dispose();
                 }
             });
-            file.add(exitItem);
+            fileMenu.add(exitItem);
         }
             
         // Operations
@@ -72,24 +72,7 @@ public class MenuBarController extends JMenuBar
             operationMenu.setMnemonic('p');
             add(operationMenu);
             
-            String[] operations = {
-                "BasicWorkFlow",
-                "Merge",
-                "Alternation",
-                "DefferedChoice",
-                "ExplicitChoice",
-                "Iteration",
-                "MutualExclusion",
-                "OneOrMoreIteration",
-                "OneServePerTime",
-                "Parallelism",
-                "Selection",
-                "Sequencing",
-                "ZeroOrMoreIteration",
-                "BasicWorkFlow",
-            };
-            
-            for(String operation : operations)
+            for(String operation : editor.getOperations())
             {
                 JMenuItem operationItem = new JMenuItem(operation);
                 operationItem.addActionListener(new ActionListener() 
@@ -110,21 +93,8 @@ public class MenuBarController extends JMenuBar
             JMenu layoutMenu = new JMenu("Layouts");
             layoutMenu.setMnemonic('l');
             add(layoutMenu);
-            
-            String[] layouts = {
-                //"VerticalTree",
-                "HorizontalTree",
-                //"Organic",
-                //"Circle",
-                "Hierarchical",
-                //"EdgeLabel",
-                //"Orthogonal",
-                //"ParallelEdge",
-                //"Partition",
-                //"Stack"
-            };
 
-            for(String layout : layouts)
+            for(String layout : editor.getLayouts())
             {
                 JMenuItem layoutItem = new JMenuItem(layout);
                 layoutItem.addActionListener(new ActionListener() 

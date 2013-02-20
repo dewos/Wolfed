@@ -36,10 +36,32 @@ import org.xml.sax.SAXException;
 
 public final class GraphEditor extends JFrame
 {
-    public static final String VERSION = "0.9.5";
+    public static final String VERSION = "0.9.5.1";
     private List<PetriNetGraph> graphs = new ArrayList<>();
     private JTabbedPane tabController = new JTabbedPane();
-
+    
+    private String[] operations = { 
+        "BasicWorkFlow",
+        "Alternation",
+        "DefferedChoice",
+        "ExplicitChoice",
+        "Iteration",
+        "MutualExclusion",
+        "OneOrMoreIteration",
+        "OneServePerTime",
+        "Parallelism",
+        "Selection",
+        "Sequencing",
+        "ZeroOrMoreIteration",
+        "BasicWorkFlow",
+    };
+    
+    private String[] layouts = { 
+        "VerticalTree",
+        "Hierarchical",
+        "Organic",
+    };
+    
     public GraphEditor()
     {
         setTitle("Wolfed " + GraphEditor.VERSION);
@@ -47,7 +69,7 @@ public final class GraphEditor extends JFrame
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabController);
         setLookAndFeel();
-
+        
         /*
          * Aggiungo due reti solo per fare qualche test
          * In realtà dovrebbero esser prese dal box di selezione
@@ -62,6 +84,26 @@ public final class GraphEditor extends JFrame
     }
 
     /**
+     * Ritorna le operazioni disponibili nell'editor.
+     *
+     * @return String[]
+     */
+    public String[] getOperations()
+    {
+        return operations;
+    }
+
+    /**
+     * Ritorna i layouts disponibili nell'editor.
+     *
+     * @return String[]
+     */
+    public String[] getLayouts()
+    {
+        return layouts;
+    }
+
+    /**
      * Ritorna tutti i grafi inseriti nell'editor.
      *
      * @return List<PetriNetGraph>
@@ -70,7 +112,7 @@ public final class GraphEditor extends JFrame
     {
         return graphs;
     }
-
+    
     /**
      * Imposta il look and feel.
      * 
@@ -189,8 +231,8 @@ public final class GraphEditor extends JFrame
         // Document xml = getCurrentGraph().export();
         // String fileXml = xml.toString();
     }
-
-    /**
+    
+        /**
      * Esegue l'operazione sui grafi scelti.
      * 
      * @param operationName il tipo di operazione
@@ -199,6 +241,8 @@ public final class GraphEditor extends JFrame
     {
         // TODO: Box di scelta
         List<PetriNetGraph> inputNets = new ArrayList<>();
+        inputNets.add(getEditorGraphs().get(0));
+        inputNets.add(getEditorGraphs().get(1));
         
         try
         {
@@ -220,13 +264,10 @@ public final class GraphEditor extends JFrame
                     throw new Exception("not implemented yet!");
                     
                 case "BasicWorkFlow":
-                    inputNets.add(getCurrentGraph());
                     opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
                     break;
                     
                 case "Sequencing":
-                    inputNets.add(getEditorGraphs().get(0));
-                    inputNets.add(getEditorGraphs().get(1));
                     opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
                     break;
             }
@@ -239,7 +280,7 @@ public final class GraphEditor extends JFrame
             ex.printStackTrace();
         }
     }
-
+    
     /**
      * Applica un layout al grafo attualmente selezionato.
      * 
