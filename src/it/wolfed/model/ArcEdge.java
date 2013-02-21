@@ -37,13 +37,13 @@ public class ArcEdge extends Edge
     public static ArcEdge factory(Object parent, Node dom)
     {
         NamedNodeMap transitionAttributes = dom.getAttributes();
-        String id = transitionAttributes.getNamedItem(Constants.ID)
+        String id = transitionAttributes.getNamedItem(Constants.PNML_ID)
                         .getNodeValue();
         
-        String sourceId = transitionAttributes.getNamedItem(Constants.SOURCE)
+        String sourceId = transitionAttributes.getNamedItem(Constants.PNML_SOURCE)
                              .getNodeValue();
 
-        String targetId = transitionAttributes.getNamedItem(Constants.TARGET)
+        String targetId = transitionAttributes.getNamedItem(Constants.PNML_TARGET)
                         .getNodeValue();
         
         ArcEdge arc = new ArcEdge(parent, id, null);

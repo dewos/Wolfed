@@ -44,7 +44,7 @@ public class PlaceVertex extends Vertex
         int tokens = 0;
         
         NamedNodeMap placeAttributes = dom.getAttributes();
-        id = placeAttributes.getNamedItem(Constants.ID).getNodeValue();
+        id = placeAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
 
         for (final org.w3c.dom.Node childNode : new IterableNodeList(dom.getChildNodes()))
         {
@@ -52,11 +52,11 @@ public class PlaceVertex extends Vertex
             {
                 switch (childNode.getNodeName())
                 {
-                    case Constants.NAME:
+                    case Constants.PNML_NAME:
                         name = childNode.getTextContent().trim();
                         break;
 
-                    case Constants.INITIALMARKING:
+                    case Constants.PNML_INITIALMARKING:
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
                 }

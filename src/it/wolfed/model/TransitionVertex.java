@@ -44,7 +44,7 @@ public class TransitionVertex extends Vertex
         
         NamedNodeMap transitionAttributes = dom.getAttributes();
         
-        id = transitionAttributes.getNamedItem(Constants.ID).getNodeValue();
+        id = transitionAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
 
         for (final Node childNode : new IterableNodeList(dom.getChildNodes()))
         {
@@ -52,7 +52,7 @@ public class TransitionVertex extends Vertex
             {
                 switch (childNode.getNodeName())
                 {
-                    case Constants.NAME:
+                    case Constants.PNML_NAME:
                         name = childNode.getTextContent().trim();
                         break;
                 }

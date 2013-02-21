@@ -41,7 +41,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
         {
             if(graphIsWorkFlow)
             {
-                getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_CONNECTED);
+                getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_CONNECTED);
             }
             else
             {
@@ -59,7 +59,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
             {
                 for(Object edge : getGraph().getIncomingEdges(vertex))
                 {
-                    getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_NOTCONNECTED);
+                    getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
                 }
                 
                 // Caso limite di "Transition Initial"
@@ -68,7 +68,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
                 {
                     for(Object edge : getGraph().getOutgoingEdges(vertex))
                     {
-                        getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_NOTCONNECTED);
+                        getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
                     }
                 }
             }

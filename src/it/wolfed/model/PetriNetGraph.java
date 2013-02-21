@@ -34,8 +34,8 @@ public final class PetriNetGraph extends mxGraph
     public static PetriNetGraph factory(Node dom, String defaultId)
     {
         // Xml Mapping 1:1
-        String id = dom.getAttributes().getNamedItem(Constants.ID).getTextContent().trim();
-        String type = dom.getAttributes().getNamedItem(Constants.TYPE).getTextContent().trim();
+        String id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getTextContent().trim();
+        String type = dom.getAttributes().getNamedItem(Constants.PNML_TYPE).getTextContent().trim();
         
         // Fix Woped "noID" behaviour
         if(id.isEmpty() || id.equals("noID"))
@@ -58,17 +58,17 @@ public final class PetriNetGraph extends mxGraph
                 {
                     switch (elementNode.getNodeName())
                     {
-                        case Constants.PLACE: 
+                        case Constants.PNML_PLACE: 
                             net.addCell(PlaceVertex.factory(parent, elementNode));
                             net.nextIndexPlaces();
                             break;
 
-                        case Constants.TRANSITION:
+                        case Constants.PNML_TRANSITION:
                             net.addCell(TransitionVertex.factory(parent, elementNode));
                             net.nextIndexTransition();
                             break;
 
-                        case Constants.ARC:
+                        case Constants.PNML_ARC:
                             ArcEdge arc = ArcEdge.factory(parent, elementNode);
                             Vertex source = net.getVertexById(arc.getSourceId());
                             Vertex target = net.getVertexById(arc.getTargetId());
