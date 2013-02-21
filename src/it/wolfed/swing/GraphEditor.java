@@ -41,25 +41,13 @@ public final class GraphEditor extends JFrame
     private JTabbedPane tabController = new JTabbedPane();
     
     private String[] operations = { 
-        "BasicWorkFlow",
-        "Alternation",
-        "DefferedChoice",
-        "ExplicitChoice",
-        "Iteration",
-        "MutualExclusion",
-        "OneOrMoreIteration",
-        "OneServePerTime",
-        "Parallelism",
-        "Selection",
-        "Sequencing",
-        "ZeroOrMoreIteration",
-        "BasicWorkFlow",
+        Constants.OPERATION_SEQUENCING,
     };
     
     private String[] layouts = { 
-        "VerticalTree",
-        "Hierarchical",
-        "Organic",
+        Constants.LAYOUT_VERTICALTREE,
+        Constants.LAYOUT_HIERARCHICAL,
+        Constants.LAYOUT_ORGANIC,
     };
     
     public GraphEditor()
@@ -76,11 +64,11 @@ public final class GraphEditor extends JFrame
          */
         importFile(new File("nets/esempio3.pnml"));
         PetriNetGraph n1 = getEditorGraphs().get(0);
-        applyLayout(n1, "HorizontalTree");
+        applyLayout(n1, Constants.LAYOUT_HORIZONTALTREE);
 
         importFile(new File("nets/esempio4.pnml"));
         PetriNetGraph n2 = getEditorGraphs().get(1);
-        applyLayout(n2, "HorizontalTree");
+        applyLayout(n2, Constants.LAYOUT_HORIZONTALTREE);
     }
 
     /**
@@ -208,7 +196,7 @@ public final class GraphEditor extends JFrame
             Document doc = builder.parse(fileXml);
             doc.getDocumentElement().normalize();
 
-            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.NET)))
+            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET)))
             {
                 String defaultId = fileXml.getName().substring(0, fileXml.getName().lastIndexOf('.'));
                 insertGraph(fileXml.getName(), PetriNetGraph.factory(netNode, defaultId));
@@ -232,7 +220,7 @@ public final class GraphEditor extends JFrame
         // String fileXml = xml.toString();
     }
     
-        /**
+     /**
      * Esegue l'operazione sui grafi scelti.
      * 
      * @param operationName il tipo di operazione
@@ -251,29 +239,13 @@ public final class GraphEditor extends JFrame
 
             switch (operationName)
             {
-                case "Alternation":
-                case "DefferedChoice":
-                case "ExplicitChoice":
-                case "Iteration":
-                case "MutualExclusion":
-                case "OneOrMoreIteration":
-                case "OneServePerTime":
-                case "Parallelism":
-                case "Selection":
-                case "ZeroOrMoreIteration":
-                    throw new Exception("not implemented yet!");
-                    
-                case "BasicWorkFlow":
-                    opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
-                    break;
-                    
-                case "Sequencing":
+                case Constants.OPERATION_SEQUENCING:
                     opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
                     break;
             }
             
             insertGraph(opGraph.getId(), opGraph);
-            applyLayout(opGraph, "HorizontalTree");
+            applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
 
         } catch (Exception ex)
         {
@@ -305,19 +277,19 @@ public final class GraphEditor extends JFrame
 
         switch (name)
         {
-            case "VerticalTree": 
+            case Constants.LAYOUT_VERTICALTREE: 
                 (new mxCompactTreeLayout(graph)).execute(parent);
                 break;
 
-            case "HorizontalTree": 
+            case Constants.LAYOUT_HORIZONTALTREE: 
                 (new mxCompactTreeLayout(graph, true)).execute(parent);
                 break;
 
-            case "Hierarchical":
+            case Constants.LAYOUT_HIERARCHICAL:
                 (new mxHierarchicalLayout(graph)).execute(parent);
                 break;
 
-            case "Organic":
+            case Constants.LAYOUT_ORGANIC:
                 (new mxOrganicLayout(graph)).execute(parent);
                 break;
         }
