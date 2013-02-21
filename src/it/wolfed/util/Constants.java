@@ -15,6 +15,8 @@ public class Constants
     public static final String STYLE_ARC_FLOW_CONNECTED     = "strokeColor=green;";
     public static final String STYLE_ARC_FLOW_UNCONNECTED   = "strokeColor=red;dashed=1;";
     
+    public static final String STYLE_INTERFACE             = "shape=cloud;fillColor=white;";
+    
     // Operations
     public static final String OPERATION_SEQUENCING          = "Sequencing";
     

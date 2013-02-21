@@ -7,6 +7,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxPoint;
 import it.wolfed.event.AutoUpdateStyleListener;
+import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
@@ -206,6 +207,26 @@ public class GraphComponent extends mxGraphComponent
         });
         
         menu.add(transItem);
+        
+        // ADD INTERFACE
+        JMenuItem interItem = new JMenuItem("Add Interface");
+        interItem.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {                
+                String id = getGraph().nextIndexInterfaces();
+                InterfaceVertex inter = new InterfaceVertex(graph.getDefaultParent(), id, id);
+                
+                // Set location (-xy for center on mouseclick)
+                inter.getGeometry().setX(e.getLocationOnScreen().getX() - 20);
+                inter.getGeometry().setY(e.getLocationOnScreen().getY() - 100);
+                
+                graph.addCell(inter);
+            }
+        });
+        
+        menu.add(interItem);
         
         return menu;
     }
