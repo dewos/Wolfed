@@ -19,6 +19,7 @@ public final class PetriNetGraph extends mxGraph
     private int indexPlaces;
     private int indexTransitions;
     private int indexArcs;
+    private int indexInterfaces;
 
     public PetriNetGraph(String id)
     {
@@ -114,6 +115,11 @@ public final class PetriNetGraph extends mxGraph
     public String nextIndexArcs()
     {
         return "a" + String.valueOf(++indexArcs);
+    }
+    
+    public String nextIndexInterfaces()
+    {
+        return "i" + String.valueOf(++indexInterfaces);
     }
 
     @Override
