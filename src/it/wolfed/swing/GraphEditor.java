@@ -42,8 +42,7 @@ import org.xml.sax.SAXException;
 
 public final class GraphEditor extends JFrame
 {
-
-    public static final String VERSION = "0.9.5.1";
+    public static final String VERSION = "0.9.6";
     private List<PetriNetGraph> graphs = new ArrayList<>();
     private JTabbedPane tabController = new JTabbedPane();
     private String[] operations =
@@ -58,6 +57,7 @@ public final class GraphEditor extends JFrame
         Constants.OPERATION_PARALLELISM,
         Constants.OPERATION_SEQUENCING
     };
+    
     private String[] layouts =
     {
         Constants.LAYOUT_VERTICALTREE,
