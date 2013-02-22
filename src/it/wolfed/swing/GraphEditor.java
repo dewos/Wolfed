@@ -81,7 +81,7 @@ public final class GraphEditor extends JFrame
         PetriNetGraph n1 = getEditorGraphs().get(0);
         applyLayout(n1, Constants.LAYOUT_HORIZONTALTREE);
 
-        importFile(new File("nets/esempio4.pnml"));
+        importFile(new File("nets/pNet_B.pnml"));
         PetriNetGraph n2 = getEditorGraphs().get(1);
         applyLayout(n2, Constants.LAYOUT_HORIZONTALTREE);
     }
@@ -271,8 +271,8 @@ public final class GraphEditor extends JFrame
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME:
                     opGraph = (new OneServePerTimeOperation(inputNet)).getOperationGraph();
                     break;
-                case "IterationZeroOrMore":
-            ZeroOrMoreIterationOperation zero = new ZeroOrMoreIterationOperation(inputNet);
+                case Constants.OPERATION_ITERATIONZEROORMORE:
+                    ZeroOrMoreIterationOperation zero = new ZeroOrMoreIterationOperation(inputNet);
                     opGraph = zero.getOperationGraph();
                     break;
                 case Constants.OPERATION_MUTUALEXCLUSION:
