@@ -13,8 +13,14 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.operations.DefferedChoiceOperation;
+import it.wolfed.operations.ExplicitChoiceOperation;
+import it.wolfed.operations.OneOrMoreIterationOperation;
+import it.wolfed.operations.OneServePerTimeOperation;
 import it.wolfed.operations.Operation;
+import it.wolfed.operations.ParallelismOperation;
 import it.wolfed.operations.SequencingOperation;
+import it.wolfed.operations.ZeroOrMoreIterationOperation;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.awt.Toolkit;
@@ -34,42 +40,35 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public final class GraphEditor extends JFrame
-{
+public final class GraphEditor extends JFrame {
+
     public static final String VERSION = "0.9.5.1";
     private List<PetriNetGraph> graphs = new ArrayList<>();
     private JTabbedPane tabController = new JTabbedPane();
-    
-    private String[] operations = { 
+    private String[] operations = {
         "BasicWorkFlow",
         "Alternation",
         "DefferedChoice",
         "ExplicitChoice",
-        "Iteration",
+        "IterationOneOrMore",
+        "IterationOneServePerTime",
+        "IterationZeroOrMore",
         "MutualExclusion",
-        "OneOrMoreIteration",
-        "OneServePerTime",
         "Parallelism",
-        "Selection",
         "Sequencing",
-        "ZeroOrMoreIteration",
-        "BasicWorkFlow",
-    };
-    
-    private String[] layouts = { 
+        "BasicWorkFlow",};
+    private String[] layouts = {
         "VerticalTree",
         "Hierarchical",
-        "Organic",
-    };
+        "Organic",};
     
-    public GraphEditor()
-    {
+    public GraphEditor() {
         setTitle("Wolfed " + GraphEditor.VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabController);
         setLookAndFeel();
-        
+
         /*
          * Aggiungo due reti solo per fare qualche test
          * In realtà dovrebbero esser prese dal box di selezione
@@ -77,7 +76,7 @@ public final class GraphEditor extends JFrame
         importFile(new File("nets/esempio3.pnml"));
         PetriNetGraph n1 = getEditorGraphs().get(0);
         applyLayout(n1, "HorizontalTree");
-
+        
         importFile(new File("nets/esempio4.pnml"));
         PetriNetGraph n2 = getEditorGraphs().get(1);
         applyLayout(n2, "HorizontalTree");
@@ -88,8 +87,7 @@ public final class GraphEditor extends JFrame
      *
      * @return String[]
      */
-    public String[] getOperations()
-    {
+    public String[] getOperations() {
         return operations;
     }
 
@@ -98,8 +96,7 @@ public final class GraphEditor extends JFrame
      *
      * @return String[]
      */
-    public String[] getLayouts()
-    {
+    public String[] getLayouts() {
         return layouts;
     }
 
@@ -108,24 +105,19 @@ public final class GraphEditor extends JFrame
      *
      * @return List<PetriNetGraph>
      */
-    public List<PetriNetGraph> getEditorGraphs()
-    {
+    public List<PetriNetGraph> getEditorGraphs() {
         return graphs;
     }
-    
+
     /**
      * Imposta il look and feel.
-     * 
+     *
      * @return void
      */
-    private void setLookAndFeel()
-    {
-        try
-        {
+    private void setLookAndFeel() {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -141,8 +133,7 @@ public final class GraphEditor extends JFrame
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph getCurrentGraph()
-    {
+    public PetriNetGraph getCurrentGraph() {
         GraphViewContainer view = (GraphViewContainer) tabController.getSelectedComponent();
         return view.getGraph();
     }
@@ -154,8 +145,7 @@ public final class GraphEditor extends JFrame
      * @param graph il grafo da inserire
      * @return void
      */
-    public void insertGraph(String name, PetriNetGraph graph)
-    {
+    public void insertGraph(String name, PetriNetGraph graph) {
         tabController.add(name, new GraphViewContainer(graph));
         tabController.setSelectedIndex(tabController.getTabCount() - 1);
         getEditorGraphs().add(graph);
@@ -163,11 +153,10 @@ public final class GraphEditor extends JFrame
 
     /**
      * Aggiunge un nuovo tab nell'editor con un grafo vuoto.
-     * 
+     *
      * @return void
      */
-    public void newFile()
-    {
+    public void newFile() {
         String name = String.valueOf(tabController.getTabCount() + 1);
         PetriNetGraph net = new PetriNetGraph(name);
         insertGraph("new_" + name, net);
@@ -175,17 +164,15 @@ public final class GraphEditor extends JFrame
 
     /**
      * Apre il box di scelta per importare un nuovo file pnml.
-     * 
+     *
      * @return void
      */
-    public void openFile()
-    {
+    public void openFile() {
         JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fc.setCurrentDirectory(new File("/nets"));
-
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
+        
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             importFile(file);
         }
@@ -193,80 +180,83 @@ public final class GraphEditor extends JFrame
 
     /**
      * Importa un file xml\pnml nell'editor.
-     * 
+     *
      * @see http://www.pnml.org/
      * @param File pnml complaint file
      */
-    private void importFile(File fileXml)
-    {
-        try
-        {
+    private void importFile(File fileXml) {
+        try {
             DocumentBuilder builder = DocumentBuilderFactory
                     .newInstance()
                     .newDocumentBuilder();
-
+            
             Document doc = builder.parse(fileXml);
             doc.getDocumentElement().normalize();
-
-            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.NET)))
-            {
+            
+            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.NET))) {
                 String defaultId = fileXml.getName().substring(0, fileXml.getName().lastIndexOf('.'));
                 insertGraph(fileXml.getName(), PetriNetGraph.factory(netNode, defaultId));
             }
-        } 
-        catch (ParserConfigurationException | SAXException | IOException ex)
-        {
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Esporta il grafo corrente in un file xml\pnml valido.
-     * 
+     *
      * @return void
      */
-    public void saveFile()
-    {
+    public void saveFile() {
         // TODO
         // Document xml = getCurrentGraph().export();
         // String fileXml = xml.toString();
     }
-    
-        /**
+
+    /**
      * Esegue l'operazione sui grafi scelti.
-     * 
+     *
      * @param operationName il tipo di operazione
      */
-    public void executeOperation(String operationName)
-    {
+    public void executeOperation(String operationName) {
         // TODO: Box di scelta
         List<PetriNetGraph> inputNets = new ArrayList<>();
         inputNets.add(getEditorGraphs().get(0));
         inputNets.add(getEditorGraphs().get(1));
         
-        try
-        {
+        List<PetriNetGraph> inputNet = new ArrayList<>();
+        inputNet.add(getEditorGraphs().get(0));
+        
+        try {
             Operation op = null;
             PetriNetGraph opGraph = null;
-
-            switch (operationName)
-            {
-                case "Alternation":
-                case "DefferedChoice":
-                case "ExplicitChoice":
-                case "Iteration":
-                case "MutualExclusion":
-                case "OneOrMoreIteration":
-                case "OneServePerTime":
-                case "Parallelism":
-                case "Selection":
-                case "ZeroOrMoreIteration":
-                    throw new Exception("not implemented yet!");
-                    
+            
+            switch (operationName) {
                 case "BasicWorkFlow":
                     opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
                     break;
-                    
+                case "Alternation":
+                    break;
+                case "DefferedChoice":
+                    opGraph = (new DefferedChoiceOperation(inputNets)).getOperationGraph();
+                    break;
+                case "ExplicitChoice":
+                    opGraph = (new ExplicitChoiceOperation(inputNets)).getOperationGraph();
+                    break;
+                case "IterationOneOrMore":
+                    opGraph = (new OneOrMoreIterationOperation(inputNet)).getOperationGraph();
+                    break;
+                case "IterationOneServePerTime":
+                    opGraph = (new OneServePerTimeOperation(inputNet)).getOperationGraph();
+                    break;
+                case "IterationZeroOrMore":
+                    opGraph = (new ZeroOrMoreIterationOperation(inputNet)).getOperationGraph();
+                    break;
+                case "MutualExclusion":
+                    break;
+                case "Parallelism":
+                    opGraph = (new ParallelismOperation(inputNets)).getOperationGraph();
+                    break;
                 case "Sequencing":
                     opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
                     break;
@@ -274,49 +264,45 @@ public final class GraphEditor extends JFrame
             
             insertGraph(opGraph.getId(), opGraph);
             applyLayout(opGraph, "HorizontalTree");
-
-        } catch (Exception ex)
-        {
+            
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Applica un layout al grafo attualmente selezionato.
-     * 
+     *
      * @param name nome del layout da applicare
      * @return void
      */
-    public void applyLayout(String name)
-    {
+    public void applyLayout(String name) {
         applyLayout(getCurrentGraph(), name);
     }
 
     /**
      * Applica un layout ad un grafo.
-     * 
-     * @param graphComponent    il grafo da stilizzare
-     * @param name              il nome del layout
+     *
+     * @param graphComponent il grafo da stilizzare
+     * @param name il nome del layout
      * @return void
      */
-    public void applyLayout(mxGraph graph, String name)
-    {
+    public void applyLayout(mxGraph graph, String name) {
         Object parent = graph.getDefaultParent();
-
-        switch (name)
-        {
-            case "VerticalTree": 
+        
+        switch (name) {
+            case "VerticalTree":                
                 (new mxCompactTreeLayout(graph)).execute(parent);
                 break;
-
-            case "HorizontalTree": 
+            
+            case "HorizontalTree":                
                 (new mxCompactTreeLayout(graph, true)).execute(parent);
                 break;
-
+            
             case "Hierarchical":
                 (new mxHierarchicalLayout(graph)).execute(parent);
                 break;
-
+            
             case "Organic":
                 (new mxOrganicLayout(graph)).execute(parent);
                 break;
