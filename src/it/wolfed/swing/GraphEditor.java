@@ -73,11 +73,11 @@ public final class GraphEditor extends JFrame {
          * Aggiungo due reti solo per fare qualche test
          * In realtà dovrebbero esser prese dal box di selezione
          */
-        importFile(new File("nets/esempio3.pnml"));
+        importFile(new File("nets/pNet_A.pnml"));
         PetriNetGraph n1 = getEditorGraphs().get(0);
         applyLayout(n1, "HorizontalTree");
         
-        importFile(new File("nets/esempio4.pnml"));
+        importFile(new File("nets/pNet_B.pnml"));
         PetriNetGraph n2 = getEditorGraphs().get(1);
         applyLayout(n2, "HorizontalTree");
     }
@@ -250,7 +250,8 @@ public final class GraphEditor extends JFrame {
                     opGraph = (new OneServePerTimeOperation(inputNet)).getOperationGraph();
                     break;
                 case "IterationZeroOrMore":
-                    opGraph = (new ZeroOrMoreIterationOperation(inputNet)).getOperationGraph();
+            ZeroOrMoreIterationOperation zero = new ZeroOrMoreIterationOperation(inputNet);
+                    opGraph = zero.getOperationGraph();
                     break;
                 case "MutualExclusion":
                     break;
