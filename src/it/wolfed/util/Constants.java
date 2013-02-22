@@ -15,10 +15,18 @@ public class Constants
     public static final String STYLE_ARC_FLOW_CONNECTED     = "strokeColor=green;";
     public static final String STYLE_ARC_FLOW_UNCONNECTED   = "strokeColor=red;dashed=1;";
     
-    public static final String STYLE_INTERFACE             = "shape=cloud;fillColor=white;";
+    public static final String STYLE_INTERFACE              = "shape=cloud;fillColor=white;";
     
     // Operations
-    public static final String OPERATION_SEQUENCING          = "Sequencing";
+    public static final String OPERATION_SEQUENCING                 = "Sequencing";
+    public static final String OPERATION_ALTERNATION                = "Alternation";
+    public static final String OPERATION_DEFFEREDCHOICE             = "DefferedChoice";
+    public static final String OPERATION_EXPLICITCHOICE             = "ExplicitChoice";
+    public static final String OPERATION_ITERATIONONEORMORE         = "IterationOneOrMore";
+    public static final String OPERATION_ITERATIONONESERVEPERTIME   = "IterationOneServePerTime";
+    public static final String OPERATION_ITERATIONZEROORMORE        = "IterationZeroOrMore";
+    public static final String OPERATION_PARALLELISM                = "Parallelism";
+    public static final String OPERATION_MUTUALEXCLUSION            = "MutualExclusion";
     
     // Layouts
     public static final String LAYOUT_VERTICALTREE          = "VerticalTree";
