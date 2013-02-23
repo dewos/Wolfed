@@ -301,12 +301,12 @@ public final class GraphEditor extends JFrame
      */
     public void applyLayout(mxGraph graph, String name)
     {
-        Object parent = graph.getDefaultParent();
-
         if(graph == null)
         {
             graph = getCurrentGraph();
         }
+        
+        Object parent = graph.getDefaultParent();
         
         switch (name)
         {
