@@ -102,7 +102,7 @@ public class MenuBarController extends JMenuBar
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        editor.applyLayout(e.getActionCommand());
+                        editor.applyLayout(null, e.getActionCommand());
                     }
                 });
                 

@@ -318,16 +318,6 @@ public final class GraphEditor extends JFrame
         }
     }
 
-    /**
-     * Applica un layout al grafo attualmente selezionato.
-     *
-     * @param name nome del layout da applicare
-     * @return void
-     */
-    public void applyLayout(String name)
-    {
-        applyLayout(getCurrentGraph(), name);
-    }
 
     /**
      * Applica un layout ad un grafo.
@@ -340,6 +330,11 @@ public final class GraphEditor extends JFrame
     {
         Object parent = graph.getDefaultParent();
 
+        if(graph == null)
+        {
+            graph = getCurrentGraph();
+        }
+        
         switch (name)
         {
             case Constants.LAYOUT_VERTICALTREE:
