@@ -17,7 +17,6 @@ import it.wolfed.operations.DefferedChoiceOperation;
 import it.wolfed.operations.ExplicitChoiceOperation;
 import it.wolfed.operations.OneOrMoreIterationOperation;
 import it.wolfed.operations.OneServePerTimeOperation;
-import it.wolfed.operations.Operation;
 import it.wolfed.operations.ParallelismOperation;
 import it.wolfed.operations.SequencingOperation;
 import it.wolfed.operations.ZeroOrMoreIterationOperation;
@@ -28,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -254,63 +252,38 @@ public final class GraphEditor extends JFrame
                     break;
                 case Constants.OPERATION_DEFFEREDCHOICE:
                     selectionBox = new OperationDialog(getEditorGraphs(), 2);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
-                    
+                    opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_EXPLICITCHOICE:
                     selectionBox = new OperationDialog(getEditorGraphs(), 2);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONONEORMORE:
                     selectionBox = new OperationDialog(getEditorGraphs(), 1);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new OneOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new OneOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME:
                     selectionBox = new OperationDialog(getEditorGraphs(), 1);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new OneServePerTimeOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new OneServePerTimeOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONZEROORMORE:
                     selectionBox = new OperationDialog(getEditorGraphs(), 1);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new ZeroOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new ZeroOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_MUTUALEXCLUSION:
                     break;
                 case Constants.OPERATION_PARALLELISM:
                     selectionBox = new OperationDialog(getEditorGraphs(), 2);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_SEQUENCING:
                     selectionBox = new OperationDialog(getEditorGraphs(), 2);
-                    if( ! selectionBox.getSelectedGraphs().isEmpty())
-                    {
-                        opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
-                    }
+                    opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
             }
             
-            if(opGraph != null)
-            {
-                insertGraph(opGraph.getId(), opGraph);
-                applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
-            }
+            insertGraph(opGraph.getId(), opGraph);
+            applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
         } 
         catch (Exception ex)
         {
