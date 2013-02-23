@@ -191,14 +191,18 @@ public final class PetriNetGraph extends mxGraph
                         cell,
                         target,
                         new mxDistanceCostFunction(),
-                        getChildVertices(getDefaultParent()).length,
+                        getChildVertices().length,
                         true
                  );
 
                 // path not exists
                 if(paths.length == 0)
                 {
-                    notConnectedVertices.add((Vertex) cell);
+                    // Ignore Interfaces
+                    if(cell instanceof TransitionVertex || cell instanceof PlaceVertex)
+                    {
+                        notConnectedVertices.add((Vertex) cell);
+                    }
                 }
             }
             
@@ -213,7 +217,13 @@ public final class PetriNetGraph extends mxGraph
         
         return notConnectedVertices;
     }
-
+    
+    /**
+     * Get a vertex by his id.
+     * 
+     * @param  id 
+     * @return Vertex
+     */
     public Vertex getVertexById(String id)
     {
         for (Object objVertex : getChildVertices())
@@ -232,6 +242,11 @@ public final class PetriNetGraph extends mxGraph
         return null;
     }
     
+    /**
+     * Get the initial places of the graph.
+     * 
+     * @return List<PlaceVertex>
+     */
     public List<PlaceVertex> getInitialPlaces()
     {
         List<PlaceVertex> initialPlaces = new ArrayList<>();
@@ -250,6 +265,11 @@ public final class PetriNetGraph extends mxGraph
         return initialPlaces;
     }
     
+    /**
+     * Get the final places of the graph.
+     * 
+     * @return List<PlaceVertex>
+     */
     public List<PlaceVertex> getFinalPlaces()
     {
         List<PlaceVertex> finalPlaces = new ArrayList<>();
@@ -268,24 +288,30 @@ public final class PetriNetGraph extends mxGraph
         return finalPlaces;
     }
     
-    /*
-     * getChildCells Wrapper with default parent
+    /**
+     * Get child cell of the default parent.
+     * 
+     * @return Object[]
      */
     public Object[] getChildCells()
     {
         return getChildCells(getDefaultParent());
     }
     
-    /*
-     * getChildVertices Wrapper with default parent
+    /**
+     * Get child vertices of the default parent.
+     * 
+     * @return Object[]
      */
     public Object[] getChildVertices()
     {
         return getChildVertices(getDefaultParent());
     }
     
-    /*
-     * getChildEdges Wrapper with default parent
+    /**
+     * Get child edge of the default parent.
+     * 
+     * @return Object[]
      */
     public Object[] getChildEdges()
     {
@@ -293,11 +319,10 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Aggiunge una nuova piazza
+     * Add a new Place to the graph.
      * 
-     * @param id
-     * @param value
-     * @return 
+     * @param   id
+     * @return PlaceVertex
      */
     public PlaceVertex insertPlace(String id)
     {
@@ -312,11 +337,10 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Aggiunge una nuova transizione
+     * Add a new Transition to the graph.
      * 
-     * @param id
-     * @param value
-     * @return 
+     * @param   id
+     * @return  TransitionVertex
      */
     public TransitionVertex insertTransition(String id)
     {
@@ -330,10 +354,11 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Aggiunge un nuovo Arco
+     * Add a new Arc to the graph.
      * 
      * @param id
-     * @param value
+     * @param source 
+     * @param target 
      * @return 
      */
     public ArcEdge insertArc(String id, Vertex source, Vertex target)
@@ -352,6 +377,9 @@ public final class PetriNetGraph extends mxGraph
     
     /**
      * Prints out some useful information about the cell in the tooltip.
+     * 
+     * @param   cell
+     * @return  String
      */
     @Override
     public String getToolTipForCell(Object cell)

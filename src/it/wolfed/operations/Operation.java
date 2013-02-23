@@ -2,6 +2,7 @@ package it.wolfed.operations;
 
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.ArcEdge;
+import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
@@ -31,7 +32,7 @@ public abstract class Operation
             {
                 if(! net.isWorkFlow())
                 {
-                    throw new Exception("WorkFlow required! " + net.getId() + "failed!");
+                    throw new Exception("WorkFlow required! " + net.getId() + " failed!");
                 }
             }
 
@@ -110,6 +111,11 @@ public abstract class Operation
                 {
                     clone = new TransitionVertex(parent, getPrefix(net) + cell.getId(), cell.getValue());
                 }
+                else if(cell instanceof InterfaceVertex)
+                {
+                    clone = new InterfaceVertex(parent, getPrefix(net) + cell.getId(), cell.getValue());
+                }
+                // @todo check instanceof Arc when the mouserelease creation of arcs will be type-zed
                 // ArcEdge e mxCell.isEdge()
                 else if(cell.isEdge())
                 {

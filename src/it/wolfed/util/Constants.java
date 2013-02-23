@@ -14,7 +14,7 @@ public class Constants
     public static final String STYLE_ARC                    = "defaultEdge";
     public static final String STYLE_ARC_FLOW_CONNECTED     = "strokeColor=green;";
     public static final String STYLE_ARC_FLOW_UNCONNECTED   = "strokeColor=red;dashed=1;";
-    public static final String STYLE_ARC_WITH_INTERFACE     = "strokeColor=orange;dashed=1;";
+    public static final String STYLE_ARC_WITH_INTERFACE     = "strokeColor=orange;";
     
     public static final String STYLE_INTERFACE              = "shape=doubleEllipse;fillColor=white;strokeColor=orange;";
     
