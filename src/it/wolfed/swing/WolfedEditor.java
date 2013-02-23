@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -52,7 +53,7 @@ public final class WolfedEditor extends JFrame
     /**
      * Holds opened graphs available in editor tabs.
      */
-    private List<PetriNetGraph> openedGraphs = new ArrayList<>();
+    private List<PetriNetGraph> openedGraphs;
     
     /**
      * The tabs controller. 
@@ -60,7 +61,12 @@ public final class WolfedEditor extends JFrame
      * A tab contains an GraphContainer
      * with the GraphComponent and AnalysisComponent.
      */
-    private JTabbedPane tabs = new JTabbedPane();
+    private JTabbedPane tabs;
+    
+    /**
+     * The menu controller.
+     */
+    private JMenuBar menu;
     
     /**
      * Sets the available operations (in menu).
@@ -93,9 +99,13 @@ public final class WolfedEditor extends JFrame
      */
     public WolfedEditor()
     {
+        this.openedGraphs = new ArrayList<>();
+        this.tabs = new JTabbedPane();
+        this.menu = new MenuBarController(this);
+        
         setTitle("Wolfed " + WolfedEditor.VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setJMenuBar(new MenuBarController(this));
+        setJMenuBar(menu);
         getContentPane().add(tabs);
         setLookAndFeel();
     }
