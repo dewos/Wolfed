@@ -46,9 +46,20 @@ import org.xml.sax.SAXException;
 public class WolfedEditor extends JFrame
 {
     /**
+     * Run WolfedEditor.
+     * 
+     * @param args 
+     */
+    public static void main(String[] args) 
+    {
+        Component editor = new WolfedEditor();
+        editor.setVisible(true);
+    }
+
+    /**
      * Specifies current version.
      */
-    public static final String VERSION = "0.9.7.5";
+    public static final String VERSION = "0.9.8.0";
     
     /**
      * Holds opened graphs available in editor tabs.
@@ -101,12 +112,6 @@ public class WolfedEditor extends JFrame
         setLookAndFeel();
     }
     
-    public static void main(String[] args) 
-    {
-        Component editor = new WolfedEditor();
-        editor.setVisible(true);
-    }
-
     /**
      * Returns all the available operations.
      *
