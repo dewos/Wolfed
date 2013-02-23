@@ -10,7 +10,7 @@ public class ExplicitChoiceOperation extends Operation
 {
     public ExplicitChoiceOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("explicitChoice", inputGraphs, 2, true);
+        super("expchoice", inputGraphs, 2, true);
     }
 
     @Override

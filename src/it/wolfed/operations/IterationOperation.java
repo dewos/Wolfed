@@ -6,14 +6,14 @@ import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.List;
 
-public abstract class Iteration extends Operation
+public abstract class IterationOperation extends Operation
 {
     protected TransitionVertex initialTransition;
     protected TransitionVertex finalTransition;
     protected PlaceVertex initialPlace;
     protected PlaceVertex finalPlace;
 
-    public Iteration(String operationName, List<PetriNetGraph> inputGraphs) throws Exception
+    public IterationOperation(String operationName, List<PetriNetGraph> inputGraphs) throws Exception
     {
         super(operationName, inputGraphs, 1, true);
     }

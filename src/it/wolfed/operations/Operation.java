@@ -35,7 +35,7 @@ public abstract class Operation
                 }
             }
 
-            name += "_" + net.getId();
+            name += "_" + net.getId().toLowerCase();
         }
 
         this.operationGraph = new PetriNetGraph(name);

@@ -7,6 +7,6 @@ public abstract class IntermediateOperation extends Operation
 {
     public IntermediateOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("_", inputGraphs, inputGraphs.size(), true);
+        super("", inputGraphs, inputGraphs.size(), true);
     }
 }
