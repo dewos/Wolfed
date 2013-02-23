@@ -117,11 +117,17 @@ public class GraphComponent extends mxGraphComponent
                 // Disable same-class link
                 if (source.getClass().equals(target.getClass()))
                 {
-                    return "Alternance for Places and Transitions failed!";
+                    return "Alternance for Places and Transitions failed.";
                 }
 
-                // Disable link to a pre-set
-                //TODO
+                // Disable interface <-> place link
+                if(source instanceof InterfaceVertex || target instanceof InterfaceVertex)
+                {
+                    if(source instanceof PlaceVertex || target instanceof PlaceVertex)
+                    {
+                        return "An interface can be linked only to a transition.";
+                    }
+                }
 
                 return graphComponent.getGraph().getEdgeValidationError(
                         connectPreview.getPreviewState().getCell(), source, target);
