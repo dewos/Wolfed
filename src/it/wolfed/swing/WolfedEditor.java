@@ -14,6 +14,7 @@ import it.wolfed.operations.SequencingOperation;
 import it.wolfed.operations.ZeroOrMoreIterationOperation;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
@@ -97,17 +98,12 @@ public final class WolfedEditor extends JFrame
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
         setLookAndFeel();
-
-        /**
-         * @todo remove this
-         */
-        importFile(new File("nets/pNet_A.pnml"));
-        PetriNetGraph n1 = getOpenedGraphs().get(0);
-        applyLayout(n1, Constants.LAYOUT_HORIZONTALTREE);
-
-        importFile(new File("nets/pNet_B.pnml"));
-        PetriNetGraph n2 = getOpenedGraphs().get(1);
-        applyLayout(n2, Constants.LAYOUT_HORIZONTALTREE);
+    }
+    
+    public static void main(String[] args) 
+    {
+        Component editor = new WolfedEditor();
+        editor.setVisible(true);
     }
 
     /**
@@ -139,6 +135,17 @@ public final class WolfedEditor extends JFrame
     {
         return openedGraphs;
     }
+    
+    /**
+     * Returns the selected Graph.
+     *
+     * @return PetriNetGraph
+     */
+    public PetriNetGraph getSelectedGraph()
+    {
+        GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
+        return view.getGraph();
+    }
 
     /**
      * Sets look and feel.
@@ -163,17 +170,6 @@ public final class WolfedEditor extends JFrame
     }
 
     /**
-     * Returns the selected Graph.
-     *
-     * @return PetriNetGraph
-     */
-    public PetriNetGraph getSelectedGraph()
-    {
-        GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
-        return view.getGraph();
-    }
-
-    /**
      * Insert a new tab\graph in the editor and selects it.
      *
      * @param tabName
@@ -193,9 +189,9 @@ public final class WolfedEditor extends JFrame
      */
     public PetriNetGraph newFile()
     {
-        String name = String.valueOf(tabs.getTabCount() + 1);
+        String name = "new_" + String.valueOf(tabs.getTabCount() + 1);
         PetriNetGraph graph = new PetriNetGraph(name);
-        insertGraph("new_" + name, graph);
+        insertGraph(name, graph);
         
         return graph;
     }
@@ -207,7 +203,7 @@ public final class WolfedEditor extends JFrame
     {
         JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
-        fc.setCurrentDirectory(new File("/nets"));
+        fc.setCurrentDirectory(new File("nets"));
 
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
         {
