@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
  * Wolfed.
  * WOrkflow Light Fast EDitor.
  * 
+ * @see     https://github.com/Dewos/wolfed
  * @see     http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html
  * @author  Fabio Piro
  * @author  Said Daoudagh
