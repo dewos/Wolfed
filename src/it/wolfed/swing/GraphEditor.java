@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -242,53 +243,76 @@ public final class GraphEditor extends JFrame
      */
     public void executeOperation(String operationName)
     {
-        // TODO: Box di scelta
-        List<PetriNetGraph> inputNets = new ArrayList<>();
-        inputNets.add(getEditorGraphs().get(0));
-        inputNets.add(getEditorGraphs().get(1));
-
-        List<PetriNetGraph> inputNet = new ArrayList<>();
-        inputNet.add(getEditorGraphs().get(0));
-
+        PetriNetGraph opGraph = null;
+        OperationDialog selectionBox;
+         
         try
-        {
-            Operation op = null;
-            PetriNetGraph opGraph = null;
-
+        { 
             switch (operationName)
             {
                 case Constants.OPERATION_ALTERNATION:
                     break;
                 case Constants.OPERATION_DEFFEREDCHOICE:
-                    opGraph = (new DefferedChoiceOperation(inputNets)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
+                    
                     break;
                 case Constants.OPERATION_EXPLICITCHOICE:
-                    opGraph = (new ExplicitChoiceOperation(inputNets)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
                 case Constants.OPERATION_ITERATIONONEORMORE:
-                    opGraph = (new OneOrMoreIterationOperation(inputNet)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new OneOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME:
-                    opGraph = (new OneServePerTimeOperation(inputNet)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new OneServePerTimeOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
                 case Constants.OPERATION_ITERATIONZEROORMORE:
-                    ZeroOrMoreIterationOperation zero = new ZeroOrMoreIterationOperation(inputNet);
-                    opGraph = zero.getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new ZeroOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
                 case Constants.OPERATION_MUTUALEXCLUSION:
                     break;
                 case Constants.OPERATION_PARALLELISM:
-                    opGraph = (new ParallelismOperation(inputNets)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
                 case Constants.OPERATION_SEQUENCING:
-                    opGraph = (new SequencingOperation(inputNets)).getOperationGraph();
+                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    if( ! selectionBox.getSelectedGraphs().isEmpty())
+                    {
+                        opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    }
                     break;
             }
-
-            insertGraph(opGraph.getId(), opGraph);
-            applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
-
-        } catch (Exception ex)
+            
+            if(opGraph != null)
+            {
+                insertGraph(opGraph.getId(), opGraph);
+                applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
+            }
+        } 
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
