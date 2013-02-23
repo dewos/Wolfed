@@ -54,7 +54,7 @@ public final class WolfedEditor extends JFrame
     /**
      * Holds opened graphs available in editor tabs.
      */
-    private List<PetriNetGraph> openedGraphs;
+    private List<PetriNetGraph> openedGraphs = new ArrayList<>();
     
     /**
      * The tabs controller. 
@@ -62,12 +62,7 @@ public final class WolfedEditor extends JFrame
      * A tab contains an GraphContainer
      * with the GraphComponent and AnalysisComponent.
      */
-    private JTabbedPane tabs;
-    
-    /**
-     * The menu controller.
-     */
-    private JMenuBar menu;
+    private JTabbedPane tabs = new JTabbedPane();
     
     /**
      * Sets the available operations (in menu).
@@ -99,14 +94,10 @@ public final class WolfedEditor extends JFrame
      * Constructor.
      */
     public WolfedEditor()
-    {
-        this.openedGraphs = new ArrayList<>();
-        this.tabs = new JTabbedPane();
-        this.menu = new MenuBarController(this);
-        
+    { 
         setTitle("Wolfed " + WolfedEditor.VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setJMenuBar(menu);
+        setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
         setLookAndFeel();
     }
@@ -148,7 +139,7 @@ public final class WolfedEditor extends JFrame
     }
     
     /**
-     * Returns the selected Graph.
+     * Returns the selected graph.
      *
      * @return PetriNetGraph
      */
@@ -317,7 +308,7 @@ public final class WolfedEditor extends JFrame
             }
             
             insertGraph(opGraph.getId(), opGraph);
-            applyLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
+            executeLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
         } 
         catch (Exception ex)
         {
@@ -331,7 +322,7 @@ public final class WolfedEditor extends JFrame
      * @param graph 
      * @param layoutName
      */
-    public void applyLayout(mxGraph graph, String layoutName)
+    public void executeLayout(mxGraph graph, String layoutName)
     {
         if(graph == null)
         {
