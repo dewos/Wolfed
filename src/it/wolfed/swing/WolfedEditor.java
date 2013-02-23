@@ -1,11 +1,3 @@
-/*
- * WOLFED
- * 
- * WO rkflow 
- * L ight
- * F ast
- * ED itor
- */
 package it.wolfed.swing;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
@@ -29,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,11 +33,37 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public final class GraphEditor extends JFrame
+/**
+ * Wolfed.
+ * WOrkflow Light Fast EDitor.
+ * 
+ * @see     http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html
+ * @author  Fabio Piro
+ * @author  Said Daoudagh
+ */
+public final class WolfedEditor extends JFrame
 {
-    public static final String VERSION = "0.9.6";
-    private List<PetriNetGraph> graphs = new ArrayList<>();
-    private JTabbedPane tabController = new JTabbedPane();
+    /**
+     * Specifies current version.
+     */
+    public static final String VERSION = "0.9.7";
+    
+    /**
+     * Holds opened graphs available in editor tabs.
+     */
+    private List<PetriNetGraph> openedGraphs = new ArrayList<>();
+    
+    /**
+     * The tabs controller. 
+     * 
+     * A tab contains an GraphContainer
+     * with the GraphComponent and AnalysisComponent.
+     */
+    private JTabbedPane tabs = new JTabbedPane();
+    
+    /**
+     * Sets the available operations (in menu).
+     */
     private String[] operations =
     {
         //Constants.OPERATION_ALTERNATION,
@@ -57,6 +77,9 @@ public final class GraphEditor extends JFrame
         Constants.OPERATION_SEQUENCING
     };
     
+    /**
+     * Sets the available layout (in menu).
+     */
     private String[] layouts =
     {
         Constants.LAYOUT_VERTICALTREE,
@@ -64,29 +87,31 @@ public final class GraphEditor extends JFrame
         Constants.LAYOUT_ORGANIC,
     };
 
-    public GraphEditor()
+    /**
+     * Constructor.
+     */
+    public WolfedEditor()
     {
-        setTitle("Wolfed " + GraphEditor.VERSION);
+        setTitle("Wolfed " + WolfedEditor.VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(new MenuBarController(this));
-        getContentPane().add(tabController);
+        getContentPane().add(tabs);
         setLookAndFeel();
 
-        /*
-         * Aggiungo due reti solo per fare qualche test
-         * In realtà dovrebbero esser prese dal box di selezione
+        /**
+         * @todo remove this
          */
         importFile(new File("nets/pNet_A.pnml"));
-        PetriNetGraph n1 = getEditorGraphs().get(0);
+        PetriNetGraph n1 = getOpenedGraphs().get(0);
         applyLayout(n1, Constants.LAYOUT_HORIZONTALTREE);
 
         importFile(new File("nets/pNet_B.pnml"));
-        PetriNetGraph n2 = getEditorGraphs().get(1);
+        PetriNetGraph n2 = getOpenedGraphs().get(1);
         applyLayout(n2, Constants.LAYOUT_HORIZONTALTREE);
     }
 
     /**
-     * Ritorna le operazioni disponibili nell'editor.
+     * Returns all the available operations.
      *
      * @return String[]
      */
@@ -96,7 +121,7 @@ public final class GraphEditor extends JFrame
     }
 
     /**
-     * Ritorna i layouts disponibili nell'editor.
+     * Returns all the available layouts.
      *
      * @return String[]
      */
@@ -106,79 +131,77 @@ public final class GraphEditor extends JFrame
     }
 
     /**
-     * Ritorna tutti i grafi inseriti nell'editor.
+     * Returns all the opened graphs in the editor.
      *
      * @return List<PetriNetGraph>
      */
-    public List<PetriNetGraph> getEditorGraphs()
+    public List<PetriNetGraph> getOpenedGraphs()
     {
-        return graphs;
+        return openedGraphs;
     }
 
     /**
-     * Imposta il look and feel.
-     *
-     * @return void
+     * Sets look and feel.
      */
     private void setLookAndFeel()
-    {
+    {        
         try
         {
+            // Sets system look
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            
+            // Force fullScreen
+            Toolkit tk = Toolkit.getDefaultToolkit();
+            int xSize = ((int) tk.getScreenSize().getWidth());
+            int ySize = ((int) tk.getScreenSize().getHeight() - 40);
+            this.setSize(xSize, ySize);
         } 
-        catch (Exception e)
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
         {
-            e.printStackTrace();
+            showErrorMessage(ex.getMessage());
         }
-
-        // FullScreen
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        int xSize = ((int) tk.getScreenSize().getWidth());
-        int ySize = ((int) tk.getScreenSize().getHeight() - 40);
-        this.setSize(xSize, ySize);
     }
 
     /**
-     * Ritorna il grafo attualmente selezionato nell'editor.
+     * Returns the selected Graph.
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph getCurrentGraph()
+    public PetriNetGraph getSelectedGraph()
     {
-        GraphViewContainer view = (GraphViewContainer) tabController.getSelectedComponent();
+        GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
         return view.getGraph();
     }
 
     /**
-     * Inserisce un nuovo grafo nell'editor e lo seleziona.
+     * Insert a new tab\graph in the editor and selects it.
      *
-     * @param name il nome che verrà mostrato nel tab
-     * @param graph il grafo da inserire
-     * @return void
+     * @param tabName
+     * @param graph  
      */
-    public void insertGraph(String name, PetriNetGraph graph)
+    public void insertGraph(String tabName, PetriNetGraph graph)
     {
-        tabController.add(name, new GraphViewContainer(graph));
-        tabController.setSelectedIndex(tabController.getTabCount() - 1);
-        getEditorGraphs().add(graph);
+        tabs.add(tabName, new GraphViewContainer(graph));
+        tabs.setSelectedIndex(tabs.getTabCount() - 1);
+        getOpenedGraphs().add(graph);
     }
 
     /**
-     * Aggiunge un nuovo tab nell'editor con un grafo vuoto.
+     * Add a new empty graph in the editor.
      *
-     * @return void
+     * @return PetriNetGraph
      */
-    public void newFile()
+    public PetriNetGraph newFile()
     {
-        String name = String.valueOf(tabController.getTabCount() + 1);
-        PetriNetGraph net = new PetriNetGraph(name);
-        insertGraph("new_" + name, net);
+        String name = String.valueOf(tabs.getTabCount() + 1);
+        PetriNetGraph graph = new PetriNetGraph(name);
+        insertGraph("new_" + name, graph);
+        
+        return graph;
     }
 
     /**
-     * Apre il box di scelta per importare un nuovo file pnml.
-     *
-     * @return void
+     * Open the filechooser and import a valid xml\pnml file.
      */
     public void openFile()
     {
@@ -194,12 +217,13 @@ public final class GraphEditor extends JFrame
     }
 
     /**
-     * Importa un file xml\pnml nell'editor.
+     * Import a pnml file. 
+     * A pnml file can contains one or MORE nets.
      *
      * @see http://www.pnml.org/
      * @param File pnml complaint file
      */
-    private void importFile(File fileXml)
+    private void importFile(File filePnml)
     {
         try
         {
@@ -207,37 +231,40 @@ public final class GraphEditor extends JFrame
                     .newInstance()
                     .newDocumentBuilder();
 
-            Document doc = builder.parse(fileXml);
+            Document doc = builder.parse(filePnml);
             doc.getDocumentElement().normalize();
 
             for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET)))
             {
-                String defaultId = fileXml.getName().substring(0, fileXml.getName().lastIndexOf('.'));
-                insertGraph(fileXml.getName(), PetriNetGraph.factory(netNode, defaultId));
+                // Sets the graph id as the filename without ext
+                String defaultId = filePnml.getName().substring(0, filePnml.getName().lastIndexOf('.'));
+                insertGraph(filePnml.getName(), PetriNetGraph.factory(netNode, defaultId));
             }
         } 
         catch (ParserConfigurationException | SAXException | IOException ex)
         {
-            ex.printStackTrace();
+            showErrorMessage(ex.getMessage());
         }
     }
 
     /**
-     * Esporta il grafo corrente in un file xml\pnml valido.
-     *
-     * @return void
+     * Exports a graph in a new file.
+     * 
+     * @param graph 
+     * @todo
      */
-    public void saveFile()
+    public void saveFile(PetriNetGraph graph)
     {
-        // TODO
-        // Document xml = getCurrentGraph().export();
-        // String fileXml = xml.toString();
+         showErrorMessage("Not supported yet");
     }
 
     /**
-     * Esegue l'operazione sui grafi scelti.
+     * Execute an operation (composition) to a graph.
+     * 
+     * The graph can be a valid workflownet or a simple
+     * petrinet. Specific checks will be made in Operation().
      *
-     * @param operationName il tipo di operazione
+     * @param operationName
      */
     public void executeOperation(String operationName)
     {
@@ -251,33 +278,33 @@ public final class GraphEditor extends JFrame
                 case Constants.OPERATION_ALTERNATION:
                     break;
                 case Constants.OPERATION_DEFFEREDCHOICE:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
                     opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_EXPLICITCHOICE:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
                     opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONONEORMORE:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     opGraph = (new OneOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     opGraph = (new OneServePerTimeOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_ITERATIONZEROORMORE:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 1);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     opGraph = (new ZeroOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_MUTUALEXCLUSION:
                     break;
                 case Constants.OPERATION_PARALLELISM:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
                     opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_SEQUENCING:
-                    selectionBox = new OperationDialog(getEditorGraphs(), 2);
+                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
                     opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
             }
@@ -287,28 +314,26 @@ public final class GraphEditor extends JFrame
         } 
         catch (Exception ex)
         {
-            ex.printStackTrace();
+            showErrorMessage(ex.getMessage());
         }
     }
-
-
+    
     /**
-     * Applica un layout ad un grafo.
+     * Styling a graph with a specific layout.
      *
-     * @param graphComponent il grafo da stilizzare
-     * @param name il nome del layout
-     * @return void
+     * @param graph 
+     * @param layoutName
      */
-    public void applyLayout(mxGraph graph, String name)
+    public void applyLayout(mxGraph graph, String layoutName)
     {
         if(graph == null)
         {
-            graph = getCurrentGraph();
+            graph = getSelectedGraph();
         }
         
         Object parent = graph.getDefaultParent();
         
-        switch (name)
+        switch (layoutName)
         {
             case Constants.LAYOUT_VERTICALTREE:
                 (new mxCompactTreeLayout(graph)).execute(parent);
@@ -326,5 +351,20 @@ public final class GraphEditor extends JFrame
                 (new mxOrganicLayout(graph)).execute(parent);
                 break;
         }
+    }
+    
+    /**
+     * Shows an error message.
+     * 
+     * @param text 
+     */
+    public void showErrorMessage(String text)
+    {
+        JOptionPane.showMessageDialog(this,
+            text,
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        
+        System.err.println(text);
     }
 }

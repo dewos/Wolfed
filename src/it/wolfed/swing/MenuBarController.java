@@ -11,7 +11,7 @@ import javax.swing.JMenuItem;
 
 public class MenuBarController extends JMenuBar
 {   
-    public MenuBarController(final GraphEditor editor)
+    public MenuBarController(final WolfedEditor editor)
     {
         // File
         {

@@ -1,11 +1,12 @@
 
-import it.wolfed.swing.GraphEditor;
+import it.wolfed.swing.WolfedEditor;
+import java.awt.Component;
 
 public class Run
 {
     public static void main(String[] args) 
     {
-        GraphEditor editor = new GraphEditor();
+        Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
 }
