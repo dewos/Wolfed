@@ -11,26 +11,31 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import layout.SpringUtilities;
 
 public class OperationDialog extends JDialog
 {
-    private List<PetriNetGraph> openedGraphs;
+    private WolfedEditor editor;
     private List<PetriNetGraph> selectedGraphs;
     private int requiredGraphs;
 
-    public OperationDialog(List<PetriNetGraph> openedGraphs, int requiredGraphs)
+    /**
+     * 
+     * @todo  refactor this
+     * @param editor
+     * @param requiredGraphs 
+     */
+    public OperationDialog(WolfedEditor editor, int requiredGraphs)
     {
-        this.openedGraphs = openedGraphs;
-        this.requiredGraphs = requiredGraphs;
+        this.editor = editor;
+        this.requiredGraphs = requiredGraphs - 1;
         this.selectedGraphs = new ArrayList<>();
 
         // Init
         setModal(true);// Stop thread
-        setTitle("Select " + requiredGraphs + " graphs.");
+        setTitle("Select " + this.requiredGraphs + " graphs.");
         setSize(300, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -60,12 +65,15 @@ public class OperationDialog extends JDialog
         {
             JComboBox box = new JComboBox();
             
-            for (PetriNetGraph graph : openedGraphs)
+            for (PetriNetGraph graph : editor.getOpenedGraphs())
             {
-                box.addItem(graph);
+                if(graph != editor.getSelectedGraph())
+                {
+                    box.addItem(graph);
+                }
             }
             
-            JLabel label = new JLabel("Graph " + (i + 1));
+            JLabel label = new JLabel("Graph " + (i));
             label.setLabelFor(box);
 
             boxList.add(box);
@@ -89,12 +97,15 @@ public class OperationDialog extends JDialog
             {
                 selectedGraphs.clear();
                 
+                // The selected graph is always the n0
+                selectedGraphs.add(editor.getSelectedGraph());
+                
                 for(JComboBox box : boxList)
                 {
                     selectedGraphs.add((PetriNetGraph) box.getSelectedItem()); 
                 }
                 
-                if(selectedGraphs.size() == requiredGraphs)
+                if(selectedGraphs.size() == requiredGraphs + 1)
                 {
                     setVisible(false);
                 }

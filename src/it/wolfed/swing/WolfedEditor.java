@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -44,12 +43,12 @@ import org.xml.sax.SAXException;
  * @author  Fabio Piro
  * @author  Said Daoudagh
  */
-public final class WolfedEditor extends JFrame
+public class WolfedEditor extends JFrame
 {
     /**
      * Specifies current version.
      */
-    public static final String VERSION = "0.9.7";
+    public static final String VERSION = "0.9.7.5";
     
     /**
      * Holds opened graphs available in editor tabs.
@@ -175,13 +174,16 @@ public final class WolfedEditor extends JFrame
      * Insert a new tab\graph in the editor and selects it.
      *
      * @param tabName
-     * @param graph  
+     * @param graph
+     * @return PetriNetGraph
      */
-    public void insertGraph(String tabName, PetriNetGraph graph)
+    public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph)
     {
         tabs.add(tabName, new GraphViewContainer(graph));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         getOpenedGraphs().add(graph);
+        
+        return graph;
     }
 
     /**
@@ -262,47 +264,58 @@ public final class WolfedEditor extends JFrame
      * The graph can be a valid workflownet or a simple
      * petrinet. Specific checks will be made in Operation().
      *
+     * @todo  refactor this
      * @param operationName
      */
     public void executeOperation(String operationName)
     {
         PetriNetGraph opGraph = null;
         OperationDialog selectionBox;
-         
+        
+        // Shortcut for the operations that required
+        // only an input graph (selected graph is always selected)
+        List<PetriNetGraph> singleInputGraph = new ArrayList<>();
+        singleInputGraph.add(getSelectedGraph());
+        
         try
         { 
             switch (operationName)
             {
                 case Constants.OPERATION_ALTERNATION:
                     break;
+                    
                 case Constants.OPERATION_DEFFEREDCHOICE:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
+                    selectionBox = new OperationDialog(this, 2);
                     opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_EXPLICITCHOICE:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
+                    selectionBox = new OperationDialog(this, 2);
                     opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_ITERATIONONEORMORE:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
-                    opGraph = (new OneOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    opGraph = (new OneOrMoreIterationOperation(singleInputGraph)).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
-                    opGraph = (new OneServePerTimeOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    opGraph = (new OneServePerTimeOperation(singleInputGraph)).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_ITERATIONZEROORMORE:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 1);
-                    opGraph = (new ZeroOrMoreIterationOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    opGraph = (new ZeroOrMoreIterationOperation(singleInputGraph)).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_MUTUALEXCLUSION:
                     break;
+                    
                 case Constants.OPERATION_PARALLELISM:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
+                    selectionBox = new OperationDialog(this, 2);
                     opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
+                    
                 case Constants.OPERATION_SEQUENCING:
-                    selectionBox = new OperationDialog(getOpenedGraphs(), 2);
+                    selectionBox = new OperationDialog(this, 2);
                     opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
             }
