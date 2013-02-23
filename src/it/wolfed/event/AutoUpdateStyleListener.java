@@ -2,6 +2,7 @@ package it.wolfed.event;
 
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
+import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
@@ -82,7 +83,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
         List<PlaceVertex> finalPlaces = getGraph().getFinalPlaces();
         boolean graphIsWorkFlow = getGraph().isWorkFlow();
 
-        for (Object objVertex : getGraph().getChildVertices(getGraph().getDefaultParent()))
+        for (Object objVertex : getGraph().getChildVertices())
         {
             if(objVertex instanceof PlaceVertex)
             {
@@ -111,8 +112,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
                 
                 getGraph().getModel().setStyle(place, newStyle);
             }
-            
-            if(objVertex instanceof TransitionVertex)
+            else if(objVertex instanceof TransitionVertex)
             {
                 if(graphIsWorkFlow)
                 {
@@ -124,6 +124,13 @@ public class AutoUpdateStyleListener implements mxIEventListener
                 }
                 
                 getGraph().getModel().setStyle(objVertex, newStyle);
+            }
+            else if(objVertex instanceof InterfaceVertex)
+            {
+                for(Object edgeObj : getGraph().getEdges(objVertex))
+                {
+                    getGraph().getModel().setStyle(edgeObj, Constants.STYLE_ARC_WITH_INTERFACE);
+                }
             }
         }
     }
