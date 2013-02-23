@@ -32,6 +32,12 @@ public final class PetriNetGraph extends mxGraph
         setMultigraph(false);
     }
     
+    @Override
+    public String toString()
+    {
+        return id;
+    }
+    
     public static PetriNetGraph factory(Node dom, String defaultId)
     {
         // Xml Mapping 1:1
