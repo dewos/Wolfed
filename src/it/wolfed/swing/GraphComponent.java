@@ -123,7 +123,7 @@ public class GraphComponent extends mxGraphComponent
                 // Disable interface <-> place link
                 if(source instanceof InterfaceVertex || target instanceof InterfaceVertex)
                 {
-                    if(source instanceof PlaceVertex || target instanceof PlaceVertex)
+                    if( ! (source instanceof TransitionVertex) && ! (target instanceof TransitionVertex))
                     {
                         return "An interface can be linked only to a transition.";
                     }
