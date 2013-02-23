@@ -285,12 +285,12 @@ public class WolfedEditor extends JFrame
                     break;
                     
                 case Constants.OPERATION_DEFFEREDCHOICE:
-                    selectionBox = new OperationDialog(this, 2);
+                    selectionBox = new OperationDialog(this, 1);
                     opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                     
                 case Constants.OPERATION_EXPLICITCHOICE:
-                    selectionBox = new OperationDialog(this, 2);
+                    selectionBox = new OperationDialog(this, 1);
                     opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                     
@@ -310,12 +310,12 @@ public class WolfedEditor extends JFrame
                     break;
                     
                 case Constants.OPERATION_PARALLELISM:
-                    selectionBox = new OperationDialog(this, 2);
+                    selectionBox = new OperationDialog(this, 1);
                     opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                     
                 case Constants.OPERATION_SEQUENCING:
-                    selectionBox = new OperationDialog(this, 2);
+                    selectionBox = new OperationDialog(this, 1);
                     opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
             }

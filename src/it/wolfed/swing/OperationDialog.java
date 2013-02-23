@@ -30,12 +30,12 @@ public class OperationDialog extends JDialog
     public OperationDialog(WolfedEditor editor, int requiredGraphs)
     {
         this.editor = editor;
-        this.requiredGraphs = requiredGraphs - 1;
+        this.requiredGraphs = requiredGraphs;
         this.selectedGraphs = new ArrayList<>();
 
         // Init
         setModal(true);// Stop thread
-        setTitle("Select " + this.requiredGraphs + " graphs.");
+        setTitle("Select " + requiredGraphs + " graphs.");
         setSize(300, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
