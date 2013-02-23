@@ -1,12 +1,12 @@
 
 package it.wolfed.model;
 
-import it.wolfed.util.Constants;
-import it.wolfed.util.IterableNodeList;
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
+import it.wolfed.util.Constants;
+import it.wolfed.util.IterableNodeList;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +65,7 @@ public final class PetriNetGraph extends mxGraph
                 {
                     switch (elementNode.getNodeName())
                     {
-                        case Constants.PNML_PLACE: 
+                        case Constants.PNML_PLACE:
                             net.addCell(PlaceVertex.factory(parent, elementNode));
                             net.nextIndexPlaces();
                             break;

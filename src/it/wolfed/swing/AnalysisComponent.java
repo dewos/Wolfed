@@ -1,9 +1,9 @@
 package it.wolfed.swing;
 
-import it.wolfed.model.PetriNetGraph;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
+import it.wolfed.model.PetriNetGraph;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 

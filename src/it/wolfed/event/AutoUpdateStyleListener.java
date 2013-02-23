@@ -37,7 +37,7 @@ public class AutoUpdateStyleListener implements mxIEventListener
         boolean graphIsWorkFlow = getGraph().isWorkFlow();
         
         // Reset Arc Style
-        for(Object edge: getGraph().getChildEdges(getGraph().getDefaultParent()))
+        for(Object edge: getGraph().getChildEdges())
         {
             if(graphIsWorkFlow)
             {
