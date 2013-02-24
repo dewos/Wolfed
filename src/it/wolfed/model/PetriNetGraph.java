@@ -194,7 +194,7 @@ public class PetriNetGraph extends mxGraph
     }
 
     /**
-     * Increments and returns the current places id.
+     * Increments and returns the current places id (with prefix).
      * 
      * @return String
      */
@@ -204,7 +204,7 @@ public class PetriNetGraph extends mxGraph
     }
 
     /**
-     * Increments and returns the current transition index.
+     * Increments and returns the current transition index (with prefix).
      * 
      * @return String
      */
@@ -215,7 +215,7 @@ public class PetriNetGraph extends mxGraph
     
     
     /**
-     * Increments and returns the current arcs index.
+     * Increments and returns the current arcs index (with prefix).
      * 
      * @return String
      */
