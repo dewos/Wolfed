@@ -17,7 +17,11 @@ import org.w3c.dom.Node;
  * 
  * The class extends the visual base model mxGraph for Jgraphx library.
  * 
+ * mxCell > Vertex  > (PlaceVertex | TransitionVertex | InterfaceVertex)
+ * mxCell > Edge    > (ArcEdge)
+ * 
  * Petri graph definition:
+ * 
  * A Petri graph is a directed bipartite graph, in which the nodes represent 
  * transitions (i.e. events that may occur, signified by bars) and places 
  * (i.e. conditions, signified by circles). 
@@ -225,7 +229,7 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Increments and returns the current interface index.
+     * Increments and returns the current interface index (with prefix).
      * 
      * @return String
      */
@@ -479,7 +483,7 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Add a new Place to the graph.
+     * Add a new place to the graph.
      * 
      * @todo    method overload for id
      * @param   id
@@ -497,7 +501,7 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Add a new Transition to the graph.
+     * Add a new transition to the graph.
      * 
      * @todo    method overload for id
      * @param   id
@@ -515,7 +519,25 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Add a new Arc to the graph.
+     * Add a new interface to the graph.
+     * 
+     * @todo    method overload for id
+     * @param   id
+     * @return  TransitionVertex
+     */
+    public InterfaceVertex insertInterface(String id)
+    {
+        if(id == null)
+        {
+            id = nextIndexInterfaces();
+        }
+        
+        InterfaceVertex interf = new InterfaceVertex(getDefaultParent(), id, id);
+        return (InterfaceVertex) addCell(interf);
+    }
+    
+    /**
+     * Add a new arc to the graph.
      * 
      * @todo    method overload for id
      * @param id
