@@ -12,15 +12,74 @@ import java.util.HashSet;
 import java.util.List;
 import org.w3c.dom.Node;
 
-public final class PetriNetGraph extends mxGraph
+/**
+ * PetriNet implementation.
+ * 
+ * The class extends the visual base model mxGraph for Jgraphx library.
+ * 
+ * Petri graph definition:
+ * A Petri graph is a directed bipartite graph, in which the nodes represent 
+ * transitions (i.e. events that may occur, signified by bars) and places 
+ * (i.e. conditions, signified by circles). 
+ * 
+ * A Petri graph consists of places, transitions, arcs and interfaces. 
+ * Arcs run from a place to a transition or vice versa, never between places
+ * or between transitions. 
+ * 
+ * The places from which an arc runs to a transition are called the input places
+ * of the transition; the places to which arcs run from a transition are called
+ * the output places of the transition.
+ * 
+ * @see http://en.wikipedia.org/wiki/Petri_net
+ * @see https://github.com/jgraph/jgraphx
+ */
+public class PetriNetGraph extends mxGraph
 {
+    /**
+     * Id of the Graph.
+     * 
+     * Usually id from pnml file or tab name.
+     */
     private String id;
-    private String type;       
+    
+    /**
+     * Type for the graph.
+     */
+    private String type;  
+    
+    /**
+     * Index of the places of the graph.
+     * 
+     * Must be in sync with any new place creation.
+     */
     private int indexPlaces;
+    
+    /**
+     * Index of the transitions of the graph.
+     * 
+     * Must be in sync with any new transition creation.
+     */
     private int indexTransitions;
+    
+    /**
+     * Index of the arcs of the graph.
+     * 
+     * Must be in sync with any new arc creation.
+     */
     private int indexArcs;
+    
+    /**
+     * Index of the interfaces of the graph.
+     * 
+     * Must be in sync with any interface creation.
+     */
     private int indexInterfaces;
 
+    /**
+     * Constructor.
+     * 
+     * @param id
+     */
     public PetriNetGraph(String id)
     {
         this.id = id;
@@ -32,12 +91,22 @@ public final class PetriNetGraph extends mxGraph
         setMultigraph(false);
     }
     
+    /**
+     * @inheritDoc
+     */
     @Override
     public String toString()
     {
         return id;
     }
     
+    /**
+     * Imports a pnml "net" node in a new PetriNetGraph.
+     * 
+     * @param dom
+     * @param defaultId
+     * @return PetriNetGraph
+     */
     public static PetriNetGraph factory(Node dom, String defaultId)
     {
         // Xml Mapping 1:1
@@ -50,12 +119,13 @@ public final class PetriNetGraph extends mxGraph
             id = defaultId;
         }
         
-        PetriNetGraph net = new PetriNetGraph(id);
-        net.setType(type);
+        // Creates new Graph
+        PetriNetGraph graph = new PetriNetGraph(id);
+        graph.setType(type);
                 
         // Pmnl Import
-        net.getModel().beginUpdate();
-        Object parent = net.getDefaultParent();
+        graph.getModel().beginUpdate();
+        Object parent = graph.getDefaultParent();
 
         try
         {
@@ -66,20 +136,20 @@ public final class PetriNetGraph extends mxGraph
                     switch (elementNode.getNodeName())
                     {
                         case Constants.PNML_PLACE:
-                            net.addCell(PlaceVertex.factory(parent, elementNode));
-                            net.nextIndexPlaces();
+                            graph.addCell(PlaceVertex.factory(parent, elementNode));
+                            graph.nextIndexPlaces();
                             break;
 
                         case Constants.PNML_TRANSITION:
-                            net.addCell(TransitionVertex.factory(parent, elementNode));
-                            net.nextIndexTransition();
+                            graph.addCell(TransitionVertex.factory(parent, elementNode));
+                            graph.nextIndexTransition();
                             break;
 
                         case Constants.PNML_ARC:
                             ArcEdge arc = ArcEdge.factory(parent, elementNode);
-                            Vertex source = net.getVertexById(arc.getSourceId());
-                            Vertex target = net.getVertexById(arc.getTargetId());
-                            net.addEdge(arc, parent, source, target, null);
+                            Vertex source = graph.getVertexById(arc.getSourceId());
+                            Vertex target = graph.getVertexById(arc.getTargetId());
+                            graph.addEdge(arc, parent, source, target, null);
                             break;
                     }
                 }
@@ -87,47 +157,89 @@ public final class PetriNetGraph extends mxGraph
         }
         finally
         {
-            net.getModel().endUpdate();
+            graph.getModel().endUpdate();
         }
         
-        return net;
+        return graph;
     }
 
+    /**
+     * Returns graph id.
+     * 
+     * @return String
+     */
     public String getId()
     {
         return id;
     }
     
+    /**
+     * Returns graph type.
+     * 
+     * @return String
+     */
     public String getType()
     {
         return type;
     }
 
+    /**
+     * Sets graph type.
+     * 
+     * @param type 
+     */
     public void setType(String type)
     {
         this.type = type;
     }
 
+    /**
+     * Increments and returns the current places id.
+     * 
+     * @return String
+     */
     public String nextIndexPlaces()
     {
         return "p" + String.valueOf(++indexPlaces);
     }
 
+    /**
+     * Increments and returns the current transition index.
+     * 
+     * @return String
+     */
     public String nextIndexTransition()
     {
         return "t" + String.valueOf(++indexTransitions);
     }
     
+    
+    /**
+     * Increments and returns the current arcs index.
+     * 
+     * @return String
+     */
     public String nextIndexArcs()
     {
         return "a" + String.valueOf(++indexArcs);
     }
     
+    /**
+     * Increments and returns the current interface index.
+     * 
+     * @return String
+     */
     public String nextIndexInterfaces()
     {
         return "i" + String.valueOf(++indexInterfaces);
     }
 
+    /**
+     * Force only-vertex selectable cells.
+     * 
+     * @param cell 
+     * @return boolean
+     */
     @Override
     public boolean isCellSelectable(Object cell) 
     {
@@ -136,6 +248,7 @@ public final class PetriNetGraph extends mxGraph
             if (cell instanceof mxCell) 
             {
                mxCell myCell = (mxCell) cell;
+               
                if (myCell.isEdge())
                 {
                     return false;
@@ -146,16 +259,31 @@ public final class PetriNetGraph extends mxGraph
          return super.isCellSelectable(cell);
     }
     
+    /**
+     * Returns if the graph has only an initial place.
+     * 
+     * @return boolean
+     */
     public boolean isSingleInitialPlace()
     {
         return (getInitialPlaces().size() == 1);
     }
     
+    /**
+     * Returns if the graph has only an final place.
+     * 
+     * @return boolean
+     */
     public boolean isSingleFinalPlace()
     {
         return (getFinalPlaces().size() == 1);
     }
     
+    /**
+     * Returns if a workflow has a path from initial to final place for each vertex.
+     * 
+     * @return boolean
+     */
     public boolean isWorkflowStronglyConnected()
     {
         if(isSingleInitialPlace() == false || isSingleFinalPlace() == false)
@@ -169,19 +297,40 @@ public final class PetriNetGraph extends mxGraph
         return notConnectedVertex.isEmpty();
     }
     
+    /**
+     * Returns if the graph is a workflow net.
+     * 
+     * Properties:
+     * 
+     * Single initial place
+     * Single final place
+     * Exist for each vertex a path to the final place.
+     * 
+     * @return boolean
+     */
     public boolean isWorkFlow()
     {
         //return isSingleInitialPlace() && isSingleFinalPlace() && isWorkflowStronglyConnected();
         return isWorkflowStronglyConnected();
     }
     
+    /**
+     * Returns all the Places and Transition without a path to target Vertex.
+     * 
+     * @param target
+     * @return HashSet<Vertex>
+     */
     public HashSet<Vertex> getNotConnectedVertices(Vertex target)
     {
         HashSet<Vertex> notConnectedVertices = new HashSet<>();
         
         for (Object cell : getChildVertices())
         {
-            // Cammino esistente fino alla final place
+            /**
+             * Search a path to target.
+             * 
+             * @todo Change this with a siple path check (shortestpath now)
+             */
             if(cell != target)
             {
                 Object[] paths = mxGraphAnalysis
@@ -195,7 +344,7 @@ public final class PetriNetGraph extends mxGraph
                         true
                  );
 
-                // path not exists
+                // Path not exists
                 if(paths.length == 0)
                 {
                     // Ignore Interfaces
@@ -206,8 +355,7 @@ public final class PetriNetGraph extends mxGraph
                 }
             }
             
-            // Caso limite in cui una transizione è "Initial"
-            // Può essere possibile creando le tran "a mano"
+            // Case with a Transition "Initial" (only postset arc)
             if(cell instanceof TransitionVertex 
                     && getIncomingEdges(cell).length == 0)
             {
@@ -245,11 +393,17 @@ public final class PetriNetGraph extends mxGraph
     /**
      * Get the initial places of the graph.
      * 
+     * An initial place is a place with:
+     * 
+     * #Preset arcs : 0
+     * #Postset arcs: > 1
+     * 
      * @return List<PlaceVertex>
      */
     public List<PlaceVertex> getInitialPlaces()
     {
         List<PlaceVertex> initialPlaces = new ArrayList<>();
+        
         for (Object vertexObj : getChildVertices())
         {   
             if(vertexObj instanceof PlaceVertex)
@@ -268,11 +422,17 @@ public final class PetriNetGraph extends mxGraph
     /**
      * Get the final places of the graph.
      * 
+     * A final place is a place with:
+     * 
+     * #Preset arcs : > 1
+     * #Postset arcs: 0
+     * 
      * @return List<PlaceVertex>
      */
     public List<PlaceVertex> getFinalPlaces()
     {
         List<PlaceVertex> finalPlaces = new ArrayList<>();
+        
         for (Object vertexObj : getChildVertices())
         {   
             if(vertexObj instanceof PlaceVertex)
@@ -289,7 +449,7 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Get child cell of the default parent.
+     * Get child cell of the default graph parent.
      * 
      * @return Object[]
      */
@@ -299,7 +459,7 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Get child vertices of the default parent.
+     * Get child vertices of the default graph parent.
      * 
      * @return Object[]
      */
@@ -309,7 +469,7 @@ public final class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Get child edge of the default parent.
+     * Get child edge of the default graph parent.
      * 
      * @return Object[]
      */
@@ -321,8 +481,9 @@ public final class PetriNetGraph extends mxGraph
     /**
      * Add a new Place to the graph.
      * 
+     * @todo    method overload for id
      * @param   id
-     * @return PlaceVertex
+     * @return  PlaceVertex
      */
     public PlaceVertex insertPlace(String id)
     {
@@ -333,12 +494,12 @@ public final class PetriNetGraph extends mxGraph
         
         PlaceVertex place = new PlaceVertex(getDefaultParent(), id, id);
         return (PlaceVertex) addCell(place);
-
     }
     
     /**
      * Add a new Transition to the graph.
      * 
+     * @todo    method overload for id
      * @param   id
      * @return  TransitionVertex
      */
@@ -356,6 +517,7 @@ public final class PetriNetGraph extends mxGraph
     /**
      * Add a new Arc to the graph.
      * 
+     * @todo    method overload for id
      * @param id
      * @param source 
      * @param target 
