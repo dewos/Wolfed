@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 /**
  * PetriNet implementation.
  * 
- * The class extends the visual base model mxGraph for Jgraphx library.
+ * The class extends the visual base model mxGraph (Jgraphx library).
  * 
  * mxCell > Vertex  > (PlaceVertex | TransitionVertex | InterfaceVertex)
  * mxCell > Edge    > (ArcEdge)
@@ -75,7 +75,7 @@ public class PetriNetGraph extends mxGraph
     /**
      * Index of the interfaces of the graph.
      * 
-     * Must be in sync with any interface creation.
+     * Must be in sync with any new interface creation.
      */
     private int indexInterfaces;
 
@@ -208,24 +208,13 @@ public class PetriNetGraph extends mxGraph
     }
 
     /**
-     * Increments and returns the current transition index (with prefix).
+     * Increments and returns the current transitions index (with prefix).
      * 
      * @return String
      */
     public String nextIndexTransition()
     {
         return "t" + String.valueOf(++indexTransitions);
-    }
-    
-    
-    /**
-     * Increments and returns the current arcs index (with prefix).
-     * 
-     * @return String
-     */
-    public String nextIndexArcs()
-    {
-        return "a" + String.valueOf(++indexArcs);
     }
     
     /**
@@ -237,10 +226,21 @@ public class PetriNetGraph extends mxGraph
     {
         return "i" + String.valueOf(++indexInterfaces);
     }
+    
+    /**
+     * Increments and returns the current arcs index (with prefix).
+     * 
+     * @return String
+     */
+    public String nextIndexArcs()
+    {
+        return "a" + String.valueOf(++indexArcs);
+    }
 
     /**
      * Force only-vertex selectable cells.
      * 
+     * @todo  try to force this in GraphComponent
      * @param cell 
      * @return boolean
      */
@@ -308,7 +308,7 @@ public class PetriNetGraph extends mxGraph
      * 
      * Single initial place
      * Single final place
-     * Exist for each vertex a path to the final place.
+     * Exist, for each vertex, a path to the final place.
      * 
      * @return boolean
      */
@@ -523,7 +523,7 @@ public class PetriNetGraph extends mxGraph
      * 
      * @todo    method overload for id
      * @param   id
-     * @return  TransitionVertex
+     * @return  InterfaceVertex
      */
     public InterfaceVertex insertInterface(String id)
     {
@@ -540,10 +540,10 @@ public class PetriNetGraph extends mxGraph
      * Add a new arc to the graph.
      * 
      * @todo    method overload for id
-     * @param id
-     * @param source 
-     * @param target 
-     * @return 
+     * @param   id
+     * @param   source 
+     * @param   target 
+     * @return  ArcEdge
      */
     public ArcEdge insertArc(String id, Vertex source, Vertex target)
     {
@@ -562,6 +562,7 @@ public class PetriNetGraph extends mxGraph
     /**
      * Prints out some useful information about the cell in the tooltip.
      * 
+     * @todo    try to force this in GraphComponent
      * @param   cell
      * @return  String
      */
