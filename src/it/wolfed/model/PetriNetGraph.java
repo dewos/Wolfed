@@ -36,7 +36,7 @@ import org.w3c.dom.Node;
 public class PetriNetGraph extends mxGraph
 {
     /**
-     * Id of the Graph.
+     * Id of the graph.
      * 
      * Usually id from pnml file or tab name.
      */
@@ -270,7 +270,7 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Returns if the graph has only an final place.
+     * Returns if the graph has only a final place.
      * 
      * @return boolean
      */
