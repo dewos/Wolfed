@@ -109,7 +109,7 @@ public class PetriNetGraph extends mxGraph
     private Set<Vertex> notConnectedVertices;
 
     /**
-     * Constructor.
+     * {@link PetriNetGraph} Constructor.
      * 
      * @param id
      */
@@ -147,11 +147,12 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Imports a pnml "net" node in a new PetriNetGraph.
+     * Imports a pnml node in a new {@link PetriNetGraph}.
      * 
      * @param dom
      * @param defaultId
      * @return PetriNetGraph
+     * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      */
     public static PetriNetGraph factory(Node dom, String defaultId)
     {
@@ -348,7 +349,7 @@ public class PetriNetGraph extends mxGraph
                 /**
                  * Search a path to target.
                  * 
-                 * @todo Change this with a siple path check (shortestpath now)
+                 * @todo Change this with a simple path check (shortestpath now)
                  */
                 if(cell != target)
                 {

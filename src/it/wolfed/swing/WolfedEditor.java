@@ -224,9 +224,9 @@ public class WolfedEditor extends JFrame
 
     /**
      * Import a pnml file. 
-     * A pnml file can contains one or MORE nets.
+     * Note: A pnml file can contains one or MORE nets.
      *
-     * @see http://www.pnml.org/
+     * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      * @param File pnml complaint file
      */
     private void importFile(File filePnml)
@@ -317,7 +317,6 @@ public class WolfedEditor extends JFrame
                 case Constants.OPERATION_MUTUALEXCLUSION:
                     selectionBox = new OperationDialog(this, 1);
                     opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
- 
                     break;
                     
                 case Constants.OPERATION_PARALLELISM:

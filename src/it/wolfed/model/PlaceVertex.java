@@ -6,10 +6,25 @@ import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+/**
+ * Place.
+ */
 public class PlaceVertex extends Vertex
 {
+    /**
+     * Number of tokens on the place.
+     * 
+     * Pnml mapped from {@link Constants#PNML_INITIALMARKING}
+     */
     private int tokens = 0;
     
+    /**
+     * PlaceVertex Constructor.
+     * 
+     * @param parent
+     * @param id
+     * @param value 
+     */
     public PlaceVertex(Object parent, String id, Object value)
     {
         super(
@@ -21,7 +36,9 @@ public class PlaceVertex extends Vertex
         );
     }
     
-    /*
+    /**
+     * Generate a new {@link PlaceVertex} from a pnml valid dom node.
+     * 
      * <place id="p2"> 
      * 	<name> 
      * 		<text>p2</text> 
@@ -37,10 +54,16 @@ public class PlaceVertex extends Vertex
      * 		<text>2</text>
      * 	</initialMarking> 
      * </place>
+     * 
+     * 
+     * @param parent
+     * @param dom
+     * @return  PlaceVertex
+     * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      */  
     public static PlaceVertex factory(Object parent, Node dom)
     {
-        String id, name = "";
+        String id, value = "";
         int tokens = 0;
         
         NamedNodeMap placeAttributes = dom.getAttributes();
@@ -52,10 +75,12 @@ public class PlaceVertex extends Vertex
             {
                 switch (childNode.getNodeName())
                 {
+                    // @note pnml "name" will be mapped to "value" property
                     case Constants.PNML_NAME:
-                        name = childNode.getTextContent().trim();
+                        value = childNode.getTextContent().trim();
                         break;
-
+                        
+                    // @note pnml "initialmarking" will be mapped to "token" property
                     case Constants.PNML_INITIALMARKING:
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
@@ -63,18 +88,24 @@ public class PlaceVertex extends Vertex
             }
         }
 
-        PlaceVertex place = new PlaceVertex(parent, id, name);
+        PlaceVertex place = new PlaceVertex(parent, id, value);
         place.setTokens(tokens);
-        
         return place;
     };
-
+    
+    /**
+     * Sets place tokens number.
+     * 
+     * @param tokens 
+     */
     public void setTokens(int tokens)
     {
         this.tokens = tokens;
     }
     
     /**
+     * Get place token number.
+     * 
      * @return the tokens
      */
     public int getTokens()

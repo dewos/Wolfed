@@ -5,11 +5,35 @@ import it.wolfed.util.Constants;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+/**
+ * Arcs are the edges type in a PetriNets.
+ * 
+ * Note: mxCell superclass force the setup of
+ * the arc only AFTER the cell creation,
+ * so sourceId and targetId are here only
+ * for using them in the PetriNetGraph factory.
+ *  
+ * {@link PetriNetGraph#factory(org.w3c.dom.Node, java.lang.String)
+ */
 public class ArcEdge extends Edge
 {
+    /**
+     * Source mapping of PNML file.
+     */
     private String sourceId;
+    
+    /**
+     * Target mapping of PNML file.
+     */
     private String targetId;
     
+    /**
+     * {@link ArcEdge} Constructor. 
+     * 
+     * @param parent
+     * @param id
+     * @param value 
+     */
     public ArcEdge(Object parent, String id, Object value)
     {
         super(
@@ -21,8 +45,10 @@ public class ArcEdge extends Edge
         );  
     }
     
-   /*
-    * <arc id="a31" source="t7" target="p7">
+    /**
+    * Generate a new {@link ArcEdge} from a pnml valid dom node.
+    * 
+    *  <arc id="a31" source="t7" target="p7">
     *    <inscription>
     *       <text>1</text>
     *     </inscription>
@@ -33,7 +59,11 @@ public class ArcEdge extends Edge
     *        <displayProbabilityPosition x="500.0" y="0.0"/>
     *     </toolspecific>
     *  </arc>
-    */
+     * 
+     * @param parent
+     * @param dom
+     * @return ArcEdge
+     */
     public static ArcEdge factory(Object parent, Node dom)
     {
         NamedNodeMap transitionAttributes = dom.getAttributes();
@@ -50,26 +80,44 @@ public class ArcEdge extends Edge
         
         arc.setTargetId(targetId);
         arc.setSourceId(sourceId);
-        
         return arc;
     };
     
-    
+    /**
+     * Gets Pnml source;
+     * 
+     * @return String
+     */
     public String getSourceId()
     {
         return sourceId;
     }
-
+    
+    /**
+     * Sets Pnml source.
+     * 
+     * @param sourceId 
+     */
     public void setSourceId(String sourceId)
     {
         this.sourceId = sourceId;
     }
 
+    /**
+     * Gets Pnml target.
+     * 
+     * @return String
+     */
     public String getTargetId()
     {
         return targetId;
     }
 
+    /**
+     * Sets Pnml target.
+     * 
+     * @param targetId 
+     */
     public void setTargetId(String targetId)
     {
         this.targetId = targetId;

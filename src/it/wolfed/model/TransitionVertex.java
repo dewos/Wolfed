@@ -6,8 +6,18 @@ import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+/**
+ * Transition.
+ */
 public class TransitionVertex extends Vertex
 {
+    /**
+     * TransitionVertex Constructor
+     * 
+     * @param parent
+     * @param id
+     * @param value 
+     */
     public TransitionVertex(Object parent, String id, Object value)
     {
         super(
@@ -19,7 +29,9 @@ public class TransitionVertex extends Vertex
         );
     }
     
-    /*
+    /**
+     * Generate a new {@link TransitionVertex} from a pnml valid dom node.
+     * 
      * <transition id="t1"> 
      * 	<name> 
      * 		<text>t1</text> 
@@ -37,10 +49,15 @@ public class TransitionVertex extends Vertex
      * 		<orientation>1</orientation> 
      * 	</toolspecific> 
      * </transition>
+     *
+     * @param parent
+     * @param dom
+     * @return TransitionVertex
+     * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      */
     public static TransitionVertex factory(Object parent, Node dom)
     {
-        String id, name = "";
+        String id, value = "";
         
         NamedNodeMap transitionAttributes = dom.getAttributes();
         
@@ -52,13 +69,14 @@ public class TransitionVertex extends Vertex
             {
                 switch (childNode.getNodeName())
                 {
+                    // @note pnml "name" will be mapped to "value" property
                     case Constants.PNML_NAME:
-                        name = childNode.getTextContent().trim();
+                        value = childNode.getTextContent().trim();
                         break;
                 }
             }
         }
 
-        return new TransitionVertex(parent, id, name);
+        return new TransitionVertex(parent, id, value);
     };
 }
