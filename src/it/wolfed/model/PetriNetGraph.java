@@ -4,7 +4,11 @@ package it.wolfed.model;
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
+import it.wolfed.swing.GraphComponent;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.util.ArrayList;
@@ -34,8 +38,8 @@ import org.w3c.dom.Node;
  * of the transition; the places to which arcs run from a transition are called
  * the output places of the transition.
  * 
- * @see http://en.wikipedia.org/wiki/Petri_net
- * @see https://github.com/jgraph/jgraphx
+ * @see <a href="http://en.wikipedia.org/wiki/Petri_net">Wikipedia PetriNet</a>
+ * @see <a href="https://github.com/jgraph/jgraphx">JGrapx Repository</a>
  */
 public class PetriNetGraph extends mxGraph
 {
@@ -78,6 +82,30 @@ public class PetriNetGraph extends mxGraph
      * Must be in sync with any new interface creation.
      */
     private int indexInterfaces;
+    
+    /**
+     * Holds all the initialPlaces of the graph.
+     * 
+     * Refreshed on every change.
+     * @see PetriNetGraph#getInitialPlaces()
+     */
+    private List<PlaceVertex> initialPlaces;
+    
+    /**
+     * Holds all the initialPlaces of the graph.
+     * 
+     * Refreshed on every change.
+     * @see PetriNetGraph#getFinalPlaces()
+     */
+    private List<PlaceVertex> finalPlaces;
+    
+    /**
+     * Holds all the NOT "workflow connected" vertices of the graph.
+     * 
+     * Refreshed on every change.
+     * @see PetriNetGraph#getNotConnectedVertices(it.wolfed.model.Vertex)
+     */
+    private HashSet<Vertex> notConnectedVertices;
 
     /**
      * Constructor.
@@ -93,6 +121,19 @@ public class PetriNetGraph extends mxGraph
         setAllowLoops(false);
         setDropEnabled(false);
         setMultigraph(false);
+        
+        // Dirty Pattern: Force refreshing of analysis on change event
+        // @todo filter this only on add and remove events
+        getModel().addListener(mxEvent.CHANGE, new mxEventSource.mxIEventListener()
+        {
+            @Override
+            public void invoke(Object sender, mxEventObject evt)
+            {
+                initialPlaces = null;
+                finalPlaces = null;
+                notConnectedVertices = null;
+            }
+        });
     }
     
     /**
@@ -141,12 +182,12 @@ public class PetriNetGraph extends mxGraph
                     {
                         case Constants.PNML_PLACE:
                             graph.addCell(PlaceVertex.factory(parent, elementNode));
-                            graph.nextIndexPlaces();
+                            graph.getSetNextPlaceId();
                             break;
 
                         case Constants.PNML_TRANSITION:
                             graph.addCell(TransitionVertex.factory(parent, elementNode));
-                            graph.nextIndexTransition();
+                            graph.getSetNextTransitionId();
                             break;
 
                         case Constants.PNML_ARC:
@@ -202,7 +243,7 @@ public class PetriNetGraph extends mxGraph
      * 
      * @return String
      */
-    public String nextIndexPlaces()
+    public String getSetNextPlaceId()
     {
         return "p" + String.valueOf(++indexPlaces);
     }
@@ -212,7 +253,7 @@ public class PetriNetGraph extends mxGraph
      * 
      * @return String
      */
-    public String nextIndexTransition()
+    public String getSetNextTransitionId()
     {
         return "t" + String.valueOf(++indexTransitions);
     }
@@ -222,7 +263,7 @@ public class PetriNetGraph extends mxGraph
      * 
      * @return String
      */
-    public String nextIndexInterfaces()
+    public String getSetNextInterfaceId()
     {
         return "i" + String.valueOf(++indexInterfaces);
     }
@@ -232,35 +273,9 @@ public class PetriNetGraph extends mxGraph
      * 
      * @return String
      */
-    public String nextIndexArcs()
+    public String getSetNextArcId()
     {
         return "a" + String.valueOf(++indexArcs);
-    }
-
-    /**
-     * Force only-vertex selectable cells.
-     * 
-     * @todo  try to force this in GraphComponent
-     * @param cell 
-     * @return boolean
-     */
-    @Override
-    public boolean isCellSelectable(Object cell) 
-    {
-         if (cell != null) 
-         {
-            if (cell instanceof mxCell) 
-            {
-               mxCell myCell = (mxCell) cell;
-               
-               if (myCell.isEdge())
-                {
-                    return false;
-                }
-            }
-         }
-         
-         return super.isCellSelectable(cell);
     }
     
     /**
@@ -295,10 +310,7 @@ public class PetriNetGraph extends mxGraph
             return false;
         }
         
-        PlaceVertex finalplace = getFinalPlaces().iterator().next();
-        HashSet<Vertex> notConnectedVertex = getNotConnectedVertices(finalplace);
-
-        return notConnectedVertex.isEmpty();
+        return getNotConnectedVertices(getFinalPlaces().get(0)).isEmpty();
     }
     
     /**
@@ -326,47 +338,50 @@ public class PetriNetGraph extends mxGraph
      */
     public HashSet<Vertex> getNotConnectedVertices(Vertex target)
     {
-        HashSet<Vertex> notConnectedVertices = new HashSet<>();
-        
-        for (Object cell : getChildVertices())
+        if(notConnectedVertices == null)
         {
-            /**
-             * Search a path to target.
-             * 
-             * @todo Change this with a siple path check (shortestpath now)
-             */
-            if(cell != target)
+            notConnectedVertices = new HashSet<>();
+            
+            for (Object cell : getChildVertices())
             {
-                Object[] paths = mxGraphAnalysis
-                    .getInstance()
-                    .getShortestPath(
-                        this,
-                        cell,
-                        target,
-                        new mxDistanceCostFunction(),
-                        getChildVertices().length,
-                        true
-                 );
-
-                // Path not exists
-                if(paths.length == 0)
+                /**
+                 * Search a path to target.
+                 * 
+                 * @todo Change this with a siple path check (shortestpath now)
+                 */
+                if(cell != target)
                 {
-                    // Ignore Interfaces
-                    if(cell instanceof TransitionVertex || cell instanceof PlaceVertex)
+                    Object[] paths = mxGraphAnalysis
+                        .getInstance()
+                        .getShortestPath(
+                            this,
+                            cell,
+                            target,
+                            new mxDistanceCostFunction(),
+                            getChildVertices().length,
+                            true
+                     );
+
+                    // Path not exists
+                    if(paths.length == 0)
                     {
-                        notConnectedVertices.add((Vertex) cell);
+                        // Ignore Interfaces
+                        if(cell instanceof TransitionVertex || cell instanceof PlaceVertex)
+                        {
+                            notConnectedVertices.add((Vertex) cell);
+                        }
                     }
                 }
-            }
-            
-            // Case with a Transition "Initial" (only postset arc)
-            if(cell instanceof TransitionVertex 
-                    && getIncomingEdges(cell).length == 0)
-            {
-                notConnectedVertices.add((Vertex) cell);
+
+                // Case with a Transition "Initial" (only postset arc)
+                if(cell instanceof TransitionVertex 
+                        && getIncomingEdges(cell).length == 0)
+                {
+                    notConnectedVertices.add((Vertex) cell);
+                }
             }
         }
-        
+
         return notConnectedVertices;
     }
     
@@ -406,20 +421,23 @@ public class PetriNetGraph extends mxGraph
      */
     public List<PlaceVertex> getInitialPlaces()
     {
-        List<PlaceVertex> initialPlaces = new ArrayList<>();
+        if(initialPlaces == null)
+        {        
+            initialPlaces = new ArrayList<>();
         
-        for (Object vertexObj : getChildVertices())
-        {   
-            if(vertexObj instanceof PlaceVertex)
-            {
-                if(getIncomingEdges(vertexObj).length == 0
-                    && getOutgoingEdges(vertexObj).length > 0)
+            for (Object vertexObj : getChildVertices())
+            {   
+                if(vertexObj instanceof PlaceVertex)
                 {
-                    initialPlaces.add((PlaceVertex) vertexObj);
+                    if(getIncomingEdges(vertexObj).length == 0
+                        && getOutgoingEdges(vertexObj).length > 0)
+                    {
+                        initialPlaces.add((PlaceVertex) vertexObj);
+                    }
                 }
             }
         }
-        
+
         return initialPlaces;
     }
     
@@ -435,20 +453,23 @@ public class PetriNetGraph extends mxGraph
      */
     public List<PlaceVertex> getFinalPlaces()
     {
-        List<PlaceVertex> finalPlaces = new ArrayList<>();
-        
-        for (Object vertexObj : getChildVertices())
-        {   
-            if(vertexObj instanceof PlaceVertex)
-            {
-                if(getOutgoingEdges(vertexObj).length == 0
-                    && getIncomingEdges(vertexObj).length > 0)
+        if(finalPlaces == null)
+        {
+            finalPlaces = new ArrayList<>();
+            
+             for (Object vertexObj : getChildVertices())
+            {   
+                if(vertexObj instanceof PlaceVertex)
                 {
-                    finalPlaces.add((PlaceVertex) vertexObj);
-                }
-            }    
+                    if(getOutgoingEdges(vertexObj).length == 0
+                        && getIncomingEdges(vertexObj).length > 0)
+                    {
+                        finalPlaces.add((PlaceVertex) vertexObj);
+                    }
+                }    
+            }
         }
-
+        
         return finalPlaces;
     }
     
@@ -491,11 +512,9 @@ public class PetriNetGraph extends mxGraph
      */
     public PlaceVertex insertPlace(String id)
     {
-        if(id == null)
-        {
-           id = nextIndexPlaces();
-        }
+        String nextId = getSetNextPlaceId();
         
+        id = (id == null) ? nextId : id;
         PlaceVertex place = new PlaceVertex(getDefaultParent(), id, id);
         return (PlaceVertex) addCell(place);
     }
@@ -509,11 +528,9 @@ public class PetriNetGraph extends mxGraph
      */
     public TransitionVertex insertTransition(String id)
     {
-        if(id == null)
-        {
-            id = nextIndexTransition();
-        }
-        
+        String nextId = getSetNextTransitionId();
+       
+        id = (id == null) ? nextId : id;
         TransitionVertex transition = new TransitionVertex(getDefaultParent(), id, id);
         return (TransitionVertex) addCell(transition);
     }
@@ -527,11 +544,9 @@ public class PetriNetGraph extends mxGraph
      */
     public InterfaceVertex insertInterface(String id)
     {
-        if(id == null)
-        {
-            id = nextIndexInterfaces();
-        }
-        
+        String nextId = getSetNextInterfaceId();
+       
+        id = (id == null) ? nextId : id;
         InterfaceVertex interf = new InterfaceVertex(getDefaultParent(), id, id);
         return (InterfaceVertex) addCell(interf);
     }
@@ -547,11 +562,9 @@ public class PetriNetGraph extends mxGraph
      */
     public ArcEdge insertArc(String id, Vertex source, Vertex target)
     {
-        if(id == null)
-        {
-            id = nextIndexArcs();
-        }
-        
+        String nextId = getSetNextArcId();
+       
+        id = (id == null) ? nextId : id;
         ArcEdge edge = new ArcEdge(getDefaultParent(), id, "");
         edge.setSourceId(source.getId());
         edge.setTargetId(target.getId());
@@ -560,9 +573,35 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
+     * Force only-vertex selectable cells.
+     * 
+     * @todo  try to force this in {@link GraphComponent}
+     * @param cell 
+     * @return boolean
+     */
+    @Override
+    public boolean isCellSelectable(Object cell) 
+    {
+         if (cell != null) 
+         {
+            if (cell instanceof mxCell) 
+            {
+               mxCell myCell = (mxCell) cell;
+               
+               if (myCell.isEdge())
+                {
+                    return false;
+                }
+            }
+         }
+         
+         return super.isCellSelectable(cell);
+    }
+    
+    /**
      * Prints out some useful information about the cell in the tooltip.
      * 
-     * @todo    try to force this in GraphComponent
+     * @todo  try to force this in {@link GraphComponent}
      * @param   cell
      * @return  String
      */

@@ -75,13 +75,13 @@ public class GraphComponent extends mxGraphComponent
                 if (source instanceof PlaceVertex)
                 {
                     PlaceVertex place = (PlaceVertex) source;
-                    String id = getGraph().nextIndexTransition();
+                    String id = getGraph().getSetNextTransitionId();
                     clone = new TransitionVertex(place.getParent(), id, id);
                 } 
                 else if (source instanceof TransitionVertex)
                 {
                     TransitionVertex transition = (TransitionVertex) source;
-                    String id = getGraph().nextIndexPlaces();
+                    String id = getGraph().getSetNextPlaceId();
                     clone = new PlaceVertex(transition.getParent(), id, id);
                 }
 
@@ -182,7 +182,7 @@ public class GraphComponent extends mxGraphComponent
             @Override
             public void mousePressed(MouseEvent e) 
             {                
-                String id = getGraph().nextIndexPlaces();
+                String id = getGraph().getSetNextPlaceId();
                 PlaceVertex place = new PlaceVertex(graph.getDefaultParent(), id, id);
                 
                 // Set location (-xy for center on mouseclick)
@@ -201,7 +201,7 @@ public class GraphComponent extends mxGraphComponent
             @Override
             public void mousePressed(MouseEvent e) 
             {                
-                String id = getGraph().nextIndexTransition();
+                String id = getGraph().getSetNextTransitionId();
                 TransitionVertex transition = new TransitionVertex(graph.getDefaultParent(), id, id);
                 
                 // Set location (-xy for center on mouseclick)
@@ -221,7 +221,7 @@ public class GraphComponent extends mxGraphComponent
             @Override
             public void mousePressed(MouseEvent e) 
             {                
-                String id = getGraph().nextIndexInterfaces();
+                String id = getGraph().getSetNextInterfaceId();
                 InterfaceVertex inter = new InterfaceVertex(graph.getDefaultParent(), id, id);
                 
                 // Set location (-xy for center on mouseclick)
