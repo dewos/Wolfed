@@ -20,88 +20,75 @@ public class AutoUpdateStyleListener implements mxIEventListener
         this.graph = graph;
     }
     
-    private PetriNetGraph getGraph()
-    {
-        return this.graph;
-    }
-    
     @Override
     public void invoke(Object o, mxEventObject eo)
     {
-        updateArcsStyle();
-        updatePlacesStyle();
-        getGraph().refresh();
+        updateEdgesStyle();
+        updateVerticesStyle();
+        graph.refresh();
     }
     
-    private void updateArcsStyle()
+    private void updateEdgesStyle()
     {
-        boolean graphIsWorkFlow = getGraph().isWorkFlow();
-        
         // Reset Arc Style
-        for(Object edge: getGraph().getChildEdges())
+        for(Object edge: graph.getChildEdges())
         {
-            if(graphIsWorkFlow)
+            if(graph.isWorkFlow())
             {
-                getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_CONNECTED);
+                graph.getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_CONNECTED);
             }
             else
             {
-                getGraph().getModel().setStyle(edge, Constants.STYLE_ARC);
+                graph.getModel().setStyle(edge, Constants.STYLE_ARC);
             }
         }
         
         // Highlight not strongly connected arc
-        if( ! graphIsWorkFlow && getGraph().isSingleFinalPlace())
+        if( ! graph.isWorkFlow() && graph.isSingleFinalPlace())
         {
-            PlaceVertex finalplace = getGraph().getFinalPlaces().iterator().next();
-            HashSet<Vertex> notConnectedVertices = getGraph().getNotConnectedVertices(finalplace);
-            
-            for(Vertex vertex : notConnectedVertices)
+            for(Vertex vertex : graph.getNotConnectedVertices(graph.getFinalPlaces().get(0)))
             {
-                for(Object edge : getGraph().getIncomingEdges(vertex))
+                for(Object edge : graph.getIncomingEdges(vertex))
                 {
-                    getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
+                    graph.getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
                 }
                 
                 // Caso limite di "Transition Initial"
                 if(vertex instanceof TransitionVertex &&
-                        getGraph().getIncomingEdges(vertex).length == 0)
+                        graph.getIncomingEdges(vertex).length == 0)
                 {
-                    for(Object edge : getGraph().getOutgoingEdges(vertex))
+                    for(Object edge : graph.getOutgoingEdges(vertex))
                     {
-                        getGraph().getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
+                        graph.getModel().setStyle(edge, Constants.STYLE_ARC_FLOW_UNCONNECTED);
                     }
                 }
             }
         }
     }
 
-    private void updatePlacesStyle()
+    private void updateVerticesStyle()
     {
         String newStyle;
-        List<PlaceVertex> initialPlaces = getGraph().getInitialPlaces();
-        List<PlaceVertex> finalPlaces = getGraph().getFinalPlaces();
-        boolean graphIsWorkFlow = getGraph().isWorkFlow();
 
-        for (Object objVertex : getGraph().getChildVertices())
+        for (Object objVertex : graph.getChildVertices())
         {
             if(objVertex instanceof PlaceVertex)
             {
                 PlaceVertex place = (PlaceVertex) objVertex;
 
-                if(initialPlaces.contains(place))
+                if(graph.getInitialPlaces().contains(place))
                 {
-                    newStyle = (initialPlaces.size() > 1)
+                    newStyle = (graph.getInitialPlaces().size() > 1)
                             ? Constants.STYLE_PLACE_SPECIAL_INVALID
                             : Constants.STYLE_PLACE_SPECIAL_VALID;
                 }
-                else if(finalPlaces.contains(place))
+                else if(graph.getFinalPlaces().contains(place))
                 {
-                    newStyle = (finalPlaces.size() > 1)
+                    newStyle = (graph.getFinalPlaces().size() > 1)
                             ? Constants.STYLE_PLACE_SPECIAL_INVALID
                             : Constants.STYLE_PLACE_SPECIAL_VALID;
                 }
-                else if(graphIsWorkFlow)
+                else if(graph.isWorkFlow())
                 {
                     newStyle = Constants.STYLE_PLACE_VALID;
                 }
@@ -110,11 +97,11 @@ public class AutoUpdateStyleListener implements mxIEventListener
                     newStyle = Constants.STYLE_PLACE;
                 }
                 
-                getGraph().getModel().setStyle(place, newStyle);
+                graph.getModel().setStyle(place, newStyle);
             }
             else if(objVertex instanceof TransitionVertex)
             {
-                if(graphIsWorkFlow)
+                if(graph.isWorkFlow())
                 {
                     newStyle = Constants.STYLE_TRANSITION_VALID;
                 }
@@ -123,13 +110,13 @@ public class AutoUpdateStyleListener implements mxIEventListener
                     newStyle = Constants.STYLE_TRANSITION;
                 }
                 
-                getGraph().getModel().setStyle(objVertex, newStyle);
+                graph.getModel().setStyle(objVertex, newStyle);
             }
             else if(objVertex instanceof InterfaceVertex)
             {
-                for(Object edgeObj : getGraph().getEdges(objVertex))
+                for(Object edgeObj : graph.getEdges(objVertex))
                 {
-                    getGraph().getModel().setStyle(edgeObj, Constants.STYLE_ARC_WITH_INTERFACE);
+                    graph.getModel().setStyle(edgeObj, Constants.STYLE_ARC_WITH_INTERFACE);
                 }
             }
         }
