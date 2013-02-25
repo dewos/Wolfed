@@ -14,6 +14,7 @@ import it.wolfed.util.IterableNodeList;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.w3c.dom.Node;
 
 /**
@@ -105,7 +106,7 @@ public class PetriNetGraph extends mxGraph
      * Refreshed on every change.
      * @see PetriNetGraph#getNotConnectedVertices(it.wolfed.model.Vertex)
      */
-    private HashSet<Vertex> notConnectedVertices;
+    private Set<Vertex> notConnectedVertices;
 
     /**
      * Constructor.
@@ -336,7 +337,7 @@ public class PetriNetGraph extends mxGraph
      * @param target
      * @return HashSet<Vertex>
      */
-    public HashSet<Vertex> getNotConnectedVertices(Vertex target)
+    public Set<Vertex> getNotConnectedVertices(Vertex target)
     {
         if(notConnectedVertices == null)
         {

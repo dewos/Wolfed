@@ -8,8 +8,6 @@ import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import it.wolfed.util.Constants;
-import java.util.HashSet;
-import java.util.List;
 
 public class AutoUpdateStyleListener implements mxIEventListener
 {

@@ -31,9 +31,8 @@
 
 package layout;
 
-import javax.swing.*;
-import javax.swing.SpringLayout;
 import java.awt.*;
+import javax.swing.*;
 
 /**
  * A 1.4 file that provides utility methods for
