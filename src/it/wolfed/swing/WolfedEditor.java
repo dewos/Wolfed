@@ -60,7 +60,7 @@ public class WolfedEditor extends JFrame
     /**
      * Specifies current version.
      */
-    public static final String VERSION = "0.9.8.0";
+    public static final String VERSION = "0.9.8.5";
     
     /**
      * Holds opened graphs available in editor tabs.
@@ -290,6 +290,7 @@ public class WolfedEditor extends JFrame
                 case Constants.OPERATION_ALTERNATION:
                     selectionBox = new OperationDialog(this, 1);
                     opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
+                    break;
                     
                 case Constants.OPERATION_DEFFEREDCHOICE:
                     selectionBox = new OperationDialog(this, 1);
