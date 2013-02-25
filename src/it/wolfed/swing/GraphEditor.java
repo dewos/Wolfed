@@ -13,6 +13,7 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.operations.AlternatioAndMutualExclusionOperation;
 import it.wolfed.operations.DefferedChoiceOperation;
 import it.wolfed.operations.ExplicitChoiceOperation;
 import it.wolfed.operations.OneOrMoreIterationOperation;
@@ -47,13 +48,13 @@ public final class GraphEditor extends JFrame
     private JTabbedPane tabController = new JTabbedPane();
     private String[] operations =
     {
-        //Constants.OPERATION_ALTERNATION,
+        Constants.OPERATION_ALTERNATION,
         Constants.OPERATION_DEFFEREDCHOICE,
         Constants.OPERATION_EXPLICITCHOICE,
         Constants.OPERATION_ITERATIONONEORMORE,
         Constants.OPERATION_ITERATIONONESERVEPERTIME,
         Constants.OPERATION_ITERATIONZEROORMORE,
-        //Constants.OPERATION_MUTUALEXCLUSION,
+        Constants.OPERATION_MUTUALEXCLUSION,
         Constants.OPERATION_PARALLELISM,
         Constants.OPERATION_SEQUENCING
     };
@@ -249,7 +250,9 @@ public final class GraphEditor extends JFrame
 
         List<PetriNetGraph> inputNet = new ArrayList<>();
         inputNet.add(getEditorGraphs().get(0));
-
+        
+        List<PetriNetGraph> inputNet2 = new ArrayList<>();
+        inputNet2.add(getEditorGraphs().get(1));
         try
         {
             Operation op = null;
@@ -258,6 +261,7 @@ public final class GraphEditor extends JFrame
             switch (operationName)
             {
                 case Constants.OPERATION_ALTERNATION:
+                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, getEditorGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_DEFFEREDCHOICE:
                     opGraph = (new DefferedChoiceOperation(inputNets)).getOperationGraph();
@@ -276,6 +280,7 @@ public final class GraphEditor extends JFrame
                     opGraph = zero.getOperationGraph();
                     break;
                 case Constants.OPERATION_MUTUALEXCLUSION:
+                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, getEditorGraphs())).getOperationGraph();
                     break;
                 case Constants.OPERATION_PARALLELISM:
                     opGraph = (new ParallelismOperation(inputNets)).getOperationGraph();
