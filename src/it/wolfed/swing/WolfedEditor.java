@@ -5,6 +5,7 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.operations.AlternatioAndMutualExclusionOperation;
 import it.wolfed.operations.DefferedChoiceOperation;
 import it.wolfed.operations.ExplicitChoiceOperation;
 import it.wolfed.operations.OneOrMoreIterationOperation;
@@ -38,8 +39,8 @@ import org.xml.sax.SAXException;
  * Wolfed.
  * WOrkflow Light Fast EDitor.
  * 
- * @see     https://github.com/Dewos/wolfed
- * @see     http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html
+ * @see     <a href="https://github.com/Dewos/wolfed">Github Repository</a>
+ * @see     <a href="http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html">MPB Course</a>
  * @author  Fabio Piro
  * @author  Said Daoudagh
  */
@@ -67,7 +68,7 @@ public class WolfedEditor extends JFrame
     private List<PetriNetGraph> openedGraphs = new ArrayList<>();
     
     /**
-     * The tabs controller. 
+     * Tabs controller. 
      * 
      * A tab contains an GraphContainer
      * with the GraphComponent and AnalysisComponent.
@@ -75,23 +76,23 @@ public class WolfedEditor extends JFrame
     private JTabbedPane tabs = new JTabbedPane();
     
     /**
-     * Sets the available operations (in menu).
+     * Available operations (in menu).
      */
     private String[] operations =
     {
-        //Constants.OPERATION_ALTERNATION,
+        Constants.OPERATION_ALTERNATION,
         Constants.OPERATION_DEFFEREDCHOICE,
         Constants.OPERATION_EXPLICITCHOICE,
         Constants.OPERATION_ITERATIONONEORMORE,
         Constants.OPERATION_ITERATIONONESERVEPERTIME,
         Constants.OPERATION_ITERATIONZEROORMORE,
-        //Constants.OPERATION_MUTUALEXCLUSION,
+        Constants.OPERATION_MUTUALEXCLUSION,
         Constants.OPERATION_PARALLELISM,
         Constants.OPERATION_SEQUENCING
     };
     
     /**
-     * Sets the available layout (in menu).
+     * Available layouts (in menu).
      */
     private String[] layouts =
     {
@@ -287,7 +288,8 @@ public class WolfedEditor extends JFrame
             switch (operationName)
             {
                 case Constants.OPERATION_ALTERNATION:
-                    break;
+                    selectionBox = new OperationDialog(this, 1);
+                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
                     
                 case Constants.OPERATION_DEFFEREDCHOICE:
                     selectionBox = new OperationDialog(this, 1);
@@ -312,6 +314,9 @@ public class WolfedEditor extends JFrame
                     break;
                     
                 case Constants.OPERATION_MUTUALEXCLUSION:
+                    selectionBox = new OperationDialog(this, 1);
+                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
+ 
                     break;
                     
                 case Constants.OPERATION_PARALLELISM:

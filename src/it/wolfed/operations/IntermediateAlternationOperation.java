@@ -6,11 +6,8 @@ import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.List;
 
-/**
- *
- * 
- */
-public class IntermediateAlternationOperation extends Operation{
+public class IntermediateAlternationOperation extends Operation
+{
     private PlaceVertex intermediatePlace;
     private final List<ExtendedGraph> extendedGraphs;
     private Vertex initialTransitionAsN0;
@@ -26,7 +23,8 @@ public class IntermediateAlternationOperation extends Operation{
     }
 
     @Override
-    void process() {
+    void process() 
+    {
         
     }
 

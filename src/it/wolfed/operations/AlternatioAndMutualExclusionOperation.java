@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.wolfed.operations;
 
 import it.wolfed.model.PetriNetGraph;
@@ -11,7 +7,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AlternatioAndMutualExclusionOperation {
+public class AlternatioAndMutualExclusionOperation 
+{
     private final List<PetriNetGraph> graphs;
     private PetriNetGraph resultGraph;
     private String operationName;
