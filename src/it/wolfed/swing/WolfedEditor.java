@@ -168,6 +168,7 @@ public class WolfedEditor extends JFrame
                 if ("Nimbus".equals(info.getName())) 
                 {
                     UIManager.setLookAndFeel(info.getClassName());
+                    break;
                 }
                 else
                 {
