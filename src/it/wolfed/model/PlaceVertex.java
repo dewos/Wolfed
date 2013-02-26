@@ -1,6 +1,7 @@
 
 package it.wolfed.model;
 
+import com.mxgraph.model.mxGeometry;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.NamedNodeMap;
@@ -65,7 +66,7 @@ public class PlaceVertex extends Vertex
     {
         String id, value = "";
         int tokens = 0;
-        
+        Node graphicsGeometry = null;
         NamedNodeMap placeAttributes = dom.getAttributes();
         id = placeAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
 
@@ -84,12 +85,16 @@ public class PlaceVertex extends Vertex
                     case Constants.PNML_INITIALMARKING:
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
+                    case Constants.PNML_GRAPHICS:
+                        graphicsGeometry = childNode;
+                        break;
                 }
             }
         }
 
         PlaceVertex place = new PlaceVertex(parent, id, value);
         place.setTokens(tokens);
+        place.setGraphics(graphicsGeometry);
         return place;
     };
     
