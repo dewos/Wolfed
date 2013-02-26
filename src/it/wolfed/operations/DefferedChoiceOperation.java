@@ -9,7 +9,7 @@ public class DefferedChoiceOperation extends Operation
 {
     public DefferedChoiceOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("deffChoice", inputGraphs, 2, true);
+        super("deff_choice", inputGraphs, 2, true);
     }
     
     /*

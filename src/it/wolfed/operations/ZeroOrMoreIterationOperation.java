@@ -5,14 +5,13 @@ import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.List;
 
-public class ZeroOrMoreIterationOperation extends IterationOperation
+public final class ZeroOrMoreIterationOperation extends IterationOperation
 {
     public ZeroOrMoreIterationOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("zeroOrMore", inputGraphs);
+        super("zero_or_more", inputGraphs);
         compose();
     }
-
     
     void compose()
     {

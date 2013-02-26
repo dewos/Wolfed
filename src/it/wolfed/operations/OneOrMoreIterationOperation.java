@@ -5,15 +5,14 @@ import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.List;
 
-public class OneOrMoreIterationOperation extends IterationOperation
+public final class OneOrMoreIterationOperation extends IterationOperation
 {
     public OneOrMoreIterationOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("oneOrMore", inputGraphs);
+        super("one_or_more", inputGraphs);
         compose();
     }
 
-    
     void compose()
     {
         TransitionVertex intermediateTransition = getOperationGraph().insertTransition(null);

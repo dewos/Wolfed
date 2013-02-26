@@ -15,7 +15,8 @@ public class IntermediateAlternationOperation extends Operation
     protected Vertex initialTransitionAsN1;
     protected Vertex finalTransitionAsN1;
     
-    public IntermediateAlternationOperation(String operationName, List<PetriNetGraph> inputGraphs, List<IterationOperation> extendedGraphs) throws Exception {
+    public IntermediateAlternationOperation(String operationName, List<PetriNetGraph> inputGraphs, List<IterationOperation> extendedGraphs) throws Exception 
+    {
         super(operationName, inputGraphs, 2, true);
         this.extendedGraphs = extendedGraphs;
         createIntermediateGraph();

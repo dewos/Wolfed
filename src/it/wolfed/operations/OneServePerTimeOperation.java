@@ -4,11 +4,11 @@ import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import java.util.List;
 
-public class OneServePerTimeOperation extends IterationOperation
+public final class OneServePerTimeOperation extends IterationOperation
 {
     public OneServePerTimeOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("onePerTime", inputGraphs);
+        super("one_x_time", inputGraphs);
         compose();
     }
 

@@ -61,7 +61,7 @@ public class WolfedEditor extends JFrame
     /**
      * Specifies current version.
      */
-    public static final String VERSION = "0.9.8.5";
+    public static final String VERSION = "0.9.9.0";
     
     /**
      * Holds opened graphs available in editor tabs.
@@ -163,10 +163,15 @@ public class WolfedEditor extends JFrame
         try
         {
             // Sets system look
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) 
+            {
+                if ("Nimbus".equals(info.getName())) 
+                {
                     UIManager.setLookAndFeel(info.getClassName());
+                }
+                else
+                {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 }
             }
             

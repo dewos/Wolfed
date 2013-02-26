@@ -80,7 +80,7 @@ public class PlaceVertex extends Vertex
                         value = childNode.getTextContent().trim();
                         break;
                         
-                    // @note pnml "initialmarking" will be mapped to "token" property
+                    // @note pnml "initialmarking" will be mapped to "tokens" property
                     case Constants.PNML_INITIALMARKING:
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
