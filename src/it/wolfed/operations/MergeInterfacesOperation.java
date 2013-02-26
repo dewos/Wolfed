@@ -75,20 +75,8 @@ public class MergeInterfacesOperation extends Operation
                     }
                     
                     // Remove as N0
-                    for(Object edgeObj : getOperationGraph().getEdges(interfAsN0))
-                    {
-                        getOperationGraph().getModel().remove(edgeObj);
-                    }
-                    
-                    getOperationGraph().getModel().remove(interfAsN0);
-                    
-                    // Remove as N1
-                    for(Object edgeObj : getOperationGraph().getEdges(interfAsN1))
-                    {
-                        getOperationGraph().getModel().remove(edgeObj);
-                    }
-                    
-                    getOperationGraph().getModel().remove(interfAsN1);
+                    removeVertexAndHisEdges(interfAsN0);
+                    removeVertexAndHisEdges(interfAsN1);
                 }
             }
         }
