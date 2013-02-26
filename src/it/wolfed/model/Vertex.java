@@ -3,10 +3,6 @@ package it.wolfed.model;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import it.wolfed.util.Constants;
-import it.wolfed.util.IterableNodeList;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 /**
  * Vertices are the node elements of the graph model. 

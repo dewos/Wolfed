@@ -80,13 +80,17 @@ public class PlaceVertex extends Vertex
                 {
                     // @note pnml "name" will be mapped to "value" property
                     case Constants.PNML_NAME:
+                    {
                         value = childNode.getTextContent().trim();
                         break;
+                    }
                         
                     // @note pnml "initialmarking" will be mapped to "tokens" property
                     case Constants.PNML_INITIALMARKING:
+                    {
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
+                    }
                     
                     /** Set the geometric aspect of the Vertex
                     *  <graphics> 
@@ -95,7 +99,7 @@ public class PlaceVertex extends Vertex
                     * 	</graphics> 
                     */
                     case Constants.PNML_GRAPHICS:
-                        
+                    { 
                         for (final Node graphNode : new IterableNodeList(childNode.getChildNodes()))
                         {
                             if (graphNode.getNodeType() == Node.ELEMENT_NODE)
@@ -103,14 +107,17 @@ public class PlaceVertex extends Vertex
                                 switch(graphNode.getNodeName())
                                 {
                                     case Constants.PNML_GRAPHICS_POSITION :
+                                    {
                                         x = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_X).getNodeValue());
                                         y = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_Y).getNodeValue());
-                                    break;
+                                        break;
+                                    }
                                 }
                             }
                         }
                         
-                    break;
+                        break;
+                    }
                 }
             }
         }

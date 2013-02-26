@@ -74,8 +74,10 @@ public class TransitionVertex extends Vertex
                 {
                     // @note pnml "name" will be mapped to "value" property
                     case Constants.PNML_NAME:
+                    {
                         value = childNode.getTextContent().trim();
                         break;
+                    }
                         
                     /** Set the geometric aspect of the Vertex
                     *  <graphics> 
@@ -84,6 +86,7 @@ public class TransitionVertex extends Vertex
                     * 	</graphics> 
                     */
                     case Constants.PNML_GRAPHICS:
+                    {
                         for (final Node graphNode : new IterableNodeList(childNode.getChildNodes()))
                         {
                             if (graphNode.getNodeType() == Node.ELEMENT_NODE)
@@ -91,18 +94,21 @@ public class TransitionVertex extends Vertex
                                 switch(graphNode.getNodeName())
                                 {
                                     case Constants.PNML_GRAPHICS_POSITION :
+                                    {
                                         x = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_X).getNodeValue());
                                         y = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_Y).getNodeValue());
-                                    break;
+                                        break;
+                                    }
                                 }
                             }
                         }
                         
-                    break;
+                        break;
+                    } 
                 }
             }
         }
-        TransitionVertex transition = new TransitionVertex(parent, id, value, x, y);
-        return transition;
+        
+        return new TransitionVertex(parent, id, value, x, y);
     };
 }
