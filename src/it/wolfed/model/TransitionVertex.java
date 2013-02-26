@@ -58,7 +58,7 @@ public class TransitionVertex extends Vertex
     public static TransitionVertex factory(Object parent, Node dom)
     {
         String id, value = "";
-        
+        Node graphicsGeometry = null;
         NamedNodeMap transitionAttributes = dom.getAttributes();
         
         id = transitionAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
@@ -73,10 +73,14 @@ public class TransitionVertex extends Vertex
                     case Constants.PNML_NAME:
                         value = childNode.getTextContent().trim();
                         break;
+                    case Constants.PNML_GRAPHICS:
+                        graphicsGeometry = childNode;
+                        break;
                 }
             }
         }
-
-        return new TransitionVertex(parent, id, value);
+        TransitionVertex transition = new TransitionVertex(parent, id, value);
+        transition.setGraphics(graphicsGeometry);
+        return transition;
     };
 }
