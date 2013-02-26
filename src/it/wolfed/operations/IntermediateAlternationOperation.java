@@ -8,18 +8,17 @@ import java.util.List;
 
 public class IntermediateAlternationOperation extends Operation
 {
-    private PlaceVertex intermediatePlace;
-    private final List<ExtendedGraph> extendedGraphs;
-    private Vertex initialTransitionAsN0;
-    private Vertex finalTransitionAsN0;
-    private Vertex initialTransitionAsN1;
-    private Vertex finalTransitionAsN1;
-    private PlaceVertex intermediatePlaceWithoutToken;
+    protected PlaceVertex intermediatePlace;
+    protected final List<IterationOperation> extendedGraphs;
+    protected Vertex initialTransitionAsN0;
+    protected Vertex finalTransitionAsN0;
+    protected Vertex initialTransitionAsN1;
+    protected Vertex finalTransitionAsN1;
     
-    public IntermediateAlternationOperation(String operationName, List<PetriNetGraph> inputGraphs, List<ExtendedGraph> extendedGraphs) throws Exception {
+    public IntermediateAlternationOperation(String operationName, List<PetriNetGraph> inputGraphs, List<IterationOperation> extendedGraphs) throws Exception {
         super(operationName, inputGraphs, 2, true);
         this.extendedGraphs = extendedGraphs;
-        compose();
+        createIntermediateGraph();
     }
 
     @Override
@@ -27,20 +26,21 @@ public class IntermediateAlternationOperation extends Operation
     {
         
     }
-
-    private void compose() {
+    
+    
+    private void createIntermediateGraph() {
         intermediatePlace = getOperationGraph().insertPlace("Palce_Token");
         intermediatePlace.setTokens(1);
         
-        ExtendedGraph net0 = extendedGraphs.get(0);
-        ExtendedGraph net1 = extendedGraphs.get(1);
+        IterationOperation net0 = extendedGraphs.get(0);
+        IterationOperation net1 = extendedGraphs.get(1);
         
+        initialTransitionAsN0 = getEquivalentVertex(net0.getOperationGraph(), net0.initialTransition);
         initialTransitionAsN0 = getOperationGraph().getVertexById("n0_"+net0.initialTransition.getId());
         finalTransitionAsN0 = getOperationGraph().getVertexById("n0_"+net0.finalTransition.getId());
         
         initialTransitionAsN1 = getOperationGraph().getVertexById("n1_"+net1.initialTransition.getId());
         finalTransitionAsN1 = getOperationGraph().getVertexById("n1_"+net1.finalTransition.getId());
-        
         
         getOperationGraph().insertArc(null, finalTransitionAsN0, intermediatePlace);
         getOperationGraph().insertArc(null, intermediatePlace, initialTransitionAsN1);
@@ -48,21 +48,6 @@ public class IntermediateAlternationOperation extends Operation
         insertInitialPattern();
         insertFinalPattern();
     }
-
-        PetriNetGraph alternation() {
-
-        getOperationGraph().insertArc(null, intermediatePlace, initialTransitionAsN0);
-        getOperationGraph().insertArc(null, finalTransitionAsN1, intermediatePlace);
-        return getOperationGraph();
-    }
-
-    PetriNetGraph mutualExclusion() {
-        intermediatePlaceWithoutToken = getOperationGraph().insertPlace("Palce_No_Token");
-        getOperationGraph().insertArc(null, intermediatePlaceWithoutToken, initialTransitionAsN0);
-        getOperationGraph().insertArc(null, finalTransitionAsN1, intermediatePlaceWithoutToken);
-        return getOperationGraph();
-    }
-    
     
     private void insertInitialPattern()
     {

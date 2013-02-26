@@ -9,10 +9,11 @@ public class ZeroOrMoreIterationOperation extends IterationOperation
 {
     public ZeroOrMoreIterationOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("zero_or_more", inputGraphs);
+        super("zeroOrMore", inputGraphs);
+        compose();
     }
 
-    @Override
+    
     void compose()
     {
         TransitionVertex intermediateTransition = getOperationGraph().insertTransition(null);

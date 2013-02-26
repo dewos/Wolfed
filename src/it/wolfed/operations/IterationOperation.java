@@ -6,7 +6,7 @@ import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.List;
 
-public abstract class IterationOperation extends Operation
+public class IterationOperation extends Operation
 {
     protected TransitionVertex initialTransition;
     protected TransitionVertex finalTransition;
@@ -23,15 +23,8 @@ public abstract class IterationOperation extends Operation
     {
         insertInitialPattern();
         insertFinalPattern();
-        compose();
     }
 
-    /**
-     * Il processo che modifica il grafo dell'operazione.
-     *
-     * @return void
-     */
-    abstract void compose();
 
     private void insertInitialPattern()
     {

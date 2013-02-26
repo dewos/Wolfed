@@ -10,7 +10,7 @@ public class ParallelismOperation extends Operation
 {
     public ParallelismOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("parr", inputGraphs, 2, true);
+        super("par", inputGraphs, 2, true);
     }
     
     /*

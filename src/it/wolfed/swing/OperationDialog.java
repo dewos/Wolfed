@@ -1,6 +1,7 @@
 package it.wolfed.swing;
 
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.operations.IterationOperation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +21,9 @@ public class OperationDialog extends JDialog
     private WolfedEditor editor;
     private List<PetriNetGraph> selectedGraphs;
     private int requiredGraphs;
-
+    // for Alternation and MutualExclusion operations
+    private List<IterationOperation> inputExtendedNetAlternation;
+    private List<PetriNetGraph> inputNetAlternation;
     /**
      * 
      * @todo  refactor this
@@ -118,5 +121,36 @@ public class OperationDialog extends JDialog
         mainWindow.add(selectButton, BorderLayout.PAGE_END);
 
         return mainWindow;
+    }
+    
+    /**
+     * create esxtendedGraphs for Alternation and MutualExcusion Operations
+     * @throws Exception 
+     */
+    void setExtendedGraph() throws Exception{
+        List<PetriNetGraph> inputNet = new ArrayList<>();
+            inputNet.add(getSelectedGraphs().get(0));
+            
+            List<PetriNetGraph> inputNet2 = new ArrayList<>();
+            inputNet2.add(getSelectedGraphs().get(1));
+            
+            IterationOperation extendedGraph1 = new IterationOperation("", inputNet);
+            IterationOperation extendedGraph2 = new IterationOperation("", inputNet2);
+    
+            inputNetAlternation = new ArrayList<>();
+            inputNetAlternation.add(extendedGraph1.getOperationGraph());
+            inputNetAlternation.add(extendedGraph2.getOperationGraph());
+            
+            
+            inputExtendedNetAlternation = new ArrayList<>();
+            inputExtendedNetAlternation.add(extendedGraph1);
+            inputExtendedNetAlternation.add(extendedGraph2);
+    }
+    
+    List<PetriNetGraph> getInputGraphs(){
+        return inputNetAlternation;
+    }
+    List<IterationOperation> getExtendedSelectedGraphs(){
+        return inputExtendedNetAlternation;
     }
 }

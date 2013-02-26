@@ -5,9 +5,10 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
-import it.wolfed.operations.AlternatioAndMutualExclusionOperation;
+import it.wolfed.operations.AlternationOperation;
 import it.wolfed.operations.DefferedChoiceOperation;
 import it.wolfed.operations.ExplicitChoiceOperation;
+import it.wolfed.operations.MutualExclusionOperation;
 import it.wolfed.operations.OneOrMoreIterationOperation;
 import it.wolfed.operations.OneServePerTimeOperation;
 import it.wolfed.operations.ParallelismOperation;
@@ -162,7 +163,12 @@ public class WolfedEditor extends JFrame
         try
         {
             // Sets system look
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                }
+            }
             
             // Force fullScreen
             Toolkit tk = Toolkit.getDefaultToolkit();
@@ -211,7 +217,7 @@ public class WolfedEditor extends JFrame
      */
     public void openFile()
     {
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(".");
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fc.setCurrentDirectory(new File("nets"));
 
@@ -288,8 +294,10 @@ public class WolfedEditor extends JFrame
             switch (operationName)
             {
                 case Constants.OPERATION_ALTERNATION:
-                    selectionBox = new OperationDialog(this, 1);
-                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
+                     selectionBox = new OperationDialog(this, 1);
+                    
+                    selectionBox.setExtendedGraph();
+                    opGraph = (new AlternationOperation(selectionBox.getInputGraphs(), selectionBox.getExtendedSelectedGraphs())).getOperationGraph();
                     break;
                     
                 case Constants.OPERATION_DEFFEREDCHOICE:
@@ -315,8 +323,9 @@ public class WolfedEditor extends JFrame
                     break;
                     
                 case Constants.OPERATION_MUTUALEXCLUSION:
-                    selectionBox = new OperationDialog(this, 1);
-                    opGraph = (new AlternatioAndMutualExclusionOperation(operationName, selectionBox.getSelectedGraphs())).getOperationGraph();
+                   selectionBox = new OperationDialog(this, 1);
+                    selectionBox.setExtendedGraph();
+                    opGraph = (new MutualExclusionOperation(selectionBox.getInputGraphs(), selectionBox.getExtendedSelectedGraphs())).getOperationGraph();
                     break;
                     
                 case Constants.OPERATION_PARALLELISM:

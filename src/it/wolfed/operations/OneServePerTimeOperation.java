@@ -8,10 +8,10 @@ public class OneServePerTimeOperation extends IterationOperation
 {
     public OneServePerTimeOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("one_x_time", inputGraphs);
+        super("onePerTime", inputGraphs);
+        compose();
     }
 
-    @Override
     void compose()
     {
         PlaceVertex tokenedPlace = getOperationGraph().insertPlace(null);

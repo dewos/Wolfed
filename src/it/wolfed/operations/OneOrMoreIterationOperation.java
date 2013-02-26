@@ -9,10 +9,11 @@ public class OneOrMoreIterationOperation extends IterationOperation
 {
     public OneOrMoreIterationOperation(List<PetriNetGraph> inputGraphs) throws Exception
     {
-        super("one_or_more", inputGraphs);
+        super("oneOrMore", inputGraphs);
+        compose();
     }
 
-    @Override
+    
     void compose()
     {
         TransitionVertex intermediateTransition = getOperationGraph().insertTransition(null);
