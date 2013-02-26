@@ -1,7 +1,6 @@
 
 package it.wolfed.model;
 
-import com.mxgraph.model.mxGeometry;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.NamedNodeMap;
@@ -24,15 +23,17 @@ public class PlaceVertex extends Vertex
      * 
      * @param parent
      * @param id
-     * @param value 
+     * @param value
+     * @param x
+     * @param y  
      */
-    public PlaceVertex(Object parent, String id, Object value)
+    public PlaceVertex(Object parent, String id, Object value, double x, double y)
     {
         super(
             parent,
             id,
             value,
-            0, 0, 40, 40,
+            x, y, 40, 40,
             Constants.STYLE_PLACE
         );
     }
@@ -66,11 +67,12 @@ public class PlaceVertex extends Vertex
     {
         String id, value = "";
         int tokens = 0;
-        Node graphicsGeometry = null;
+        double x = 0, y = 0;
+        
         NamedNodeMap placeAttributes = dom.getAttributes();
         id = placeAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
 
-        for (final org.w3c.dom.Node childNode : new IterableNodeList(dom.getChildNodes()))
+        for (final Node childNode : new IterableNodeList(dom.getChildNodes()))
         {
             if (childNode.getNodeType() == Node.ELEMENT_NODE)
             {
@@ -85,16 +87,36 @@ public class PlaceVertex extends Vertex
                     case Constants.PNML_INITIALMARKING:
                         tokens = Integer.parseInt(childNode.getTextContent().trim());
                         break;
+                    
+                    /** Set the geometric aspect of the Vertex
+                    *  <graphics> 
+                    *       <position x="200" y="70"/>
+                    * 	    <dimension x="40" y="40"/> 
+                    * 	</graphics> 
+                    */
                     case Constants.PNML_GRAPHICS:
-                        graphicsGeometry = childNode;
-                        break;
+                        
+                        for (final Node graphNode : new IterableNodeList(childNode.getChildNodes()))
+                        {
+                            if (graphNode.getNodeType() == Node.ELEMENT_NODE)
+                            {
+                                switch(graphNode.getNodeName())
+                                {
+                                    case Constants.PNML_GRAPHICS_POSITION :
+                                        x = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_X).getNodeValue());
+                                        y = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_Y).getNodeValue());
+                                    break;
+                                }
+                            }
+                        }
+                        
+                    break;
                 }
             }
         }
 
-        PlaceVertex place = new PlaceVertex(parent, id, value);
+        PlaceVertex place = new PlaceVertex(parent, id, value, x, y);
         place.setTokens(tokens);
-        place.setGraphics(graphicsGeometry);
         return place;
     };
     

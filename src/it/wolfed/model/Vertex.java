@@ -35,42 +35,4 @@ abstract public class Vertex extends mxCell
         setVertex(true);
         setConnectable(true);
     }
-    /**
-     * Set the geometric aspect of the Vertex
-     *  <graphics> 
-     *      <position x="200" y="70"/>
-     * 	    <dimension x="40" y="40"/> 
-     * 	</graphics> 
-     * @param graphics 
-     */
-    public void setGraphics(Node graphics){
-        if(graphics == null) {
-            setGeometry(new mxGeometry(0, 0, 40, 40));
-        }
-        else{
-
-        for (final Node childNode : new IterableNodeList(graphics.getChildNodes()))
-        {
-            if (childNode.getNodeType() == Node.ELEMENT_NODE)
-            {
-                switch (childNode.getNodeName())
-                {
-                    case Constants.PNML_GRAPHICS_POSITION:
-                        NamedNodeMap positionAttributes = childNode.getAttributes();
-                        getGeometry().setX(Double.valueOf(positionAttributes.getNamedItem(Constants.PNML_GRAPHICS_DIMENSION_X).getNodeValue()));
-                        getGeometry().setY(Double.valueOf(positionAttributes.getNamedItem(Constants.PNML_GRAPHICS_DIMENSION_Y).getNodeValue()));
-                        
-                        break;
-                    case Constants.PNML_GRAPHICS_DIMENSION:
-                        NamedNodeMap dimensionAttributes = childNode.getAttributes();
-                        
-                        getGeometry().setWidth(Double.valueOf(dimensionAttributes.getNamedItem(Constants.PNML_GRAPHICS_DIMENSION_X).getNodeValue()));
-                        getGeometry().setHeight(Double.valueOf(dimensionAttributes.getNamedItem(Constants.PNML_GRAPHICS_DIMENSION_Y).getNodeValue()));
-                        break;
-                }
-                
-        }
-            }
-        }
-    }
 }

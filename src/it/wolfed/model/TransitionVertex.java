@@ -16,15 +16,17 @@ public class TransitionVertex extends Vertex
      * 
      * @param parent
      * @param id
-     * @param value 
+     * @param value
+     * @param x
+     * @param y
      */
-    public TransitionVertex(Object parent, String id, Object value)
+    public TransitionVertex(Object parent, String id, Object value, double x, double y)
     {
         super(
             parent,
             id,
             value,
-            0, 0, 40, 40,
+            x, y, 40, 40,
             Constants.STYLE_TRANSITION
         );
     }
@@ -58,7 +60,8 @@ public class TransitionVertex extends Vertex
     public static TransitionVertex factory(Object parent, Node dom)
     {
         String id, value = "";
-        Node graphicsGeometry = null;
+        double x = 0, y = 0;
+        
         NamedNodeMap transitionAttributes = dom.getAttributes();
         
         id = transitionAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
@@ -73,14 +76,34 @@ public class TransitionVertex extends Vertex
                     case Constants.PNML_NAME:
                         value = childNode.getTextContent().trim();
                         break;
+                        
+ /** Set the geometric aspect of the Vertex
+                    *  <graphics> 
+                    *       <position x="200" y="70"/>
+                    * 	    <dimension x="40" y="40"/> 
+                    * 	</graphics> 
+                    */
                     case Constants.PNML_GRAPHICS:
-                        graphicsGeometry = childNode;
-                        break;
+                        
+                        for (final Node graphNode : new IterableNodeList(childNode.getChildNodes()))
+                        {
+                            if (graphNode.getNodeType() == Node.ELEMENT_NODE)
+                            {
+                                switch(graphNode.getNodeName())
+                                {
+                                    case Constants.PNML_GRAPHICS_POSITION :
+                                        x = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_X).getNodeValue());
+                                        y = Double.valueOf(graphNode.getAttributes().getNamedItem(Constants.PNML_GRAPHICS_POSITION_Y).getNodeValue());
+                                    break;
+                                }
+                            }
+                        }
+                        
+                    break;
                 }
             }
         }
-        TransitionVertex transition = new TransitionVertex(parent, id, value);
-        transition.setGraphics(graphicsGeometry);
+        TransitionVertex transition = new TransitionVertex(parent, id, value, x, y);
         return transition;
     };
 }

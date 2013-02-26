@@ -105,11 +105,11 @@ public abstract class Operation
 
                 if(cell instanceof PlaceVertex)
                 {
-                    clone = new PlaceVertex(parent, getPrefix(net) + cell.getId(), cell.getValue());
+                    clone = new PlaceVertex(parent, getPrefix(net) + cell.getId(), cell.getValue(), 0, 0);
                 } 
                 else if(cell instanceof TransitionVertex)
                 {
-                    clone = new TransitionVertex(parent, getPrefix(net) + cell.getId(), cell.getValue());
+                    clone = new TransitionVertex(parent, getPrefix(net) + cell.getId(), cell.getValue(), 0, 0);
                 }
                 else if(cell instanceof InterfaceVertex)
                 {

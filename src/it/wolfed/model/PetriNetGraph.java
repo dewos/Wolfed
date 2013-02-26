@@ -517,7 +517,7 @@ public class PetriNetGraph extends mxGraph
         String nextId = getSetNextPlaceId();
         
         id = (id == null) ? nextId : id;
-        PlaceVertex place = new PlaceVertex(getDefaultParent(), id, id);
+        PlaceVertex place = new PlaceVertex(getDefaultParent(), id, id, 0, 0);
         return (PlaceVertex) addCell(place);
     }
     
@@ -533,7 +533,7 @@ public class PetriNetGraph extends mxGraph
         String nextId = getSetNextTransitionId();
        
         id = (id == null) ? nextId : id;
-        TransitionVertex transition = new TransitionVertex(getDefaultParent(), id, id);
+        TransitionVertex transition = new TransitionVertex(getDefaultParent(), id, id, 0, 0);
         return (TransitionVertex) addCell(transition);
     }
     

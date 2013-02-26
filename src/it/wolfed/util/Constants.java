@@ -48,9 +48,9 @@ public class Constants
     public static final String PNML_TYPE                    = "type";
     public static final String PNML_GRAPHICS                = "graphics";
     public static final String PNML_GRAPHICS_POSITION       = "position";
-    public static final String PNML_GRAPHICS_DIMENSION      = "dimension";
-    public static final String PNML_GRAPHICS_DIMENSION_X    = "x";
-    public static final String PNML_GRAPHICS_DIMENSION_Y    = "y";
+    public static final String PNML_GRAPHICS_POSITION_X     = "x";
+    public static final String PNML_GRAPHICS_POSITION_Y     = "y";
+    
 //    public static final String NAMED_TARGET = "namedTarget";
 //    public static final String POSITION = "position";
 //    public static final String RESOURCES = "resources";

@@ -76,13 +76,13 @@ public class GraphComponent extends mxGraphComponent
                 {
                     PlaceVertex place = (PlaceVertex) source;
                     String id = getGraph().getSetNextTransitionId();
-                    clone = new TransitionVertex(place.getParent(), id, id);
+                    clone = new TransitionVertex(place.getParent(), id, id, 0, 0);
                 } 
                 else if (source instanceof TransitionVertex)
                 {
                     TransitionVertex transition = (TransitionVertex) source;
                     String id = getGraph().getSetNextPlaceId();
-                    clone = new PlaceVertex(transition.getParent(), id, id);
+                    clone = new PlaceVertex(transition.getParent(), id, id, 0, 0);
                 }
 
                 mxIGraphModel model = graph.getModel();
@@ -183,11 +183,13 @@ public class GraphComponent extends mxGraphComponent
             public void mousePressed(MouseEvent e) 
             {                
                 String id = getGraph().getSetNextPlaceId();
-                PlaceVertex place = new PlaceVertex(graph.getDefaultParent(), id, id);
-                
-                // Set location (-xy for center on mouseclick)
-                place.getGeometry().setX(e.getLocationOnScreen().getX() - 20);
-                place.getGeometry().setY(e.getLocationOnScreen().getY() - 100);
+                PlaceVertex place = new PlaceVertex(
+                        graph.getDefaultParent(),
+                        id,
+                        id,
+                        e.getLocationOnScreen().getX() - 20,
+                        e.getLocationOnScreen().getY() - 100
+                );
                 
                 graph.addCell(place);
             }
@@ -202,11 +204,15 @@ public class GraphComponent extends mxGraphComponent
             public void mousePressed(MouseEvent e) 
             {                
                 String id = getGraph().getSetNextTransitionId();
-                TransitionVertex transition = new TransitionVertex(graph.getDefaultParent(), id, id);
                 
-                // Set location (-xy for center on mouseclick)
-                transition.getGeometry().setX(e.getLocationOnScreen().getX() - 20);
-                transition.getGeometry().setY(e.getLocationOnScreen().getY() - 100);
+                TransitionVertex transition = new TransitionVertex(
+                        graph.getDefaultParent(), 
+                        id, 
+                        id, 
+                        e.getLocationOnScreen().getX() - 20,
+                        e.getLocationOnScreen().getY() - 100
+                );
+
                 
                 graph.addCell(transition);
             }
