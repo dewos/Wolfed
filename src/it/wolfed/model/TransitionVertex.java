@@ -77,14 +77,13 @@ public class TransitionVertex extends Vertex
                         value = childNode.getTextContent().trim();
                         break;
                         
- /** Set the geometric aspect of the Vertex
+                    /** Set the geometric aspect of the Vertex
                     *  <graphics> 
                     *       <position x="200" y="70"/>
                     * 	    <dimension x="40" y="40"/> 
                     * 	</graphics> 
                     */
                     case Constants.PNML_GRAPHICS:
-                        
                         for (final Node graphNode : new IterableNodeList(childNode.getChildNodes()))
                         {
                             if (graphNode.getNodeType() == Node.ELEMENT_NODE)
