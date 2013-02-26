@@ -8,6 +8,8 @@ import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operations.AlternationOperation;
 import it.wolfed.operations.DefferedChoiceOperation;
 import it.wolfed.operations.ExplicitChoiceOperation;
+import it.wolfed.operations.MergeGraphsOperation;
+import it.wolfed.operations.MergeInterfacesOperation;
 import it.wolfed.operations.MutualExclusionOperation;
 import it.wolfed.operations.OneOrMoreIterationOperation;
 import it.wolfed.operations.OneServePerTimeOperation;
@@ -88,6 +90,8 @@ public class WolfedEditor extends JFrame
         Constants.OPERATION_ITERATIONONESERVEPERTIME,
         Constants.OPERATION_ITERATIONZEROORMORE,
         Constants.OPERATION_MUTUALEXCLUSION,
+        Constants.OPERATION_MERGEGRAPHS,
+        Constants.OPERATION_MERGEINTERFACES,
         Constants.OPERATION_PARALLELISM,
         Constants.OPERATION_SEQUENCING
     };
@@ -331,6 +335,16 @@ public class WolfedEditor extends JFrame
                    selectionBox = new OperationDialog(this, 1);
                     selectionBox.setExtendedGraph();
                     opGraph = (new MutualExclusionOperation(selectionBox.getInputGraphs(), selectionBox.getExtendedSelectedGraphs())).getOperationGraph();
+                    break;
+                    
+                case Constants.OPERATION_MERGEGRAPHS:
+                    selectionBox = new OperationDialog(this, 1);
+                    opGraph = (new MergeGraphsOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    break;
+                    
+                case Constants.OPERATION_MERGEINTERFACES:
+                    selectionBox = new OperationDialog(this, 1);
+                    opGraph = (new MergeInterfacesOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
                     break;
                     
                 case Constants.OPERATION_PARALLELISM:

@@ -412,6 +412,30 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
+     * Get a vertex by his value.
+     * 
+     * @param  value
+     * @return Vertex
+     */
+    public Vertex getVertexByValue(Object value)
+    {
+        for (Object objVertex : getChildVertices())
+        {
+            if (objVertex instanceof Vertex)
+            {
+                Vertex vertex = (Vertex) objVertex;
+
+                if (vertex.getValue().equals(value))
+                {
+                    return vertex;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * Get the initial places of the graph.
      * 
      * An initial place is a place with:
