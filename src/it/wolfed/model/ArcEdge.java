@@ -18,16 +18,6 @@ import org.w3c.dom.Node;
 public class ArcEdge extends Edge
 {
     /**
-     * Source mapping of PNML file.
-     */
-    private String sourceId;
-    
-    /**
-     * Target mapping of PNML file.
-     */
-    private String targetId;
-    
-    /**
      * {@link ArcEdge} Constructor. 
      * 
      * @param parent
@@ -62,9 +52,10 @@ public class ArcEdge extends Edge
      * 
      * @param parent
      * @param dom
+     * @param graph 
      * @return ArcEdge
      */
-    public static ArcEdge factory(Object parent, Node dom)
+    public static ArcEdge factory(Object parent, Node dom, PetriNetGraph graph)
     {
         NamedNodeMap transitionAttributes = dom.getAttributes();
         String id = transitionAttributes.getNamedItem(Constants.PNML_ID)
@@ -77,49 +68,9 @@ public class ArcEdge extends Edge
                         .getNodeValue();
         
         ArcEdge arc = new ArcEdge(parent, id, null);
+        arc.setSource(graph.getVertexById(sourceId));
+        arc.setTarget(graph.getVertexById(targetId));
         
-        arc.setTargetId(targetId);
-        arc.setSourceId(sourceId);
         return arc;
     };
-    
-    /**
-     * Gets Pnml source;
-     * 
-     * @return String
-     */
-    public String getSourceId()
-    {
-        return sourceId;
-    }
-    
-    /**
-     * Sets Pnml source.
-     * 
-     * @param sourceId 
-     */
-    public void setSourceId(String sourceId)
-    {
-        this.sourceId = sourceId;
-    }
-
-    /**
-     * Gets Pnml target.
-     * 
-     * @return String
-     */
-    public String getTargetId()
-    {
-        return targetId;
-    }
-
-    /**
-     * Sets Pnml target.
-     * 
-     * @param targetId 
-     */
-    public void setTargetId(String targetId)
-    {
-        this.targetId = targetId;
-    }
 }

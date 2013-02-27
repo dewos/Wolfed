@@ -193,10 +193,8 @@ public class PetriNetGraph extends mxGraph
                             break;
 
                         case Constants.PNML_ARC:
-                            ArcEdge arc = ArcEdge.factory(parent, elementNode);
-                            Vertex source = graph.getVertexById(arc.getSourceId());
-                            Vertex target = graph.getVertexById(arc.getTargetId());
-                            graph.addEdge(arc, parent, source, target, null);
+                            graph.addCell(ArcEdge.factory(parent, elementNode, graph));
+                            graph.getSetNextArcId();
                             break;
                     }
                 }
@@ -592,9 +590,6 @@ public class PetriNetGraph extends mxGraph
        
         id = (id == null) ? nextId : id;
         ArcEdge edge = new ArcEdge(getDefaultParent(), id, "");
-        edge.setSourceId(source.getId());
-        edge.setTargetId(target.getId());
-        
         return (ArcEdge) addEdge(edge, getDefaultParent(), source, target, null);
     }
     
