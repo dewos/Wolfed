@@ -253,6 +253,8 @@ public class WolfedEditor extends JFrame {
         try {
             switch (operationName) {
                 case Constants.OPERATION_ALTERNATION: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operationsRefactored.AlternationOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     break;
                 }
 
@@ -269,18 +271,23 @@ public class WolfedEditor extends JFrame {
                 }
 
                 case Constants.OPERATION_ITERATIONONEORMORE: {
+                    operation = new it.wolfed.operationsRefactored.OneOrMoreIterationOperation(operationGraph, getSelectedGraph());
                     break;
                 }
 
                 case Constants.OPERATION_ITERATIONONESERVEPERTIME: {
+                    operation = new it.wolfed.operationsRefactored.OneServePerTimeOperation(operationGraph, getSelectedGraph());
                     break;
                 }
 
                 case Constants.OPERATION_ITERATIONZEROORMORE: {
+                    operation = new it.wolfed.operationsRefactored.ZeroOrMoreIterationOperation(operationGraph, getSelectedGraph());
                     break;
                 }
 
                 case Constants.OPERATION_MUTUALEXCLUSION: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operationsRefactored.MutualExclusionOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     break;
                 }
 
@@ -313,6 +320,7 @@ public class WolfedEditor extends JFrame {
             insertGraph(operationGraph.getId(), operationGraph);
             executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
         } catch (Exception ex) {
+            ex.printStackTrace();
             showErrorMessage(ex.getMessage());
         }
 

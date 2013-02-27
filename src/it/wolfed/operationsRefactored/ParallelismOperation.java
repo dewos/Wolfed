@@ -1,6 +1,5 @@
 package it.wolfed.operationsRefactored;
 
-import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
