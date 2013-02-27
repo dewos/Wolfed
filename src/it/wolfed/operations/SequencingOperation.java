@@ -27,13 +27,7 @@ public class SequencingOperation extends Operation
             mxCell edge = (mxCell) edgeOjb;
             getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), (Vertex) initialPlaceAsN1);
         }
-
-        // Elimina gli archi e la final place della rete 2
-        for(Object edgeObj : getOperationGraph().getEdges(finalPlaceAsN0))
-        {
-            getOperationGraph().getModel().remove(edgeObj);
-        }
-
-        getOperationGraph().getModel().remove(finalPlaceAsN0);
+        
+        removeVertexAndHisEdges(finalPlaceAsN0);
     }
 }

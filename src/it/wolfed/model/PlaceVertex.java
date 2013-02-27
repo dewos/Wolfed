@@ -19,7 +19,7 @@ public class PlaceVertex extends Vertex
     private int tokens = 0;
     
     /**
-     * PlaceVertex Constructor.
+     * {@link PlaceVertex} Constructor.
      * 
      * @param parent
      * @param id
@@ -57,7 +57,6 @@ public class PlaceVertex extends Vertex
      * 	</initialMarking> 
      * </place>
      * 
-     * 
      * @param parent
      * @param dom
      * @return  PlaceVertex
@@ -69,8 +68,7 @@ public class PlaceVertex extends Vertex
         int tokens = 0;
         double x = 0, y = 0;
         
-        NamedNodeMap placeAttributes = dom.getAttributes();
-        id = placeAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
+        id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getNodeValue();
 
         for (final Node childNode : new IterableNodeList(dom.getChildNodes()))
         {
@@ -92,7 +90,9 @@ public class PlaceVertex extends Vertex
                         break;
                     }
                     
-                    /** Set the geometric aspect of the Vertex
+                    /** 
+                    * Set the geometric aspect of the Vertex
+                    * 
                     *  <graphics> 
                     *       <position x="200" y="70"/>
                     * 	    <dimension x="40" y="40"/> 
@@ -138,7 +138,7 @@ public class PlaceVertex extends Vertex
     }
     
     /**
-     * Get place token number.
+     * Get place tokens number.
      * 
      * @return the tokens
      */

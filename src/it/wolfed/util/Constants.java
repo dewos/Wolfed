@@ -26,8 +26,10 @@ public class Constants
     public static final String OPERATION_ITERATIONONEORMORE         = "IterationOneOrMore";
     public static final String OPERATION_ITERATIONONESERVEPERTIME   = "IterationOneServePerTime";
     public static final String OPERATION_ITERATIONZEROORMORE        = "IterationZeroOrMore";
-    public static final String OPERATION_PARALLELISM                = "Parallelism";
+    public static final String OPERATION_MERGEGRAPHS                = "MergeGraphs";
+    public static final String OPERATION_MERGEINTERFACES            = "MergeInterfaces";
     public static final String OPERATION_MUTUALEXCLUSION            = "MutualExclusion";
+    public static final String OPERATION_PARALLELISM                = "Parallelism";
     
     // Layouts
     public static final String LAYOUT_VERTICALTREE          = "VerticalTree";

@@ -154,6 +154,20 @@ public abstract class Operation
     }
     
     /**
+     * 
+     * @param vertex 
+     */
+    protected void removeVertexAndHisEdges(Vertex vertex)
+    {
+        for(Object edgeObj : getOperationGraph().getEdges(vertex))
+        {
+            getOperationGraph().getModel().remove(edgeObj);
+        }
+
+        getOperationGraph().getModel().remove(vertex);
+    }
+    
+    /**
      * Ottiene il prefisso del grafo di input.
      * 
      * @param inputGraph

@@ -79,7 +79,9 @@ public class TransitionVertex extends Vertex
                         break;
                     }
                         
-                    /** Set the geometric aspect of the Vertex
+                    /** 
+                    * Set the geometric aspect of the Vertex
+                    * 
                     *  <graphics> 
                     *       <position x="200" y="70"/>
                     * 	    <dimension x="40" y="40"/> 
