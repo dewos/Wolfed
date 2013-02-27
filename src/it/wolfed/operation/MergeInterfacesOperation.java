@@ -52,6 +52,8 @@ public class MergeInterfacesOperation extends Operation
     @Override
     void process() throws Exception
     {
+        int countInterfaces = 0;
+        
         // Finds all interfaces in first
         for(Object cellObj : firstGraph.getChildVertices())
         {
@@ -63,6 +65,8 @@ public class MergeInterfacesOperation extends Operation
                 // Matching exists?
                 if(interfSecond != null)
                 {
+                    countInterfaces++;
+                    
                     // Matching first and second found! Merge the same interface in op
                     Vertex interfAsFirst = getEquivalentVertex(1, interfFirst);
                     Vertex interfAsSecond = getEquivalentVertex(2, interfSecond);
@@ -79,7 +83,14 @@ public class MergeInterfacesOperation extends Operation
             }
         }
         
-        // Make System
-        operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        if(countInterfaces > 0)
+        {
+            // Make System
+            operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        }
+        else
+        {
+            throw new Exception("No common interfaces found in the two graphs.");
+        }
     }
 }
