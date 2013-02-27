@@ -286,7 +286,7 @@ public class WolfedEditor extends JFrame
     public void executeOperation(String operationName)
     {
         Operation operation = null;
-        PetriNetGraph operationGraph = new PetriNetGraph("new_" + openedGraphs.size());
+        PetriNetGraph operationGraph = new PetriNetGraph("new_" + (openedGraphs.size() + 1));
 
         try
         { 
@@ -361,7 +361,7 @@ public class WolfedEditor extends JFrame
             operationGraph = operation.getOperationGraph();
             insertGraph(operationGraph.getId(), operationGraph);
             executeLayout(operationGraph, Constants.LAYOUT_HORIZONTALTREE);
-        } 
+        }
         catch (Exception ex)
         {
             showErrorMessage(ex.getMessage());
