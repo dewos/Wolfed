@@ -1,6 +1,5 @@
 package it.wolfed.operation;
 
-import com.mxgraph.model.mxCell;
 import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
@@ -31,11 +30,29 @@ public class MergeInterfacesOperation extends Operation
    
     /**
      * Process Merge Interfaces.
+     * 
+     * FistGraph:      
+     *                 I1
+     *                  ^
+     *                  |
+     *            P1 -> T1 -> P2
+     * 
+     * -------------------------
+     * 
+     * SecondGraph:
+     * 
+     *            P3 -> T2 -> P3
+     *                  |
+     *                  I1
+     * 
+     * -------------------------
+     * ResultGraph:
+     * 
      */
     @Override
     void process() throws Exception
     {
-        // Finds all interfaces in n0
+        // Finds all interfaces in first
         for(Object cellObj : firstGraph.getChildVertices())
         {
             if(cellObj instanceof InterfaceVertex)
@@ -47,21 +64,22 @@ public class MergeInterfacesOperation extends Operation
                 if(interfSecond != null)
                 {
                     // Matching first and second found! Merge the same interface in op
-                    Vertex interfAsN0 = getEquivalentVertex(1, interfFirst);
-                    Vertex interfAsN1 = getEquivalentVertex(2, interfSecond);
+                    Vertex interfAsFirst = getEquivalentVertex(1, interfFirst);
+                    Vertex interfAsSecond = getEquivalentVertex(2, interfSecond);
                     
                     // Mirror a place instead the interface
-                    PlaceVertex placeInterf = getOperationGraph().insertPlace((String) interfFirst.getValue());
-                    cloneEdges(interfAsN0, placeInterf);
-                    cloneEdges(interfAsN1, interfAsN1);
+                    PlaceVertex placeInterf = operationGraph.insertPlace((String) interfFirst.getValue());
+                    cloneIncomingEdges(interfAsFirst, placeInterf);
+                    cloneEdges(interfAsSecond, interfAsSecond);
 
                     // Remove
-                    getOperationGraph().getModel().remove(interfAsN0);
-                    getOperationGraph().getModel().remove(interfAsN1);
+                    removeVertexAndHisEdges(interfAsFirst);
+                    removeVertexAndHisEdges(interfAsSecond);
                 }
-                
-                operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
             }
         }
+        
+        // Make System
+        operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
     }
 }

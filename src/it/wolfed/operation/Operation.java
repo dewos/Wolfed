@@ -124,10 +124,10 @@ abstract public class Operation
      */
     protected void cloneIncomingEdges(Vertex from, Vertex to)
     {
-        for(Object edgeOjb : getOperationGraph().getIncomingEdges(from))
+        for(Object edgeOjb : operationGraph.getIncomingEdges(from))
         {
             mxCell edge = (mxCell) edgeOjb;
-            getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), (Vertex) to);
+            operationGraph.insertArc(edge.getId(), (Vertex) edge.getSource(), (Vertex) to);
         }
     }
     
@@ -139,10 +139,10 @@ abstract public class Operation
      */
     protected void cloneOutgoingEdges(Vertex from, Vertex to)
     {
-        for(Object edgeOjb : getOperationGraph().getOutgoingEdges(from))
+        for(Object edgeOjb : operationGraph.getOutgoingEdges(from))
         {
             mxCell edge = (mxCell) edgeOjb;
-            getOperationGraph().insertArc(edge.getId(), (Vertex) to, (Vertex) edge.getTarget());
+            operationGraph.insertArc(edge.getId(), (Vertex) to, (Vertex) edge.getTarget());
         }
     }
     
