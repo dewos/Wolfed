@@ -182,7 +182,7 @@ public class WolfedEditor extends JFrame
         } 
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
         {
-            showErrorMessage(ex.getMessage());
+            showErrorMessage(ex);
         }
     }
 
@@ -259,7 +259,7 @@ public class WolfedEditor extends JFrame
         } 
         catch (ParserConfigurationException | SAXException | IOException ex)
         {
-            showErrorMessage(ex.getMessage());
+            showErrorMessage(ex);
         }
     }
 
@@ -271,7 +271,7 @@ public class WolfedEditor extends JFrame
      */
     public void saveFile(PetriNetGraph graph)
     {
-         showErrorMessage("Not supported yet");
+
     }
 
     /**
@@ -364,7 +364,7 @@ public class WolfedEditor extends JFrame
         }
         catch (Exception ex)
         {
-            showErrorMessage(ex.getMessage());
+            showErrorMessage(ex);
         }
     }
     
@@ -406,15 +406,15 @@ public class WolfedEditor extends JFrame
     /**
      * Shows an error message.
      * 
-     * @param text 
+     * @param ex 
      */
-    public void showErrorMessage(String text)
+    public void showErrorMessage(Exception ex)
     {
         JOptionPane.showMessageDialog(this,
-            text,
+            ex.getMessage(),
             "Error",
             JOptionPane.ERROR_MESSAGE);
         
-        System.err.println(text);
+        System.err.println(ex.getStackTrace());
     }
 }

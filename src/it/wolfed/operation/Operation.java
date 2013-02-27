@@ -10,7 +10,7 @@ import it.wolfed.util.Constants;
  * Basic Operation Class.
  * 
  * A base class that trigger and execute all operation with some handy
- * shortcut methods for all the common editing action.
+ * shortcut methods for all the common editing actions.
  */
 abstract public class Operation
 {
@@ -31,6 +31,7 @@ abstract public class Operation
     
     /**
      * Execute the specific operation process.
+     * @throws Exception 
      */
     protected void execute() throws Exception
     {
@@ -127,7 +128,7 @@ abstract public class Operation
         for(Object edgeOjb : operationGraph.getIncomingEdges(from))
         {
             mxCell edge = (mxCell) edgeOjb;
-            operationGraph.insertArc(edge.getId(), (Vertex) edge.getSource(), (Vertex) to);
+            operationGraph.insertArc(edge.getId(), (Vertex) edge.getSource(), to);
         }
     }
     
@@ -142,7 +143,7 @@ abstract public class Operation
         for(Object edgeOjb : operationGraph.getOutgoingEdges(from))
         {
             mxCell edge = (mxCell) edgeOjb;
-            operationGraph.insertArc(edge.getId(), (Vertex) to, (Vertex) edge.getTarget());
+            operationGraph.insertArc(edge.getId(), to, (Vertex) edge.getTarget());
         }
     }
     
