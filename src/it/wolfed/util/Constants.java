@@ -2,6 +2,8 @@ package it.wolfed.util;
 
 public class Constants 
 {
+    // Editor
+
     // Styles
     public static final String STYLE_TRANSITION             = "fillColor=white;";
     public static final String STYLE_TRANSITION_VALID       = "fillColor=white;strokeColor=green;";
@@ -19,6 +21,7 @@ public class Constants
     public static final String STYLE_INTERFACE              = "shape=doubleEllipse;fillColor=white;strokeColor=orange;";
     
     // Operations
+    public static final String OPERATION_PREFIX                     = "n";
     public static final String OPERATION_SEQUENCING                 = "Sequencing";
     public static final String OPERATION_ALTERNATION                = "Alternation";
     public static final String OPERATION_DEFFEREDCHOICE             = "DefferedChoice";

@@ -2,7 +2,7 @@ package it.wolfed.operations.refactored;
 
 import it.wolfed.swing.*;
 import it.wolfed.model.PetriNetGraph;
-import it.wolfed.operations.IterationOperation;
+import it.wolfed.operation.IterationOperation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -21,7 +21,7 @@ public class MergeGraphOperation extends Operation
     
 
     /**
-     * Shortcut for one input Graph.
+     * Clone all the cells from inputGraphs into operationGraph.
      * 
      * @param operationGraph
      * @param inputGraphs 

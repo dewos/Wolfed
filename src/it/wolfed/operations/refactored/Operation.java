@@ -4,6 +4,7 @@ package it.wolfed.operations.refactored;
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
+import it.wolfed.util.Constants;
 
 /**
  * Basic Operation Class.
@@ -82,15 +83,14 @@ abstract public class Operation
      */
     protected String getPrefix(int id)
     {
-        return "n" + id + "_";
+        return Constants.OPERATION_PREFIX + id + "_";
     }
     
     /**
-     * Cerca, nella rete operazionale, un vertice con lo stesso id 
-     * di quello di una rete diversa (valutando il prefisso).
+     * Search, in the {@link Operation#operationGraph}, the equivalent vertex from another graph.
      * 
-     * @param id 
-     * @param sameVertex    il vertice da cercare
+     * @param id            input graph prefix (first = 1, second = 2 etc...)
+     * @param sameVertex    vertex to search
      * @return 
      */
     public Vertex getEquivalentVertex(int id, Vertex sameVertex)
@@ -99,6 +99,7 @@ abstract public class Operation
     }
     
      /**
+     * Remove, in {@link Operation#operationGraph}, a vertex and his edges.
      * 
      * @param vertex 
      */
@@ -112,6 +113,12 @@ abstract public class Operation
         operationGraph.getModel().remove(vertex);
     }
     
+    /**
+     * Clone, in {@link Operation#operationGraph}, all incoming edges from a vertex to another.
+     * 
+     * @param from
+     * @param to 
+     */
     protected void cloneIncomingEdges(Vertex from, Vertex to)
     {
         for(Object edgeOjb : getOperationGraph().getIncomingEdges(from))
@@ -121,6 +128,12 @@ abstract public class Operation
         }
     }
     
+    /**
+     * Clone, in {@link Operation#operationGraph}, all outgoing edges from a vertex to another.
+     * 
+     * @param from
+     * @param to 
+     */
     protected void cloneOutgoingEdges(Vertex from, Vertex to)
     {
         for(Object edgeOjb : getOperationGraph().getOutgoingEdges(from))
@@ -130,6 +143,12 @@ abstract public class Operation
         }
     }
     
+    /**
+     * Clone, in {@link Operation#operationGraph}, all edges from a vertex to another.
+     * 
+     * @param from
+     * @param to 
+     */
     protected void cloneEdges(Vertex from, Vertex to)
     {
         cloneIncomingEdges(from, to);
