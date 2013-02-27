@@ -9,6 +9,7 @@ import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,46 +19,18 @@ public class MergeGraphOperation extends Operation
 {
     protected List<PetriNetGraph> inputGraphs;
     
-    /**
-     * Shortcut for two input Graphs.
-     * 
-     * @param operationGraph
-     * @param firstGraph
-     * @param secondGraph  
-     */
-    public MergeGraphOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph, PetriNetGraph secondGraph)
-    {
-        super(operationGraph);
-        inputGraphs = new ArrayList<>();
-        inputGraphs.add(firstGraph);
-        inputGraphs.add(secondGraph);
-        execute();
-    }
-    
+
     /**
      * Shortcut for one input Graph.
      * 
      * @param operationGraph
-     * @param firstGraph
-     */
-    public MergeGraphOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph)
-    {
-        super(operationGraph);
-        inputGraphs = new ArrayList<>();
-        inputGraphs.add(firstGraph);
-        execute();
-    }
-    
-    /**
-     * Merge n graphs in operationGraph;
-     * 
-     * @param operationGraph
      * @param inputGraphs 
      */
-    public MergeGraphOperation(PetriNetGraph operationGraph, List<PetriNetGraph> inputGraphs)
+    public MergeGraphOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs)
     {
         super(operationGraph);
-        this.inputGraphs = inputGraphs;
+        this.inputGraphs = new ArrayList<>();
+        this.inputGraphs.addAll(Arrays.asList(inputGraphs));
         execute();
     }
     
