@@ -2,6 +2,8 @@
 package it.wolfed.model;
 
 import it.wolfed.util.Constants;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -121,5 +123,21 @@ public class ArcEdge extends Edge
     public void setTargetId(String targetId)
     {
         this.targetId = targetId;
+    }
+
+    public Element exportPNML(Document doc) {
+        /*
+         * <arc id="a8" source="p4" target="t4">
+         */
+	Element arcAsXML = doc.createElement(Constants.PNML_ARC);
+	arcAsXML.setAttribute(Constants.PNML_ID, getId());
+	arcAsXML.setAttribute(Constants.PNML_SOURCE, getSourceId());
+	arcAsXML.setAttribute(Constants.PNML_TARGET, getTargetId());
+	return arcAsXML;
+    }
+
+    public String exportDOT() {
+        return "\n" + getSourceId() + " -> " + getTargetId() + ";";
+        
     }
 }

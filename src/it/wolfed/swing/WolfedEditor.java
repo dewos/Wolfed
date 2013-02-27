@@ -59,7 +59,10 @@ public class WolfedEditor extends JFrame
         Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
-
+    /**
+     * Specifies Editor Name
+     */
+    public static final String WOLFED_EDITOR_NAME = "WoLFEd";
     /**
      * Specifies current version.
      */
@@ -111,7 +114,7 @@ public class WolfedEditor extends JFrame
      */
     public WolfedEditor()
     { 
-        setTitle("Wolfed " + WolfedEditor.VERSION);
+        setTitle(WolfedEditor.WOLFED_EDITOR_NAME +" "+  WolfedEditor.VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
@@ -275,9 +278,13 @@ public class WolfedEditor extends JFrame
      * @param graph 
      * @todo
      */
-    public void saveFile(PetriNetGraph graph)
+    public void saveFile(String type)
     {
-         showErrorMessage("Not supported yet");
+        String exportedGraph = getSelectedGraph().export(type);
+        
+        System.out.println(exportedGraph);
+        
+        showErrorMessage("Not supported yet");
     }
 
     /**

@@ -3,6 +3,8 @@ package it.wolfed.model;
 
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -145,5 +147,67 @@ public class PlaceVertex extends Vertex
     public int getTokens()
     {
         return tokens;
+    }
+
+    public Element exportPNML(Document doc) {
+        /**
+	 *  <place id="p6">
+	 *      <name>
+	 *        <text>p6</text>
+	 *        <graphics>
+	 *          <offset x="650" y="110"/>
+	 *        </graphics>
+	 *      </name>
+	 *      <graphics>
+	 *        <position x="650" y="70"/>
+	 *        <dimension x="40" y="40"/>
+	 *      </graphics>
+	 *			
+	 *      <initialMarking>
+	 *        <text>2</text>
+	 *      </initialMarking>
+	 *    </place>
+	 */
+        Element placeAsXML = doc.createElement(Constants.PNML_PLACE);
+	placeAsXML.setAttribute(Constants.PNML_ID, getId());
+	Element nameAsXML = doc.createElement(Constants.PNML_NAME);
+	Element textAsXML = doc.createElement(Constants.PNML_TEXT);
+	textAsXML.setTextContent(getValue().toString());
+	nameAsXML.appendChild(textAsXML);
+	placeAsXML.appendChild(nameAsXML);
+	if(getTokens() > 0)
+        {
+            Element initialMarkingAsXML = doc.createElement(Constants.PNML_INITIALMARKING);
+            Element initialMarkingTextAsXML = doc.createElement(Constants.PNML_TEXT);
+            initialMarkingTextAsXML.setTextContent(String.valueOf(getTokens()));
+            initialMarkingAsXML.appendChild(initialMarkingTextAsXML);
+            placeAsXML.appendChild(initialMarkingAsXML);
+	}
+        return placeAsXML;
+    }
+
+   /**
+     * 
+     * @return 
+     */
+      public String exportDOT() {
+        
+          return "\n "+this.getId()+" [=\""+getValue().toString()+", shape=circle]; ";
+    }
+
+    public String exportDOT(int preSet, int postSet) {
+        StringBuilder dotBuilder = new StringBuilder();
+        String shape = "";
+        String color = " ]";
+        
+        dotBuilder.append("\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=");
+        
+        shape = (preSet != 0 || postSet != 0) ? "doublecircle ":"circle ";
+        color = (preSet > 0 ) ? ", color=\"green\" ]" : color;
+        color = (postSet > 0 ) ? ", color=\"red\" ]" : color;
+        
+        dotBuilder.append(shape);
+        dotBuilder.append(color);
+       return dotBuilder.toString();
     }
 }

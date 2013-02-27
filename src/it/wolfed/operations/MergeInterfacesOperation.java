@@ -68,9 +68,9 @@ public class MergeInterfacesOperation extends Operation
                         getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), placeInterf);
                     }
                     
-                    for(Object edgeOjb : getOperationGraph().getOutgoingEdges(interfAsN1))
+                    for(Object edgeObj : getOperationGraph().getOutgoingEdges(interfAsN1))
                     {
-                        mxCell edge = (mxCell) edgeOjb;
+                        mxCell edge = (mxCell) edgeObj;
                         getOperationGraph().insertArc(edge.getId(), placeInterf, (Vertex) edge.getTarget());
                     }
                     
