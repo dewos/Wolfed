@@ -7,13 +7,6 @@ import org.w3c.dom.Node;
 
 /**
  * Arcs are the edges type in a PetriNets.
- * 
- * Note: mxCell superclass force the setup of
- * the arc only AFTER the cell creation,
- * so sourceId and targetId are here only
- * for using them in the PetriNetGraph factory.
- *  
- * {@link PetriNetGraph#factory(org.w3c.dom.Node, java.lang.String)
  */
 public class ArcEdge extends Edge
 {
@@ -57,15 +50,9 @@ public class ArcEdge extends Edge
      */
     public static ArcEdge factory(Object parent, Node dom, PetriNetGraph graph)
     {
-        NamedNodeMap transitionAttributes = dom.getAttributes();
-        String id = transitionAttributes.getNamedItem(Constants.PNML_ID)
-                        .getNodeValue();
-        
-        String sourceId = transitionAttributes.getNamedItem(Constants.PNML_SOURCE)
-                             .getNodeValue();
-
-        String targetId = transitionAttributes.getNamedItem(Constants.PNML_TARGET)
-                        .getNodeValue();
+        String id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getNodeValue();
+        String sourceId = dom.getAttributes().getNamedItem(Constants.PNML_SOURCE).getNodeValue();
+        String targetId = dom.getAttributes().getNamedItem(Constants.PNML_TARGET).getNodeValue();
         
         ArcEdge arc = new ArcEdge(parent, id, null);
         arc.setSource(graph.getVertexById(sourceId));
