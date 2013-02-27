@@ -62,9 +62,7 @@ public class TransitionVertex extends Vertex
         String id, value = "";
         double x = 0, y = 0;
         
-        NamedNodeMap transitionAttributes = dom.getAttributes();
-        
-        id = transitionAttributes.getNamedItem(Constants.PNML_ID).getNodeValue();
+        id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getNodeValue();
 
         for (final Node childNode : new IterableNodeList(dom.getChildNodes()))
         {

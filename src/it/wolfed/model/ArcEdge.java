@@ -2,7 +2,6 @@
 package it.wolfed.model;
 
 import it.wolfed.util.Constants;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
