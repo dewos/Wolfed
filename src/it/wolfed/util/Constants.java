@@ -19,6 +19,7 @@ public class Constants
     public static final String STYLE_INTERFACE              = "shape=doubleEllipse;fillColor=white;strokeColor=orange;";
     
     // Operations
+    public static final String OPERATION_PREFIX                     = "n";
     public static final String OPERATION_SEQUENCING                 = "Sequencing";
     public static final String OPERATION_ALTERNATION                = "Alternation";
     public static final String OPERATION_DEFFEREDCHOICE             = "DefferedChoice";
@@ -59,8 +60,15 @@ public class Constants
     public static final String PNML_INTERFACES               = "interfaces"; 
     public static final String PNML_TOOL_SPECIFIC           = "toolspecific";
     public static final String PNML_TOOL                    = "tool";
-    public static final String PNML_TOOL_VERSION            = "version";
-    
+    public static final String WOLFED_EDITOR_VERSION        = "version";
+    /**
+     * Specifies Editor Name
+     */
+    public static final String WOLFED_EDITOR_NAME           = "WoLFEd";
+    /**
+     * Specifies current version.
+     */
+    public static final String WOLFED_EDITOR_VERSION_NUMBER = "0.9.9.0";
     public static final String WOLFED_EXPORT_DOT            = ".DOT";
     public static final String WOLFED_EXPORT_PNML           = ".PNML";
 //    public static final String NAMED_TARGET = "namedTarget";

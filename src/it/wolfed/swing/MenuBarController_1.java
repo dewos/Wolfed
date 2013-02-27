@@ -10,9 +10,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class MenuBarController extends JMenuBar
+public class MenuBarController_1 extends JMenuBar
 {   
-    public MenuBarController(final WolfedEditor editor)
+    public MenuBarController_1(final WolfedEditorCopyOne editor)
     {
         // File
         {

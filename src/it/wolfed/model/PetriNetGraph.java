@@ -687,8 +687,8 @@ public class PetriNetGraph extends mxGraph
             pnml.appendChild(netAsXML);
 
             Element toolSpecificAsXML = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
-            toolSpecificAsXML.setAttribute(Constants.PNML_TOOL, WolfedEditor.WOLFED_EDITOR_NAME);
-            toolSpecificAsXML.setAttribute(Constants.PNML_TOOL_VERSION, WolfedEditor.VERSION);
+            toolSpecificAsXML.setAttribute(Constants.PNML_TOOL, Constants.WOLFED_EDITOR_NAME);
+            toolSpecificAsXML.setAttribute(Constants.WOLFED_EDITOR_VERSION, Constants.WOLFED_EDITOR_VERSION_NUMBER);
 
             Element interfacesAsXML = doc.createElement(Constants.PNML_INTERFACES);
             toolSpecificAsXML.appendChild(interfacesAsXML);
@@ -722,10 +722,10 @@ public class PetriNetGraph extends mxGraph
             // add Transitions as PNML
             addElements(netAsXML, transitions);
             // add Edges as PNML
-            for (Object edgeObj : this.getChildEdges()) {
-                ArcEdge arcEdge = (ArcEdge) edgeObj;
-                netAsXML.appendChild(arcEdge.exportPNML(doc));
-            }
+//            for (Object edgeObj : this.getChildEdges()) {
+//                ArcEdge arcEdge = (ArcEdge) edgeObj;
+//                netAsXML.appendChild(arcEdge.exportPNML(doc));
+//            }
             
             
             
