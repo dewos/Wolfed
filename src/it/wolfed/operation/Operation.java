@@ -1,5 +1,5 @@
 
-package it.wolfed.operations;
+package it.wolfed.operation;
 
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
