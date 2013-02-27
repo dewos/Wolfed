@@ -58,7 +58,7 @@ public class WolfedEditor extends JFrame
     /**
      * Specifies current version.
      */
-    public static final String VERSION = "0.9.9.0";
+    public static final String VERSION = "0.9.9.2";
     
     /**
      * Holds opened graphs available in editor tabs.
