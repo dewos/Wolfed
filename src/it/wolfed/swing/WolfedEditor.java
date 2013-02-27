@@ -354,7 +354,10 @@ public class WolfedEditor extends JFrame
                     
                 case Constants.OPERATION_SEQUENCING:
                     selectionBox = new OperationDialog(this, 1);
-                    opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    //opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+                    
+                    it.wolfed.operations.refactored.Operation op = new it.wolfed.operations.refactored.SequencingOperation(new PetriNetGraph("new_1"), getSelectedGraph(), selectionBox.getSelectedGraphs().get(1));
+                    opGraph = op.getOperationGraph();
                     break;
             }
             
@@ -363,6 +366,7 @@ public class WolfedEditor extends JFrame
         } 
         catch (Exception ex)
         {
+            ex.printStackTrace();
             showErrorMessage(ex.getMessage());
         }
     }
