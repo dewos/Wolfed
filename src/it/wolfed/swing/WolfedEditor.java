@@ -409,6 +409,7 @@ public class WolfedEditor extends JFrame
      * 
      * @param ex 
      */
+    @SuppressWarnings("CallToThreadDumpStack")
     public void showErrorMessage(Exception ex)
     {
         JOptionPane.showMessageDialog(this,
@@ -416,6 +417,6 @@ public class WolfedEditor extends JFrame
             "Error",
             JOptionPane.ERROR_MESSAGE);
         
-        System.err.println(ex.getStackTrace());
+        ex.printStackTrace();
     }
 }
