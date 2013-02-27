@@ -7,6 +7,7 @@ import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operation.DefferedChoiceOperation;
 import it.wolfed.operation.MergeGraphsOperation;
+import it.wolfed.operation.MergeInterfacesOperation;
 import it.wolfed.operation.Operation;
 import it.wolfed.operation.ParallelismOperation;
 import it.wolfed.operation.SequencingOperation;
@@ -337,6 +338,8 @@ public class WolfedEditor extends JFrame
                     
                 case Constants.OPERATION_MERGEINTERFACES:
                 {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     break;
                 }
                     

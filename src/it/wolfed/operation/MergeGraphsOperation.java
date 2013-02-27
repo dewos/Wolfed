@@ -24,9 +24,10 @@ public class MergeGraphsOperation extends Operation
      * Clone all the cells from inputGraphs into operationGraph.
      * 
      * @param operationGraph
-     * @param inputGraphs 
+     * @param inputGraphs
+     * @throws Exception  
      */
-    public MergeGraphsOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs)
+    public MergeGraphsOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs) throws Exception
     {
         super(operationGraph);
         this.inputGraphs = new ArrayList<>();

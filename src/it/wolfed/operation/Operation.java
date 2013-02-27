@@ -5,7 +5,6 @@ import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
 import it.wolfed.util.Constants;
-import java.util.List;
 
 /**
  * Basic Operation Class.
@@ -33,7 +32,7 @@ abstract public class Operation
     /**
      * Execute the specific operation process.
      */
-    protected void execute()
+    protected void execute() throws Exception
     {
         operationGraph.getModel().beginUpdate();
 
@@ -50,7 +49,7 @@ abstract public class Operation
     /**
      * Abstract definition for process in subclass.
      */
-    abstract void process();
+    abstract void process() throws Exception;
     
     /**
      * Return the graph if is a Graph is a valid workflow.
