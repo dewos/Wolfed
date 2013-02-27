@@ -589,8 +589,8 @@ public class PetriNetGraph extends mxGraph
         String nextId = getSetNextArcId();
        
         id = (id == null) ? nextId : id;
-        ArcEdge edge = new ArcEdge(getDefaultParent(), id, "");
-        return (ArcEdge) addEdge(edge, getDefaultParent(), source, target, null);
+        ArcEdge edge = new ArcEdge(getDefaultParent(), id, "", source, target);
+        return (ArcEdge) addCell(edge);
     }
     
     /**

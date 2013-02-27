@@ -14,9 +14,11 @@ public class ArcEdge extends Edge
      * 
      * @param parent
      * @param id
-     * @param value 
+     * @param value
+     * @param source
+     * @param target  
      */
-    public ArcEdge(Object parent, String id, Object value)
+    public ArcEdge(Object parent, String id, Object value, Vertex source, Vertex target)
     {
         super(
             parent,
@@ -25,6 +27,9 @@ public class ArcEdge extends Edge
             null,
             null
         );  
+        
+        setSource(source);
+        setTarget(target);
     }
     
     /**
@@ -53,10 +58,6 @@ public class ArcEdge extends Edge
         String sourceId = dom.getAttributes().getNamedItem(Constants.PNML_SOURCE).getNodeValue();
         String targetId = dom.getAttributes().getNamedItem(Constants.PNML_TARGET).getNodeValue();
         
-        ArcEdge arc = new ArcEdge(parent, id, null);
-        arc.setSource(graph.getVertexById(sourceId));
-        arc.setTarget(graph.getVertexById(targetId));
-        
-        return arc;
+        return new ArcEdge(parent, id, null, graph.getVertexById(sourceId), graph.getVertexById(targetId));
     };
 }

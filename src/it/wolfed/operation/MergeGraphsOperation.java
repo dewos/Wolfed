@@ -70,11 +70,7 @@ public class MergeGraphsOperation extends Operation
                     Vertex target = operationGraph.getVertexById(getPrefix(i + 1) + cell.getTarget().getId());
 
                     // Clone
-                    clone = new ArcEdge(parent, getPrefix(i + 1) + cell.getId(), cell.getValue());
-
-                    clone.setSource(source);
-                    clone.setTarget(target);
-                    clone.setId(getPrefix(i + 1) + cell.getId());
+                    clone = new ArcEdge(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), source, target);
                 }
                 else
                 {
