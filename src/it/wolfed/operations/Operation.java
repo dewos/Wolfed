@@ -1,13 +1,17 @@
 
-package it.wolfed.operations.refactored;
+package it.wolfed.operations;
 
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
 import it.wolfed.util.Constants;
+import java.util.List;
 
 /**
  * Basic Operation Class.
+ * 
+ * A base class that trigger and execute all operation with some handy
+ * shortcut methods for all the common editing action.
  */
 abstract public class Operation
 {

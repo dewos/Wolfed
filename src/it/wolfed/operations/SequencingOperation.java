@@ -1,4 +1,4 @@
-package it.wolfed.operations.refactored;
+package it.wolfed.operations;
 
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
@@ -22,7 +22,7 @@ public class SequencingOperation extends Operation
         super(operationGraph);
         this.firstGraph = getIfIsWorkFlow(firstGraph);
         this.secondGraph = getIfIsWorkFlow(secondGraph);
-        this.operationGraph = (new MergeGraphOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
         execute();
     }
    

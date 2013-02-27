@@ -1,5 +1,5 @@
 
-package it.wolfed.operations.refactored;
+package it.wolfed.operations;
 
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.ArcEdge;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  *
  */
-public class MergeGraphOperation extends Operation
+public class MergeGraphsOperation extends Operation
 {
     protected List<PetriNetGraph> inputGraphs;
     
@@ -26,7 +26,7 @@ public class MergeGraphOperation extends Operation
      * @param operationGraph
      * @param inputGraphs 
      */
-    public MergeGraphOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs)
+    public MergeGraphsOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs)
     {
         super(operationGraph);
         this.inputGraphs = new ArrayList<>();

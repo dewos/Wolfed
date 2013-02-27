@@ -16,3 +16,4 @@ manifest.mf
 
 # Git Files #
 .gitignore
+/src/it/wolfed/operation/old/
