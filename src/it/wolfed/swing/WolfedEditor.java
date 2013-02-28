@@ -78,10 +78,7 @@ public class WolfedEditor extends JFrame
      */
     private JTabbedPane tabs = new JTabbedPane();
     
-    /**
-     * FileChooser for open and save.
-     */
-    private JFileChooser fileChooser = new JFileChooser(".");
+
 
     /**
      * Constructor.
@@ -183,6 +180,7 @@ public class WolfedEditor extends JFrame
      */
     public void openFile()
     {
+        JFileChooser fileChooser = new JFileChooser(".");
         fileChooser.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fileChooser.setCurrentDirectory(new File("nets"));
 
@@ -233,7 +231,8 @@ public class WolfedEditor extends JFrame
     public void saveFile(String exportType)
     {
         try
-        {            
+        {
+            JFileChooser fileChooser = new JFileChooser(".");
             fileChooser.setFileFilter(new FileNameExtensionFilter("pnml or dot", "pnml", "dot"));
             int returnVal = fileChooser.showSaveDialog(this);
             
