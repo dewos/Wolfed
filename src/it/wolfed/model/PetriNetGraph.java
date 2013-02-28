@@ -719,7 +719,9 @@ public class PetriNetGraph extends mxGraph
                  * Interfaces are not PNML complaint.
                  * 
                  * A "Place" mirror of the interface will be added to
-                 * the Net node, for the compatibility with other editors.
+                 * the Net node, for the compatibility with other editors,
+                 * and the Interface element will be added to a toolSpecific
+                 * tag inside the net element.
                  * 
                  * In THIS editor the mirror place will be "casted" to
                  * Interface during the import of the pnml file.
@@ -811,6 +813,5 @@ public class PetriNetGraph extends mxGraph
         dot.append("\n }");
         
         return dot.toString();
-
     }
 }

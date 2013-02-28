@@ -40,8 +40,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-
-
 /**
  * Wolfed. WOrkflow Light Fast EDitor.
  *
@@ -51,20 +49,18 @@ import org.xml.sax.SAXException;
  * @author Fabio Piro
  * @author Said Daoudagh
  */
-public class WolfedEditor extends JFrame 
+public class WolfedEditor extends JFrame
 {
-
     /**
      * Run WolfedEditor.
      *
      * @param args
      */
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
-    
     /**
      * Holds opened graphs available in editor tabs.
      */
@@ -76,12 +72,13 @@ public class WolfedEditor extends JFrame
      * AnalysisComponent.
      */
     private JTabbedPane tabs = new JTabbedPane();
+
     /**
      * Constructor.
      */
     public WolfedEditor()
-    { 
-        setTitle(Constants.EDITOR_NAME + " " +  Constants.EDITOR_VERSION);
+    {
+        setTitle(Constants.EDITOR_NAME + " " + Constants.EDITOR_VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
@@ -93,7 +90,8 @@ public class WolfedEditor extends JFrame
      *
      * @return List<PetriNetGraph>
      */
-    public List<PetriNetGraph> getOpenedGraphs() {
+    public List<PetriNetGraph> getOpenedGraphs()
+    {
         return openedGraphs;
     }
 
@@ -102,7 +100,8 @@ public class WolfedEditor extends JFrame
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph getSelectedGraph() {
+    public PetriNetGraph getSelectedGraph()
+    {
         GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
         return view.getGraph();
     }
@@ -110,15 +109,17 @@ public class WolfedEditor extends JFrame
     /**
      * Sets look and feel.
      */
-    private void setLookAndFeel() {
-        try {
+    private void setLookAndFeel()
+    {
+        try
+        {
             // Sets system look
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            
+
             // Force Numbus (for Said happiness )
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) 
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
             {
-                if ("Nimbus".equals(info.getName())) 
+                if ("Nimbus".equals(info.getName()))
                 {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
@@ -144,7 +145,8 @@ public class WolfedEditor extends JFrame
      * @param graph
      * @return PetriNetGraph
      */
-    public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph) {
+    public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph)
+    {
         tabs.add(tabName, new GraphViewContainer(graph));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         getOpenedGraphs().add(graph);
@@ -157,7 +159,8 @@ public class WolfedEditor extends JFrame
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph newFile() {
+    public PetriNetGraph newFile()
+    {
         String name = "new_" + String.valueOf(tabs.getTabCount() + 1);
         PetriNetGraph graph = new PetriNetGraph(name);
         insertGraph(name, graph);
@@ -168,12 +171,14 @@ public class WolfedEditor extends JFrame
     /**
      * Open the filechooser and import a valid xml\pnml file.
      */
-    public void openFile() {
+    public void openFile()
+    {
         JFileChooser fc = new JFileChooser(".");
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fc.setCurrentDirectory(new File("nets"));
 
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        {
             File file = fc.getSelectedFile();
             importFile(file);
         }
@@ -185,8 +190,10 @@ public class WolfedEditor extends JFrame
      * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      * @param File pnml complaint file
      */
-    private void importFile(File filePnml) {
-        try {
+    private void importFile(File filePnml)
+    {
+        try
+        {
             DocumentBuilder builder = DocumentBuilderFactory
                     .newInstance()
                     .newDocumentBuilder();
@@ -194,7 +201,8 @@ public class WolfedEditor extends JFrame
             Document doc = builder.parse(filePnml);
             doc.getDocumentElement().normalize();
 
-            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET))) {
+            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET)))
+            {
                 // Sets the graph id as the filename without ext
                 String defaultId = filePnml.getName().substring(0, filePnml.getName().lastIndexOf('.'));
                 insertGraph(filePnml.getName(), PetriNetGraph.factory(netNode, defaultId));
@@ -208,7 +216,7 @@ public class WolfedEditor extends JFrame
 
     /**
      * Exports a graph in a new file.
-     * 
+     *
      * @param exportType
      * @see {@link Constants#EDITOR_EXPORT_PNML}
      * @see {@link Constants#EDITOR_EXPORT_DOT}
@@ -216,10 +224,10 @@ public class WolfedEditor extends JFrame
     public void saveFile(String exportType)
     {
         // @todo chooser window
-        
+
         try
-        {   
-            switch(exportType)
+        {
+            switch (exportType)
             {
                 case Constants.EDITOR_EXPORT_PNML:
                 {
@@ -227,14 +235,15 @@ public class WolfedEditor extends JFrame
                     System.out.println(exportedGraph);
                     break;
                 }
-                    
+
                 case Constants.EDITOR_EXPORT_DOT:
                 {
-                    // @ todo
+                    String exportedGraph = getSelectedGraph().exportDOT();
+                    System.out.println(exportedGraph);
                 }
             }
         } 
-        catch (TransformerException  | ParserConfigurationException ex)
+        catch (TransformerException | ParserConfigurationException ex)
         {
             showErrorMessage(ex);
         }
@@ -249,11 +258,12 @@ public class WolfedEditor extends JFrame
      * @todo refactor this
      * @param operationName
      */
-    public void executeOperation(String operationName) {
+    public void executeOperation(String operationName)
+    {
         Operation operation = null;
         PetriNetGraph operationGraph = new PetriNetGraph("new_" + (openedGraphs.size() + 1));
 
-        try 
+        try
         {
             switch (operationName)
             {
@@ -336,7 +346,7 @@ public class WolfedEditor extends JFrame
             insertGraph(operationGraph.getId(), operationGraph);
             executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
         } 
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             showErrorMessage(ex);
         }
@@ -348,14 +358,17 @@ public class WolfedEditor extends JFrame
      * @param graph
      * @param layoutName
      */
-    public void executeLayout(mxGraph graph, String layoutName) {
-        if (graph == null) {
+    public void executeLayout(mxGraph graph, String layoutName)
+    {
+        if (graph == null)
+        {
             graph = getSelectedGraph();
         }
 
         Object parent = graph.getDefaultParent();
 
-        switch (layoutName) {
+        switch (layoutName)
+        {
             case Constants.LAYOUT_VERTICALTREE:
                 (new mxCompactTreeLayout(graph)).execute(parent);
                 break;
@@ -376,17 +389,17 @@ public class WolfedEditor extends JFrame
 
     /**
      * Shows an error message.
-     * 
-     * @param ex 
+     *
+     * @param ex
      */
     @SuppressWarnings("CallToThreadDumpStack")
     public void showErrorMessage(Exception ex)
     {
         JOptionPane.showMessageDialog(this,
-            ex.getMessage(),
-            "Error",
-            JOptionPane.ERROR_MESSAGE);
-        
+                ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+
         ex.printStackTrace();
     }
 }
