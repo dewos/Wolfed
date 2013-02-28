@@ -1,5 +1,6 @@
 package it.wolfed.operation;
 
+import com.mxgraph.model.mxCell;
 import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
@@ -24,7 +25,7 @@ public class MergeInterfacesOperation extends Operation
         super(operationGraph);
         this.firstGraph = getIfIsWorkFlow(firstGraph);
         this.secondGraph = getIfIsWorkFlow(secondGraph);
-        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        this.operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
         execute();
     }
    
@@ -71,9 +72,12 @@ public class MergeInterfacesOperation extends Operation
                     Vertex interfAsSecond = getEquivalentVertex(2, interfSecond);
                     
                     // Mirror a place instead the interface
-                    PlaceVertex placeInterf = operationGraph.insertPlace((String) interfFirst.getValue());
-                    cloneIncomingEdges(interfAsFirst, placeInterf);
-                    cloneEdges(interfAsSecond, interfAsSecond);
+                    PlaceVertex placeInterf = operationGraph.insertPlace(interfFirst.getId());
+                    placeInterf.setValue(interfAsFirst.getValue());
+                    
+                    // Clone Edges to mirror place\interface
+                    cloneEdges(interfAsFirst, placeInterf);
+                    cloneEdges(interfAsSecond, placeInterf);
 
                     // Remove
                     removeVertexAndHisEdges(interfAsFirst);
@@ -82,12 +86,7 @@ public class MergeInterfacesOperation extends Operation
             }
         }
         
-        if(countInterfaces > 0)
-        {
-            // Make System
-            operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
-        }
-        else
+        if(countInterfaces <= 0)
         {
             throw new Exception("No common interfaces found in the two graphs.");
         }
