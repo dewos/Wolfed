@@ -3,8 +3,6 @@ package it.wolfed.swing;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operation.AlternationOperation;
@@ -48,8 +46,7 @@ import org.xml.sax.SAXException;
  * Wolfed. WOrkflow Light Fast EDitor.
  *
  * @see <a href="https://github.com/Dewos/wolfed">Github Repository</a>
- * @see <a href="http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html">MPB
- * Course</a>
+ * @see <a href="http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html">MPB Course</a>
  * @author Fabio Piro
  * @author Said Daoudagh
  */
