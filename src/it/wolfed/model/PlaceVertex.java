@@ -203,9 +203,27 @@ public class PlaceVertex extends Vertex
      */
       public String exportDOT() {
         
-          
+           StringBuilder dotBuilder = new StringBuilder();
+        String shape = "circle , color=\"green\" ]";
+        
+        dotBuilder.append("\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=");
+        
+        
+        
+        
+        switch(getStyle()){
+            case Constants.STYLE_PLACE_VALID:
+                shape = "circle , color=\"green\" ];";
+                break;
+            case Constants.STYLE_PLACE_SPECIAL_VALID:
+                shape = "doublecircle , color=\"green\" ];";
+                break;
+        }
+        
+        dotBuilder.append(shape);
+        
+       return dotBuilder.toString();
          
-          return "\n "+this.getId()+" [=\""+getValue().toString()+", shape=circle]; ";
     }
 
     public String exportDOT(int preSet, int postSet) {
