@@ -697,6 +697,8 @@ public class PetriNetGraph extends mxGraph
         
         for (Object cellObj : getChildCells())
         {
+            System.err.println(cellObj);
+            
             /** <place id="p1" name="p1"> ... </place> */
             if(cellObj instanceof PlaceVertex)
             {
@@ -708,16 +710,6 @@ public class PetriNetGraph extends mxGraph
             {
                 TransitionVertex transition = (TransitionVertex) cellObj;
                 net.appendChild(transition.exportPNML(doc));
-            }
-            /**  <arc id="a17" source="t3" target="p5"> ... </arc> */
-            else if(cellObj instanceof mxCell)
-            {
-                mxCell cell = (mxCell) cellObj;
-                
-                if(cell.isEdge())
-                {
-                    net.appendChild(ArcEdge.exportPNML(doc, cell));
-                }
             }
             /**  <interface id="i1" name="i1"> ... </interface> */
             else if(cellObj instanceof InterfaceVertex)
@@ -732,6 +724,16 @@ public class PetriNetGraph extends mxGraph
                  */
                  PlaceVertex mirrorInterf = new PlaceVertex(getDefaultParent(), interf.getId(), interf.getValue(), interf.getGeometry().getX(), interf.getGeometry().getY());
                  net.appendChild(mirrorInterf.exportPNML(doc));
+            }
+            /**  <arc id="a17" source="t3" target="p5"> ... </arc> */
+            else if(cellObj instanceof mxCell)
+            {
+                mxCell cell = (mxCell) cellObj;
+                
+                if(cell.isEdge())
+                {
+                    net.appendChild(ArcEdge.exportPNML(doc, cell));
+                }
             }
         }
 
