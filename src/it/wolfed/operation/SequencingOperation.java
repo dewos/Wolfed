@@ -29,10 +29,22 @@ public class SequencingOperation extends Operation
     /**
      * Process Sequencing.
      * 
-     * firstGraph = P1 -> T1 -> P2
-     * secondGraph = P3 -> T2 -> P4
+     * FistGraph:
+     *
+     *  N1_P1 ◎ → N1_T1 ❒ → N1_P2 ◯
      * 
-     * result = P1 -> T1 -> (P2 + P3) -> T2 -> P4
+     * -------------------------------
+     * 
+     * SecondGraph:
+     * 
+     *  N2_P1 ◎ → N2_T1 ❒ → N2_P2 ◯
+     * 
+     * -------------------------------
+     * 
+     * ResultGraph:
+     * 
+     * N1_P1 ◎ → N1_T1 ❒ -> P* ◯ → N2_T2 ❒ → N2_P2 ◯
+     * P* = (N1_P2 + N2_P1)
      */
     @Override
     void process()

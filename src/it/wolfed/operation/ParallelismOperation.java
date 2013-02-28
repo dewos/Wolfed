@@ -32,14 +32,25 @@ public class ParallelismOperation extends Operation
     /**
      * Parallelism.
      * 
-     * (AND-split + AND-join)
-     * A and B are both executed in no particular order
-     *       			-> p1 -> A -> p3 ->  
-     *  i -> AND-split						AND-join -> o
-     *       			-> p2 -> B -> p4 ->
-     *       
-     *      where AND-split, AND-join are Transitions
-     *      and i, p1, p2, p3, p4 and o are places
+     * FistGraph:
+     *
+     *  N1_P1 ◎ → N1_T1 ❒ → N1_P2 ◯
+     * 
+     * -------------------------------
+     * 
+     * SecondGraph:
+     * 
+     *  N2_P1 ◎ → N2_T1 ❒ → N2_P2 ◯
+     * 
+     * -------------------------------
+     * 
+     * ResultGraph:
+     * 
+     *               N1_P1 ◯ → N1_T1 ❒ → N1_P2 ◯
+     *                    ↗                       ↘
+     * P* ◎ → and-split ❒                and-join ❒ → P* ◯
+     *                    ↘                       ↗
+     *               N2_P1 ◯ → N2_T1 ❒ → N2_P2 ◯
      */
     @Override
     void process()
@@ -49,12 +60,15 @@ public class ParallelismOperation extends Operation
     }
     
     /**
-     * Insert initial pattern.
+     * Insert final pattern.
      * 
-     *        			-> p1 -> A -> p3 ->  
-     *  i -> AND-split						AND-join -> o
-     *       			-> p2 -> B -> p4 ->
+     *                 N1_P1 ◯
+     *                      ↗                       
+     * P* ◎ → and-split ❒
+     *                      ↘ 
+     *                  N2_P1 ◯ 
      */
+    
     private void insertInitialPattern()
     {
         PlaceVertex pi = getOperationGraph().insertPlace(null);
@@ -74,11 +88,13 @@ public class ParallelismOperation extends Operation
     }
     
     /**
-     * Insert final pattern.
+     * Insert initial pattern.
      * 
-     *        			-> p1 -> A -> p3 ->  
-     *  i -> AND-split						AND-join -> o
-     *       			-> p2 -> B -> p4 ->
+     *  N1_P2 ◯
+     *          ↘
+     *  and-join ❒ → P* ◯
+     *          ↗
+     *  N2_P2 ◯
      */
     private void insertFinalPattern()
     {
