@@ -5,12 +5,7 @@ import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
-import it.wolfed.operation.DefferedChoiceOperation;
-import it.wolfed.operation.MergeGraphsOperation;
-import it.wolfed.operation.MergeInterfacesOperation;
-import it.wolfed.operation.Operation;
-import it.wolfed.operation.ParallelismOperation;
-import it.wolfed.operation.SequencingOperation;
+import it.wolfed.operations.Operation;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.awt.Component;
@@ -35,23 +30,22 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
- * Wolfed.
- * WOrkflow Light Fast EDitor.
- * 
- * @see     <a href="https://github.com/Dewos/wolfed">Github Repository</a>
- * @see     <a href="http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html">MPB Course</a>
- * @author  Fabio Piro
- * @author  Said Daoudagh
+ * Wolfed. WOrkflow Light Fast EDitor.
+ *
+ * @see <a href="https://github.com/Dewos/wolfed">Github Repository</a>
+ * @see <a href="http://www.cli.di.unipi.it/~rbruni/MPB-12/index.html">MPB
+ * Course</a>
+ * @author Fabio Piro
+ * @author Said Daoudagh
  */
-public class WolfedEditor extends JFrame
-{
+public class WolfedEditor extends JFrame {
+
     /**
      * Run WolfedEditor.
-     * 
-     * @param args 
+     *
+     * @param args
      */
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
@@ -60,15 +54,13 @@ public class WolfedEditor extends JFrame
      * Holds opened graphs available in editor tabs.
      */
     private List<PetriNetGraph> openedGraphs = new ArrayList<>();
-    
     /**
-     * Tabs controller. 
-     * 
-     * A tab contains an GraphContainer
-     * with the GraphComponent and AnalysisComponent.
+     * Tabs controller.
+     *
+     * A tab contains an GraphContainer with the GraphComponent and
+     * AnalysisComponent.
      */
     private JTabbedPane tabs = new JTabbedPane();
-    
     /**
      * Constructor.
      */
@@ -86,18 +78,16 @@ public class WolfedEditor extends JFrame
      *
      * @return List<PetriNetGraph>
      */
-    public List<PetriNetGraph> getOpenedGraphs()
-    {
+    public List<PetriNetGraph> getOpenedGraphs() {
         return openedGraphs;
     }
-    
+
     /**
      * Returns the selected graph.
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph getSelectedGraph()
-    {
+    public PetriNetGraph getSelectedGraph() {
         GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
         return view.getGraph();
     }
@@ -105,10 +95,8 @@ public class WolfedEditor extends JFrame
     /**
      * Sets look and feel.
      */
-    private void setLookAndFeel()
-    {        
-        try
-        {
+    private void setLookAndFeel() {
+        try {
             // Sets system look
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             
@@ -121,7 +109,7 @@ public class WolfedEditor extends JFrame
                     break;
                 }
             }
-            
+
             // Force fullScreen
             Toolkit tk = Toolkit.getDefaultToolkit();
             int xSize = ((int) tk.getScreenSize().getWidth());
@@ -141,12 +129,11 @@ public class WolfedEditor extends JFrame
      * @param graph
      * @return PetriNetGraph
      */
-    public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph)
-    {
+    public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph) {
         tabs.add(tabName, new GraphViewContainer(graph));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         getOpenedGraphs().add(graph);
-        
+
         return graph;
     }
 
@@ -155,42 +142,36 @@ public class WolfedEditor extends JFrame
      *
      * @return PetriNetGraph
      */
-    public PetriNetGraph newFile()
-    {
+    public PetriNetGraph newFile() {
         String name = "new_" + String.valueOf(tabs.getTabCount() + 1);
         PetriNetGraph graph = new PetriNetGraph(name);
         insertGraph(name, graph);
-        
+
         return graph;
     }
 
     /**
      * Open the filechooser and import a valid xml\pnml file.
      */
-    public void openFile()
-    {
+    public void openFile() {
         JFileChooser fc = new JFileChooser(".");
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fc.setCurrentDirectory(new File("nets"));
 
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
+        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             importFile(file);
         }
     }
 
     /**
-     * Import a pnml file. 
-     * Note: A pnml file can contains one or MORE nets.
+     * Import a pnml file. Note: A pnml file can contains one or MORE nets.
      *
      * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
      * @param File pnml complaint file
      */
-    private void importFile(File filePnml)
-    {
-        try
-        {
+    private void importFile(File filePnml) {
+        try {
             DocumentBuilder builder = DocumentBuilderFactory
                     .newInstance()
                     .newDocumentBuilder();
@@ -198,8 +179,7 @@ public class WolfedEditor extends JFrame
             Document doc = builder.parse(filePnml);
             doc.getDocumentElement().normalize();
 
-            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET)))
-            {
+            for (final Node netNode : new IterableNodeList(doc.getElementsByTagName(Constants.PNML_NET))) {
                 // Sets the graph id as the filename without ext
                 String defaultId = filePnml.getName().substring(0, filePnml.getName().lastIndexOf('.'));
                 insertGraph(filePnml.getName(), PetriNetGraph.factory(netNode, defaultId));
@@ -248,115 +228,188 @@ public class WolfedEditor extends JFrame
 
     /**
      * Execute an operation (composition) to a graph.
-     * 
-     * The graph can be a valid workflownet or a simple
-     * petrinet. Specific checks will be made in Operation().
      *
-     * @todo  refactor this
+     * The graph can be a valid workflownet or a simple petrinet. Specific
+     * checks will be made in Operation().
+     *
+     * @todo refactor this
      * @param operationName
      */
-    public void executeOperation(String operationName)
-    {
+    public void executeOperation(String operationName) {
         Operation operation = null;
         PetriNetGraph operationGraph = new PetriNetGraph("new_" + (openedGraphs.size() + 1));
 
-        try
-        { 
-            switch (operationName)
-            {
-                case Constants.OPERATION_ALTERNATION:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_DEFFEREDCHOICE:
-                {
+        try {
+            switch (operationName) {
+                case Constants.OPERATION_ALTERNATION: {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new DefferedChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
-                    break;
-                }
-                    
-                case Constants.OPERATION_EXPLICITCHOICE:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_ITERATIONONEORMORE:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_ITERATIONONESERVEPERTIME:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_ITERATIONZEROORMORE:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_MUTUALEXCLUSION:
-                {
-                    break;
-                }
-                    
-                case Constants.OPERATION_MERGEGRAPHS:
-                {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new MergeGraphsOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
-                    break;
-                }
-                    
-                case Constants.OPERATION_MERGEINTERFACES:
-                {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
-                    break;
-                }
-                    
-                case Constants.OPERATION_PARALLELISM:
-                {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new ParallelismOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    operation = new it.wolfed.operations.AlternationOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     break;
                 }
 
-                case Constants.OPERATION_SEQUENCING:
-                {
+                case Constants.OPERATION_DEFFEREDCHOICE: {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    operation = new it.wolfed.operations.DefferedChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_EXPLICITCHOICE: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.ExplicitChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_ITERATIONONEORMORE: {
+                    operation = new it.wolfed.operations.OneOrMoreIterationOperation(operationGraph, getSelectedGraph());
+                    break;
+                }
+
+                case Constants.OPERATION_ITERATIONONESERVEPERTIME: {
+                    operation = new it.wolfed.operations.OneServePerTimeOperation(operationGraph, getSelectedGraph());
+                    break;
+                }
+
+                case Constants.OPERATION_ITERATIONZEROORMORE: {
+                    operation = new it.wolfed.operations.ZeroOrMoreIterationOperation(operationGraph, getSelectedGraph());
+                    break;
+                }
+
+                case Constants.OPERATION_MUTUALEXCLUSION: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.MutualExclusionOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_MERGEGRAPHS: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.MergeGraphsOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_MERGEINTERFACES: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_PARALLELISM: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.ParallelismOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    break;
+                }
+
+                case Constants.OPERATION_SEQUENCING: {
+                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    operation = new it.wolfed.operations.SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     break;
                 }
             }
-            
+
             operationGraph = operation.getOperationGraph();
             insertGraph(operationGraph.getId(), operationGraph);
-            executeLayout(operationGraph, Constants.LAYOUT_HORIZONTALTREE);
+            executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showErrorMessage(ex.getMessage());
         }
-        catch (Exception ex)
-        {
-            showErrorMessage(ex);
-        }
+
+
+
+
+
+
+
+//        PetriNetGraph opGraph = null;
+//        OperationDialog selectionBox;
+//        
+//        // Shortcut for the operations that required
+//        // only an input graph (selected graph is always selected)
+//        List<PetriNetGraph> singleInputGraph = new ArrayList<>();
+//        singleInputGraph.add(getSelectedGraph());
+//        
+//        try
+//        { 
+//            switch (operationName)
+//            {
+//                case Constants.OPERATION_ALTERNATION:
+//                     selectionBox = new OperationDialog(this, 1);
+//                    
+//                    selectionBox.setExtendedGraph();
+//                    opGraph = (new AlternationOperation(selectionBox.getInputGraphs(), selectionBox.getExtendedSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_DEFFEREDCHOICE:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new DefferedChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_EXPLICITCHOICE:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new ExplicitChoiceOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_ITERATIONONEORMORE:
+//                    opGraph = (new OneOrMoreIterationOperation(singleInputGraph)).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_ITERATIONONESERVEPERTIME:
+//                    opGraph = (new OneServePerTimeOperation(singleInputGraph)).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_ITERATIONZEROORMORE:
+//                    opGraph = (new ZeroOrMoreIterationOperation(singleInputGraph)).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_MUTUALEXCLUSION:
+//                   selectionBox = new OperationDialog(this, 1);
+//                    selectionBox.setExtendedGraph();
+//                    opGraph = (new MutualExclusionOperation(selectionBox.getInputGraphs(), selectionBox.getExtendedSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_MERGEGRAPHS:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new MergeGraphsOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_MERGEINTERFACES:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new MergeInterfacesOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_PARALLELISM:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new ParallelismOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//                    
+//                case Constants.OPERATION_SEQUENCING:
+//                    selectionBox = new OperationDialog(this, 1);
+//                    opGraph = (new SequencingOperation(selectionBox.getSelectedGraphs())).getOperationGraph();
+//                    break;
+//            }
+//            
+//            insertGraph(opGraph.getId(), opGraph);
+//            executeLayout(opGraph, Constants.LAYOUT_HORIZONTALTREE);
+//        } 
+//        catch (Exception ex)
+//        {
+//            showErrorMessage(ex.getMessage());
+//        }
     }
-    
+
     /**
      * Styling a graph with a specific layout.
      *
-     * @param graph 
+     * @param graph
      * @param layoutName
      */
-    public void executeLayout(mxGraph graph, String layoutName)
-    {
-        if(graph == null)
-        {
+    public void executeLayout(mxGraph graph, String layoutName) {
+        if (graph == null) {
             graph = getSelectedGraph();
         }
-        
+
         Object parent = graph.getDefaultParent();
-        
-        switch (layoutName)
-        {
+
+        switch (layoutName) {
             case Constants.LAYOUT_VERTICALTREE:
                 (new mxCompactTreeLayout(graph)).execute(parent);
                 break;
@@ -374,7 +427,7 @@ public class WolfedEditor extends JFrame
                 break;
         }
     }
-    
+
     /**
      * Shows an error message.
      * 
