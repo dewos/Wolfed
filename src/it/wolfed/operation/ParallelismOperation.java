@@ -57,8 +57,8 @@ public class ParallelismOperation extends Operation
      */
     private void insertInitialPattern()
     {
-        PlaceVertex pi = getOperationGraph().insertPlace("initial");
-        TransitionVertex andSplit = getOperationGraph().insertTransition("AND-split");
+        PlaceVertex pi = getOperationGraph().insertPlace(null);
+        TransitionVertex andSplit = getOperationGraph().insertTransition("and-split");
 
         PlaceVertex initialPlaceAsFirst =  (PlaceVertex) getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
         PlaceVertex initialPlaceAsSecond = (PlaceVertex)getEquivalentVertex(2, secondGraph.getInitialPlaces().get(0));
@@ -82,7 +82,7 @@ public class ParallelismOperation extends Operation
      */
     private void insertFinalPattern()
     {
-        PlaceVertex po = getOperationGraph().insertPlace("final");
+        PlaceVertex po = getOperationGraph().insertPlace(null);
         TransitionVertex andJoin = getOperationGraph().insertTransition("and-join");
 
         Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));

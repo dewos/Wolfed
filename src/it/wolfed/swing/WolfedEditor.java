@@ -236,7 +236,8 @@ public class WolfedEditor extends JFrame
         {            
             fileChooser.setFileFilter(new FileNameExtensionFilter("pnml or dot", "pnml", "dot"));
             int returnVal = fileChooser.showSaveDialog(this);
-
+            
+            // @todo check if file exist
             if (returnVal == JFileChooser.APPROVE_OPTION)
             {
                 File exportedFile = null;

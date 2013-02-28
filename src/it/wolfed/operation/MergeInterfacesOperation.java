@@ -35,7 +35,7 @@ public class MergeInterfacesOperation extends Operation
      * FistGraph:      
      *                N1_I1
      *                  ↑
-     *           ◯ → N1_T1 → ◯
+     *           ◎ → ❒ → ◯
      * 
      * -------------------------
      * 
