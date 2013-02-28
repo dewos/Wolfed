@@ -696,9 +696,7 @@ public class PetriNetGraph extends mxGraph
         pnml.appendChild(net);
         
         for (Object cellObj : getChildCells())
-        {
-            System.err.println(cellObj);
-            
+        {           
             /** <place id="p1" name="p1"> ... </place> */
             if(cellObj instanceof PlaceVertex)
             {
