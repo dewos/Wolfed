@@ -231,6 +231,8 @@ public class WolfedEditor extends JFrame
                 case Constants.EDITOR_EXPORT_DOT:
                 {
                     // @ todo
+                    String exportedGraph = getSelectedGraph().exportDOT();
+                    System.out.println(exportedGraph);
                 }
             }
         } 
