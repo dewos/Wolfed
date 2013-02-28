@@ -44,6 +44,6 @@ public class SequencingOperation extends Operation
         removeVertexAndHisEdges(finalPlaceAsFirst);
         
         // set token to initial place
-        this.operationGraph.getInitialPlaces().get(0).setTokens(1);
+        operationGraph.getInitialPlaces().get(0).setTokens(1);
     }
 }

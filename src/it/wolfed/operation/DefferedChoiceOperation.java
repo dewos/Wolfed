@@ -43,7 +43,7 @@ public class DefferedChoiceOperation extends Operation
     @Override
     void process()
     {
-        Vertex initialPlaceAsFirst = getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
+        PlaceVertex initialPlaceAsFirst = (PlaceVertex) getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
         Vertex initialPlaceAsSecond = getEquivalentVertex(2, secondGraph.getInitialPlaces().get(0));
         Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
         Vertex finalPlaceAsSecond = getEquivalentVertex(2, secondGraph.getFinalPlaces().get(0));
@@ -53,8 +53,8 @@ public class DefferedChoiceOperation extends Operation
         
         removeVertexAndHisEdges(initialPlaceAsSecond);
         removeVertexAndHisEdges(finalPlaceAsSecond);
-        // set token
-        ((PlaceVertex)initialPlaceAsFirst).setTokens(1);
         
+        // set token
+        initialPlaceAsFirst.setTokens(1);
     }
 }

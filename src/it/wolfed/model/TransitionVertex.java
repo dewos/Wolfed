@@ -135,7 +135,6 @@ public class TransitionVertex extends Vertex
         name.appendChild(text);
        
 	 /**
-         * The geometric aspect of the Vertex
 	 *              <graphics>
 	 *                  <position x="275" y="140"/>
 	 *                  <dimension x="40" y="40"/>
@@ -153,6 +152,7 @@ public class TransitionVertex extends Vertex
 	graphics.appendChild(position);
         
         transition.appendChild(graphics);
+        
         /**  </transition>  */
         return transition;
     }

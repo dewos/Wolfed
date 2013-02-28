@@ -39,7 +39,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -70,6 +69,7 @@ public class WolfedEditor extends JFrame
      * Holds opened graphs available in editor tabs.
      */
     private List<PetriNetGraph> openedGraphs = new ArrayList<>();
+    
     /**
      * Tabs controller.
      *
@@ -77,7 +77,11 @@ public class WolfedEditor extends JFrame
      * AnalysisComponent.
      */
     private JTabbedPane tabs = new JTabbedPane();
-    private JFileChooser fc = new JFileChooser(".");
+    
+    /**
+     * FileChooser for open and save.
+     */
+    private JFileChooser fileChooser = new JFileChooser(".");
 
     /**
      * Constructor.
@@ -179,16 +183,12 @@ public class WolfedEditor extends JFrame
      */
     public void openFile()
     {
-        if(fc == null)
-        {
-            fc = new JFileChooser(".");
-        }
-        fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
-        fc.setCurrentDirectory(new File("nets"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
+        fileChooser.setCurrentDirectory(new File("nets"));
 
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
         {
-            File file = fc.getSelectedFile();
+            File file = fileChooser.getSelectedFile();
             importFile(file);
         }
     }
@@ -232,78 +232,44 @@ public class WolfedEditor extends JFrame
      */
     public void saveFile(String exportType)
     {
-
-        // @todo chooser window
-
         try
-        {
-            switch (exportType)
-            {
-                case Constants.EDITOR_EXPORT_PNML:
-                {
-                    String exportedGraph = getSelectedGraph().exportPNML();
-                    System.out.println(exportedGraph);
-                    break;
-                }
+        {            
+            fileChooser.setFileFilter(new FileNameExtensionFilter("pnml or dot", "pnml", "dot"));
+            int returnVal = fileChooser.showSaveDialog(this);
 
-                case Constants.EDITOR_EXPORT_DOT:
-                {
-                    String exportedGraph = getSelectedGraph().exportDOT();
-                    System.out.println(exportedGraph);
-                }
-            }
-        } 
-        catch (TransformerException | ParserConfigurationException ex)
-        {
-            fc = new JFileChooser(".");
-        }
-        
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION)
-        {
-            File file = fc.getSelectedFile();
-            System.out.println("File : "+file.getAbsolutePath());
-            try
+            if (returnVal == JFileChooser.APPROVE_OPTION)
             {
-                String exportedGraph = null; 
+                File exportedFile = null;
+                String exportedGraph = "";
+                File file = fileChooser.getSelectedFile();
+
                 switch (exportType)
                 {
                     case Constants.EDITOR_EXPORT_PNML:
                     {
+                        exportedFile = new File(file + Constants.EDITOR_EXPORT_PNML);
                         exportedGraph = getSelectedGraph().exportPNML();
-                        System.out.println(exportedGraph);
                         break;
                     }
+
                     case Constants.EDITOR_EXPORT_DOT:
                     {
+                        exportedFile = new File(file + Constants.EDITOR_EXPORT_DOT);
                         exportedGraph = getSelectedGraph().exportDOT();
-                        System.out.println(exportedGraph);
+                        break;
                     }
                 }
-               
-		File pnmlFile = new File(file+".pnml");
-		if(pnmlFile.exists())
-                    pnmlFile.delete();
-		pnmlFile.createNewFile();
-		BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(pnmlFile.getCanonicalPath()));
-		pnmlWriter.write(exportedGraph);
-		pnmlWriter.flush();
-		pnmlWriter.close();
-		
-                
-                
-                
-                
-                
-                
-                
-            }
-            catch (TransformerException | ParserConfigurationException | IOException ex)
-            {
-                showErrorMessage(ex);
-            }           
-        }
 
+                BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(exportedFile.getCanonicalPath()));
+                pnmlWriter.write(exportedGraph);
+                pnmlWriter.flush();
+                pnmlWriter.close();
+            }
+        }
+        catch (TransformerException | ParserConfigurationException | IOException ex)
+        {
+            showErrorMessage(ex);
+        }
     }
 
     /**
