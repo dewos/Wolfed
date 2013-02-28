@@ -717,10 +717,16 @@ public class PetriNetGraph extends mxGraph
                 InterfaceVertex interf = (InterfaceVertex) cellObj;
                 toolSpecific.appendChild(interf.exportPNML(doc));
                 
-                /*
+                /**
                  * Interfaces are not PNML complaint.
+                 * 
                  * A "Place" mirror of the interface will be added to
-                 * the Net node, for compatibility propuose.
+                 * the Net node, for the compatibility with other editors.
+                 * 
+                 * In THIS editor the mirror place will be "casted" to
+                 * Interface during the import of the pnml file.
+                 * 
+                 * See {@link PetriNetGraph#factory}
                  */
                  PlaceVertex mirrorInterf = new PlaceVertex(getDefaultParent(), interf.getId(), interf.getValue(), interf.getGeometry().getX(), interf.getGeometry().getY());
                  net.appendChild(mirrorInterf.exportPNML(doc));
