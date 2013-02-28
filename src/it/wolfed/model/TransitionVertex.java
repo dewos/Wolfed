@@ -3,9 +3,10 @@ package it.wolfed.model;
 
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -113,42 +114,38 @@ public class TransitionVertex extends Vertex
         
         return new TransitionVertex(parent, id, value, x, y);
     }
-     
-    public Element exportPNML(Document doc) {
-        /*
-	 * <transition id="t3">
-	 *      <name>
-	 *        <text>t3</text>
-	 *        <graphics>
-	 *          <offset x="270" y="180"/>
-	 *        </graphics>
-	 *      </name>
-	 *      <graphics>
-	 *        <position x="275" y="140"/>
-	 *        <dimension x="40" y="40"/>
-	 *      </graphics>
-	 *      <toolspecific tool="WoPeD" version="1.0">
-	 *        <time>0</time>
-	 *        <timeUnit>1</timeUnit>
-	 *        <orientation>1</orientation>
-	 *      </toolspecific>
-	 *    </transition>
-	 */
-	Element transitionAsXML = doc.createElement(Constants.PNML_TRANSITION);
-	transitionAsXML.setAttribute(Constants.PNML_ID, getId());
-	Element nameAsXML = doc.createElement(Constants.PNML_NAME);
-	Element textAsXML = doc.createElement(Constants.PNML_TEXT);
-	textAsXML.setTextContent(getValue().toString());
-	nameAsXML.appendChild(textAsXML);
-	transitionAsXML.appendChild(nameAsXML);
-	return transitionAsXML;
-     }
+    
+    
+    public Element exportPNML(Document doc ) throws ParserConfigurationException 
+    {
+        /**  <transition id="t3"> */
+	Element transition = doc.createElement(Constants.PNML_TRANSITION);
+	transition.setAttribute(Constants.PNML_ID, getId());
 
-    /**
-     * 
-     * @return 
-     */
-      public String exportDOT() {
-        return "\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=box ]; ";
+        /**     <name> */
+	Element name = doc.createElement(Constants.PNML_NAME);
+        transition.appendChild(name);
+
+        /**         <text>p6</text> */
+	Element text = doc.createElement(Constants.PNML_TEXT);
+	text.setTextContent(getValue().toString());
+        name.appendChild(text);
+       
+	 /**
+         * Ignored for now.
+         * 
+	 *              <graphics>
+	 *                  <position x="275" y="140"/>
+	 *                  <dimension x="40" y="40"/>
+	 *              </graphics>
+	 *              <toolspecific tool="WoPeD" version="1.0">
+	 *                  <time>0</time>
+	 *                  <timeUnit>1</timeUnit>
+	 *                  <orientation>1</orientation>
+	 *              </toolspecific>
+	 */
+
+        /**  </transition>  */
+        return transition;
     }
 }

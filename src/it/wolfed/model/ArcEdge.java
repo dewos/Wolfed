@@ -1,10 +1,10 @@
 
 package it.wolfed.model;
 
+import com.mxgraph.model.mxCell;
 import it.wolfed.util.Constants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -63,4 +63,22 @@ public class ArcEdge extends Edge
         
         return new ArcEdge(parent, id, null, graph.getVertexById(sourceId), graph.getVertexById(targetId));
     };
+    
+    /**
+     * Static for the edge bug.
+     * 
+     * @param doc
+     * @param edge
+     * @return 
+     */
+    public static Element exportXML(Document doc, mxCell edge)
+    {
+        /** <arc id="a8" source="p4" target="t4"> */         
+        Element arc = doc.createElement(Constants.PNML_ARC);
+        arc.setAttribute(Constants.PNML_ID, edge.getId());
+        arc.setAttribute(Constants.PNML_SOURCE, edge.getSource().getId());
+        arc.setAttribute(Constants.PNML_TARGET, edge.getTarget().getId());
+
+        return arc;
+    }
 }

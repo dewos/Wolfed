@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -29,6 +31,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -54,14 +58,6 @@ public class WolfedEditor extends JFrame
         Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
-    /**
-     * Specifies Editor Name
-     */
-    public static final String WOLFED_EDITOR_NAME = "WoLFEd";
-    /**
-     * Specifies current version.
-     */
-    public static final String VERSION = "0.9.9.2";
     
     /**
      * Holds opened graphs available in editor tabs.
@@ -109,7 +105,7 @@ public class WolfedEditor extends JFrame
      */
     public WolfedEditor()
     { 
-        setTitle(WolfedEditor.WOLFED_EDITOR_NAME +" "+  WolfedEditor.VERSION);
+        setTitle(Constants.EDITOR_NAME + " " +  Constants.EDITOR_VERSION);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
@@ -270,16 +266,21 @@ public class WolfedEditor extends JFrame
     /**
      * Exports a graph in a new file.
      * 
-     * @param graph 
-     * @todo
+     * @param exportType
+     * @see {@link Constants#EDITOR_EXPORT_PNML}
+     * @see {@link Constants#EDITOR_EXPORT_DOT}
      */
-    public void saveFile(String type)
+    public void saveFile(String exportType)
     {
-        String exportedGraph = getSelectedGraph().export(type);
-        
-        System.out.println(exportedGraph);
-        
-        showErrorMessage("Not supported yet");
+        try
+        {   
+            String exportedGraph = getSelectedGraph().exportPNML();
+            System.out.println(exportedGraph);
+        } 
+        catch (TransformerException  | ParserConfigurationException ex)
+        {
+            showErrorMessage(ex);
+        }
     }
 
     /**

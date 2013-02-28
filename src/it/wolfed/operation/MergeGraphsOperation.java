@@ -8,7 +8,6 @@ import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +18,6 @@ public class MergeGraphsOperation extends Operation
 {
     protected List<PetriNetGraph> inputGraphs;
     
-
     /**
      * Clone all the cells from inputGraphs into operationGraph.
      * 
@@ -30,8 +28,7 @@ public class MergeGraphsOperation extends Operation
     public MergeGraphsOperation(PetriNetGraph operationGraph, PetriNetGraph... inputGraphs) throws Exception
     {
         super(operationGraph);
-        this.inputGraphs = new ArrayList<>();
-        this.inputGraphs.addAll(Arrays.asList(inputGraphs));
+        this.inputGraphs = Arrays.asList(inputGraphs);
         execute();
     }
     
@@ -71,10 +68,6 @@ public class MergeGraphsOperation extends Operation
 
                     // Clone
                     clone = new ArcEdge(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), source, target);
-                }
-                else
-                {
-                    //clone = cell.clone()
                 }
 
                 operationGraph.addCell(clone);

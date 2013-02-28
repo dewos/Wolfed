@@ -9,7 +9,6 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.swing.GraphComponent;
-import it.wolfed.swing.WolfedEditor;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.io.StringWriter;
@@ -17,16 +16,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
@@ -47,7 +42,7 @@ import org.w3c.dom.Node;
  * transitions (i.e. events that may occur, signified by bars) and places 
  * (i.e. conditions, signified by circles). 
  * 
- * A Petri graph consists of places, transitions, arcs and interfaces. 
+ * A Petri graph consists of places, transitions, arcs and interfacesFound. 
  * Arcs run from a place to a transition or vice versa, never between places
  * or between transitions. 
  * 
@@ -63,7 +58,7 @@ public class PetriNetGraph extends mxGraph
     /**
      * Id of the graph.
      * 
-     * Usually id from pnml file or tab name.
+     * Usually id from pnmlXML file or tab name.
      */
     private String id;
     
@@ -94,7 +89,7 @@ public class PetriNetGraph extends mxGraph
     private int indexArcs;
     
     /**
-     * Index of the interfaces of the graph.
+     * Index of the interfacesFound of the graph.
      * 
      * Must be in sync with any new interface creation.
      */
@@ -163,12 +158,12 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Imports a pnml node in a new {@link PetriNetGraph}.
+     * Imports a pnmlXML node in a new {@link PetriNetGraph}.
      * 
      * @param dom
      * @param defaultId
      * @return PetriNetGraph
-     * @see <a href="http://www.pnml.org/">http://www.pnml.org/</a>
+     * @see <a href="http://www.pnmlXML.org/">http://www.pnmlXML.org/</a>
      */
     public static PetriNetGraph factory(Node dom, String defaultId)
     {
@@ -667,173 +662,94 @@ public class PetriNetGraph extends mxGraph
         return tip;
     }
 
-    public String exportPNML() {
-        DocumentBuilder builder;
-        String exportedGraph = new String();
-        try {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = builder.newDocument();
-            Element pnml = doc.createElement(Constants.PNML_TAG);
-            doc.appendChild(pnml);
-            Element netAsXML = doc.createElement(Constants.PNML_NET);
-            netAsXML.setAttribute(Constants.PNML_TYPE, this.getType());
-            netAsXML.setAttribute(Constants.PNML_ID, this.getId());
+    /**
+     * Export net to String.
+     * 
+     * @param exportType
+     * @return 
+     */
+    public String exportPNML() throws ParserConfigurationException, TransformerConfigurationException, TransformerException 
+    {
+        
+        /** <?xml version="1.0" encoding="UTF-8"?> */
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        
+        /**
+        * <toolspecific tool="WoLFEd" version="currentVersion">
+        *      <interface id="i1" />
+        * </toolspecific>
+        */
+        Set<InterfaceVertex> interfacesFound = new HashSet<>();
+        Element toolSpecific = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
+        toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
+        toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
 
-            pnml.appendChild(netAsXML);
+        /**     <pnml> */
+        Element pnml = doc.createElement(Constants.PNML_TAG);
+        doc.appendChild(pnml);
 
-            Element toolSpecificAsXML = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
-            toolSpecificAsXML.setAttribute(Constants.PNML_TOOL, WolfedEditor.WOLFED_EDITOR_NAME);
-            toolSpecificAsXML.setAttribute(Constants.PNML_TOOL_VERSION, WolfedEditor.VERSION);
-
-            Element interfacesAsXML = doc.createElement(Constants.PNML_INTERFACES);
-            toolSpecificAsXML.appendChild(interfacesAsXML);
-            /**
-             * <toolspecific tool="WoLFEd" version="currentVersion">
-             *  <interfaces>
-             *      <interface id="interfaceID">
-             * </toolspecific>
-             */
-            HashSet<Element> places = new HashSet<>();
-            HashSet<Element> transitions = new HashSet<>();
-            HashSet<Element> edges = new HashSet<>();
-
-            // exportPNML Graph Elements
-            for (Object cellObj : this.getChildVertices()) {
-                if (cellObj instanceof InterfaceVertex) {
-                    InterfaceVertex interfaceVertex = (InterfaceVertex) cellObj;
-                    interfacesAsXML.appendChild(interfaceVertex.exportPNML(doc));
-                }
-                if (cellObj instanceof PlaceVertex) {
-                    PlaceVertex placeVertex = (PlaceVertex) cellObj;
-                    places.add(placeVertex.exportPNML(doc));
-                }
-                if (cellObj instanceof TransitionVertex) {
-                    TransitionVertex transitionVertex = (TransitionVertex) cellObj;
-                    transitions.add(transitionVertex.exportPNML(doc));
+        /**         <net type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb" id="noId"> */
+        Element net = doc.createElement(Constants.PNML_NET);
+        net.setAttribute(Constants.PNML_TYPE, getType());
+        net.setAttribute(Constants.PNML_ID, getId());
+        pnml.appendChild(net);
+        
+        for (Object cellObj : getChildCells())
+        {
+            /** <place id="p1"> ... </place> */
+            if(cellObj instanceof PlaceVertex)
+            {
+                PlaceVertex place = (PlaceVertex) cellObj;
+                net.appendChild(place.exportPNML(doc));
+            }
+            /** <transition id="t1"> ... </transition> */
+            else if(cellObj instanceof TransitionVertex)
+            {
+                TransitionVertex transition = (TransitionVertex) cellObj;
+                net.appendChild(transition.exportPNML(doc));
+            }
+            /**  <arc id="a17" source="t3" target="p5"> ... </arc> */
+            else if(cellObj instanceof mxCell)
+            {
+                mxCell cell = (mxCell) cellObj;
+                
+                if(cell.isEdge())
+                {
+                    net.appendChild(ArcEdge.exportXML(doc, cell));
                 }
             }
-            // add places as PNML
-            addElements(netAsXML, places);
-            // add Transitions as PNML
-            addElements(netAsXML, transitions);
-            // add Edges as PNML
-            for (Object edgeObj : this.getChildEdges()) {
-                ArcEdge arcEdge = (ArcEdge) edgeObj;
-                netAsXML.appendChild(arcEdge.exportPNML(doc));
+            /**  <interface id="i1"> ... </interface> */
+            else if(cellObj instanceof InterfaceVertex)
+            {
+                InterfaceVertex interf = (InterfaceVertex) cellObj;
+                toolSpecific.appendChild(interf.exportPNML(doc));
+                interfacesFound.add(interf);
             }
-            
-            
-            
-                        // add Edges as DOT
-            for (Object edgeObj : this.getChildEdges()) {
-                mxCell arcEdge = (mxCell)edgeObj;
-                if (arcEdge.isEdge()) {
-                    System.out.println(arcEdge.toString());
-                    if(arcEdge instanceof ArcEdge){
-                        netAsXML.appendChild(((ArcEdge)arcEdge).exportPNML(doc));
-                    }else{
-                        /*
-                         *  <arc id="a8" source="p4" target="t4">
-                         */
-                        
-                        Element arcAsXML = doc.createElement(Constants.PNML_ARC);
-                        arcAsXML.setAttribute(Constants.PNML_ID, arcEdge.getId());
-                        arcAsXML.setAttribute(Constants.PNML_SOURCE, arcEdge.getSource().getId());
-                        arcAsXML.setAttribute(Constants.PNML_TARGET, arcEdge.getTarget().getId());
-                        netAsXML.appendChild(arcAsXML);
-                    }
-                }   
-            }
-            
-            
-            
-            
-            // add Interfaces as PNML (tool specific WoLFEd)
-            pnml.appendChild(toolSpecificAsXML);
-
-            doc.getDocumentElement().normalize();
-            
-            Source source = new DOMSource(doc);
-            Transformer xformer = TransformerFactory.newInstance().newTransformer();
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-            xformer.transform(source, result);
-            exportedGraph = writer.toString();
-            
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TransformerConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TransformerFactoryConfigurationError e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-        return exportedGraph;
-
-
-    }
-
-    public String export(String exportedNetType) {
-
-        String exportedGraph = new String();
-        switch (exportedNetType) {
-            case Constants.WOLFED_EXPORT_DOT:
-                exportedGraph = exportDOT();
-                break;
-            case Constants.WOLFED_EXPORT_PNML:
-                exportedGraph = exportPNML();
-                break;
-        }
-        return exportedGraph.toString();
-    }
-
-    private String exportDOT() {
-        StringBuilder exportedGraph = new StringBuilder();
-        exportedGraph.append("digraph WoLFEdGraph{ \n rankdir=LR;");
-        // exportDOT Graph Elements
-        for (Object cellObj : this.getChildVertices()) {
-                if (cellObj instanceof InterfaceVertex) {
-                    InterfaceVertex interfaceVertex = (InterfaceVertex) cellObj;
-                    exportedGraph.append(interfaceVertex.exportDOT());
-                }
-                if (cellObj instanceof PlaceVertex) {
-                    PlaceVertex placeVertex = (PlaceVertex) cellObj;
-                    exportedGraph.append(placeVertex.exportDOT(getIncomingEdges(placeVertex).length, getOutgoingEdges(placeVertex).length));
-                }
-                if (cellObj instanceof TransitionVertex) {
-                    TransitionVertex transitionVertex = (TransitionVertex) cellObj;
-                    exportedGraph.append(transitionVertex.exportDOT());
-                }
-            }
             
-            // add Edges as DOT
-            for (Object edgeObj : this.getChildEdges()) {
-                mxCell arcEdge = (mxCell)edgeObj;
-                if (arcEdge.isEdge()) {
-                    System.out.println(arcEdge.toString());
-                    if(arcEdge instanceof ArcEdge){
-                        exportedGraph.append(((ArcEdge)arcEdge).exportDOT());
-                    }else{
-                        exportedGraph.append("\n "+arcEdge.getSource().getId() +" -> "+
-                        arcEdge.getTarget().getId()+" ;");
-                        
-                    }
-                }   
-            }
-            exportedGraph.append("\n }");
+        /**     </net>
+        * </pnml> 
+        */
+        
+        // Transform places to interface
+        if(interfacesFound.size() > 0)
+        {
+            net.appendChild(toolSpecific);
             
-        return exportedGraph.toString();
-
-    }
-
-    private void addElements(Element netAsXML, HashSet<Element> elements) {
-        for (Element element : elements) {
-             netAsXML.appendChild(element);
+            for(InterfaceVertex interf : interfacesFound)
+            {
+                // @todo
+            }
         }
+        
+        // Output
+        doc.getDocumentElement().normalize();
+        DOMSource source = new DOMSource(doc);
+        StringWriter sw = new StringWriter();
+        StreamResult result = new StreamResult(sw);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.transform(source, result);
+
+        return sw.toString();
     }
 }

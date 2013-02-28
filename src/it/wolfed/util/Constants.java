@@ -3,22 +3,23 @@ package it.wolfed.util;
 public class Constants 
 {
     // Editor
-
+    public static final String EDITOR_VERSION                       = "0.9.9.2";
+    public static final String EDITOR_NAME                          = "WoLFEd";
+    public static final String EDITOR_EXPORT_DOT                    = ".DOT";
+    public static final String EDITOR_EXPORT_PNML                   = ".PNML";
+    
     // Styles
-    public static final String STYLE_TRANSITION             = "fillColor=white;";
-    public static final String STYLE_TRANSITION_VALID       = "fillColor=white;strokeColor=green;";
-    
-    public static final String STYLE_PLACE                  = "shape=ellipse;fillColor=white;";
-    public static final String STYLE_PLACE_VALID            = "shape=ellipse;fillColor=white;strokeColor=green;";
-    public static final String STYLE_PLACE_SPECIAL_VALID    = "shape=doubleEllipse;fillColor=white;strokeColor=#31B404";
-    public static final String STYLE_PLACE_SPECIAL_INVALID  = "shape=doubleEllipse;fillColor=white;strokeColor=#FF0000";
-    
-    public static final String STYLE_ARC                    = "defaultEdge";
-    public static final String STYLE_ARC_FLOW_CONNECTED     = "strokeColor=green;";
-    public static final String STYLE_ARC_FLOW_UNCONNECTED   = "strokeColor=red;dashed=1;";
-    public static final String STYLE_ARC_WITH_INTERFACE     = "strokeColor=orange;";
-    
-    public static final String STYLE_INTERFACE              = "shape=doubleEllipse;fillColor=white;strokeColor=orange;";
+    public static final String STYLE_TRANSITION                     = "fillColor=white;";
+    public static final String STYLE_TRANSITION_VALID               = "fillColor=white;strokeColor=green;";
+    public static final String STYLE_PLACE                          = "shape=ellipse;fillColor=white;";
+    public static final String STYLE_PLACE_VALID                    = "shape=ellipse;fillColor=white;strokeColor=green;";
+    public static final String STYLE_PLACE_SPECIAL_VALID            = "shape=doubleEllipse;fillColor=white;strokeColor=#31B404";
+    public static final String STYLE_PLACE_SPECIAL_INVALID          = "shape=doubleEllipse;fillColor=white;strokeColor=#FF0000";
+    public static final String STYLE_ARC                            = "defaultEdge";
+    public static final String STYLE_ARC_FLOW_CONNECTED             = "strokeColor=green;";
+    public static final String STYLE_ARC_FLOW_UNCONNECTED           = "strokeColor=red;dashed=1;";
+    public static final String STYLE_ARC_WITH_INTERFACE             = "strokeColor=orange;";
+    public static final String STYLE_INTERFACE                      = "shape=doubleEllipse;fillColor=white;strokeColor=orange;";
     
     // Operations
     public static final String OPERATION_PREFIX                     = "n";
@@ -35,37 +36,34 @@ public class Constants
     public static final String OPERATION_PARALLELISM                = "Parallelism";
     
     // Layouts
-    public static final String LAYOUT_VERTICALTREE          = "VerticalTree";
-    public static final String LAYOUT_HORIZONTALTREE        = "HorizontalTree";
-    public static final String LAYOUT_HIERARCHICAL          = "Hierarchical";
-    public static final String LAYOUT_ORGANIC               = "Organic";
+    public static final String LAYOUT_VERTICALTREE                  = "VerticalTree";
+    public static final String LAYOUT_HORIZONTALTREE                = "HorizontalTree";
+    public static final String LAYOUT_HIERARCHICAL                  = "Hierarchical";
+    public static final String LAYOUT_ORGANIC                       = "Organic";
 
     // Pnml
-    public static final String PNML_TAG                   = "pnml";
-    public static final String PNML_PLACE                   = "place";
-    public static final String PNML_TRANSITION              = "transition";
-    public static final String PNML_ARC                     = "arc";
-    public static final String PNML_TARGET                  = "target";
-    public static final String PNML_SOURCE                  = "source";
-    public static final String PNML_NET                     = "net";
-    public static final String PNML_ID                      = "id";
-    public static final String PNML_INITIALMARKING          = "initialMarking";
-    public static final String PNML_NAME                    = "name";
-    public static final String PNML_TYPE                    = "type";
-    public static final String PNML_GRAPHICS                = "graphics";
-    public static final String PNML_GRAPHICS_POSITION       = "position";
-    public static final String PNML_GRAPHICS_POSITION_X     = "x";
-    public static final String PNML_GRAPHICS_POSITION_Y     = "y";
-    public static final String PNML_TEXT     = "text";
-    // woLFEd
-    public static final String PNML_INTERFACE               = "interface";
-    public static final String PNML_INTERFACES               = "interfaces"; 
-    public static final String PNML_TOOL_SPECIFIC           = "toolspecific";
-    public static final String PNML_TOOL                    = "tool";
-    public static final String PNML_TOOL_VERSION            = "version";
-    
-    public static final String WOLFED_EXPORT_DOT            = ".DOT";
-    public static final String WOLFED_EXPORT_PNML           = ".PNML";
+    public static final String PNML_TAG                             = "pnml";
+    public static final String PNML_PLACE                           = "place";
+    public static final String PNML_TRANSITION                      = "transition";
+    public static final String PNML_ARC                             = "arc";
+    public static final String PNML_TARGET                          = "target";
+    public static final String PNML_SOURCE                          = "source";
+    public static final String PNML_NET                             = "net";
+    public static final String PNML_ID                              = "id";
+    public static final String PNML_INITIALMARKING                  = "initialMarking";
+    public static final String PNML_NAME                            = "name";
+    public static final String PNML_TYPE                            = "type";
+    public static final String PNML_GRAPHICS                        = "graphics";
+    public static final String PNML_GRAPHICS_POSITION               = "position";
+    public static final String PNML_GRAPHICS_POSITION_X             = "x";
+    public static final String PNML_GRAPHICS_POSITION_Y             = "y";
+    public static final String PNML_TEXT                            = "text";
+    public static final String PNML_INTERFACE                       = "interface";
+    public static final String PNML_INTERFACES                      = "interfaces"; 
+    public static final String PNML_TOOL_SPECIFIC                   = "toolspecific";
+    public static final String PNML_TOOL                            = "tool";
+    public static final String PNML_TOOL_VERSION                    = "version";
+   
 //    public static final String NAMED_TARGET = "namedTarget";
 //    public static final String POSITION = "position";
 //    public static final String RESOURCES = "resources";

@@ -48,18 +48,29 @@ public class MenuBarController extends JMenuBar
             
             fileMenu.add(openItem);
 
-            // Save
-            JMenuItem saveItem = new JMenuItem("Save");
-            saveItem.setMnemonic('v');
-            saveItem.addMouseListener(new MouseAdapter() 
+            // Save Pnml
+            JMenuItem savePnmlItem = new JMenuItem("Save PNML");
+            savePnmlItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
                 public void mousePressed(MouseEvent e)
                 {
-                    editor.saveFile(Constants.WOLFED_EXPORT_DOT);
+                    editor.saveFile(Constants.EDITOR_EXPORT_PNML);
                 }
             });
-            fileMenu.add(saveItem);	
+            fileMenu.add(savePnmlItem);
+            
+            // Save Dot
+            JMenuItem saveDotItem = new JMenuItem("Save DOT");
+            saveDotItem.addMouseListener(new MouseAdapter() 
+            {
+                @Override
+                public void mousePressed(MouseEvent e)
+                {
+                    editor.saveFile(Constants.EDITOR_EXPORT_DOT);
+                }
+            });
+            fileMenu.add(saveDotItem);	
 
             // Exit
             JMenuItem exitItem = new JMenuItem("Exit");
