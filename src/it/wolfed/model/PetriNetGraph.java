@@ -9,7 +9,6 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.swing.GraphComponent;
-import it.wolfed.swing.WolfedEditor;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.io.StringWriter;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -733,8 +731,9 @@ public class PetriNetGraph extends mxGraph
             for (Object edgeObj : this.getChildEdges()) {
                 mxCell arcEdge = (mxCell)edgeObj;
                 if (arcEdge.isEdge()) {
-                    System.out.println(arcEdge.toString());
+                    
                     if(arcEdge instanceof ArcEdge){
+                        System.out.println(arcEdge.toString());
                         netAsXML.appendChild(((ArcEdge)arcEdge).exportPNML(doc));
                     }else{
                         /*

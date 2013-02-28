@@ -5,7 +5,6 @@ import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -175,6 +174,18 @@ public class PlaceVertex extends Vertex
 	textAsXML.setTextContent(getValue().toString());
 	nameAsXML.appendChild(textAsXML);
 	placeAsXML.appendChild(nameAsXML);
+        
+         // the geometric aspect of the Vertex
+        
+        Element graphics = doc.createElement(Constants.PNML_GRAPHICS);
+        Element position = doc.createElement(Constants.PNML_GRAPHICS_POSITION);
+        position.setAttribute(Constants.PNML_GRAPHICS_POSITION_X, String.valueOf(getGeometry().getX()));
+        position.setAttribute(Constants.PNML_GRAPHICS_POSITION_Y, String.valueOf(getGeometry().getY()));
+	graphics.appendChild(position);
+        
+        
+        placeAsXML.appendChild(graphics);
+        
 	if(getTokens() > 0)
         {
             Element initialMarkingAsXML = doc.createElement(Constants.PNML_INITIALMARKING);
@@ -192,10 +203,15 @@ public class PlaceVertex extends Vertex
      */
       public String exportDOT() {
         
+          
+         
           return "\n "+this.getId()+" [=\""+getValue().toString()+", shape=circle]; ";
     }
 
     public String exportDOT(int preSet, int postSet) {
+        
+        System.out.println("Style :: "+getStyle());
+        
         StringBuilder dotBuilder = new StringBuilder();
         String shape = "";
         String color = " ]";
@@ -206,8 +222,18 @@ public class PlaceVertex extends Vertex
         color = (preSet > 0 ) ? ", color=\"green\" ]" : color;
         color = (postSet > 0 ) ? ", color=\"red\" ]" : color;
         
+        
         dotBuilder.append(shape);
         dotBuilder.append(color);
+        
+        switch(getStyle()){
+            case Constants.STYLE_PLACE_VALID:
+                shape = "circle ";
+                break;
+            case Constants.STYLE_PLACE_SPECIAL_VALID:
+                shape = "doublecircle ";
+                break;
+        }
        return dotBuilder.toString();
     }
 }

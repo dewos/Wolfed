@@ -133,6 +133,7 @@ public class ArcEdge extends Edge
 	arcAsXML.setAttribute(Constants.PNML_ID, getId());
 	arcAsXML.setAttribute(Constants.PNML_SOURCE, getSourceId());
 	arcAsXML.setAttribute(Constants.PNML_TARGET, getTargetId());
+        System.out.println("ExportPNML : "+getId()+" : "+getSourceId()+" : "+getTargetId());
 	return arcAsXML;
     }
 

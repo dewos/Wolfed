@@ -48,7 +48,7 @@ public class IterationPatternOperation extends Operation
     {
         PlaceVertex initialPlace = operationGraph.insertPlace("initial");
         TransitionVertex initialTransition = operationGraph.insertTransition(null);
-        PlaceVertex initialPlaceAsFirst = (PlaceVertex) getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
+        PlaceVertex initialPlaceAsFirst = this.operationGraph.getInitialPlaces().get(0);//PlaceVertex) getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
         
         operationGraph.insertArc(null, initialPlace, initialTransition);
         operationGraph.insertArc(null, initialTransition, initialPlaceAsFirst);
@@ -67,7 +67,7 @@ public class IterationPatternOperation extends Operation
     {
         PlaceVertex finalPlace = operationGraph.insertPlace("final");
         TransitionVertex finalTransition = operationGraph.insertTransition(null);
-        Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
+        Vertex finalPlaceAsFirst = this.operationGraph.getFinalPlaces().get(0);//getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
 
         operationGraph.insertArc(null, finalTransition, finalPlace);
         operationGraph.insertArc(null, finalPlaceAsFirst, finalTransition);
