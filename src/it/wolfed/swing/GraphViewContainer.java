@@ -1,8 +1,10 @@
 package it.wolfed.swing;
 
+
 import it.wolfed.model.PetriNetGraph;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import javax.swing.JButton;
 
 public class GraphViewContainer extends Container
 {
