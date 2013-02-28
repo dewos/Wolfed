@@ -69,8 +69,6 @@ public class WolfedEditor extends JFrame
      */
     private JTabbedPane tabs = new JTabbedPane();
     
-
-
     /**
      * Constructor.
      */
@@ -112,16 +110,15 @@ public class WolfedEditor extends JFrame
         try
         {
             // Sets system look
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            
+            // Force Numbus (for Said happiness )
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) 
             {
                 if ("Nimbus".equals(info.getName())) 
                 {
                     UIManager.setLookAndFeel(info.getClassName());
                     break;
-                }
-                else
-                {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 }
             }
             
