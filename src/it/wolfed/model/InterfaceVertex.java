@@ -29,6 +29,7 @@ public class InterfaceVertex extends Vertex
     }
 
     /**
+     * Export PNML interface
      * 
      * @param doc
      * @return 
@@ -43,9 +44,12 @@ public class InterfaceVertex extends Vertex
     }
     
     /**
+     * Export DOT interface
+     * 
      * @return 
      */
-      public String exportDOT() {
+      public String exportDOT() 
+      {
         return "\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=doublecircle, color=\"orange\" ]; ";
     }
 }

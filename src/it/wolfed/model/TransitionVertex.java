@@ -114,7 +114,11 @@ public class TransitionVertex extends Vertex
         return new TransitionVertex(parent, id, value, x, y);
     }
     
-    
+    /**
+     * Export PNML Transition.
+     * 
+     * @return 
+     */
     public Element exportPNML(Document doc ) throws ParserConfigurationException 
     {
         /** <transition id="t3"> */
@@ -149,6 +153,7 @@ public class TransitionVertex extends Vertex
     }
     
     /**
+     * Export DOT Transition.
      * 
      * @return 
      */

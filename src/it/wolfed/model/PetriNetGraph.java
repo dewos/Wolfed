@@ -790,7 +790,7 @@ public class PetriNetGraph extends mxGraph
             if (cellObj instanceof PlaceVertex)
             {
                 PlaceVertex placeVertex = (PlaceVertex) cellObj;
-                dot.append(placeVertex.exportDOT(getIncomingEdges(placeVertex).length, getOutgoingEdges(placeVertex).length));
+                dot.append(placeVertex.exportDOT());
             }
             if (cellObj instanceof TransitionVertex)
             {
