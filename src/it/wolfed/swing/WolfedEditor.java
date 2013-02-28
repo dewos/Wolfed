@@ -370,20 +370,28 @@ public class WolfedEditor extends JFrame
         switch (layoutName)
         {
             case Constants.LAYOUT_VERTICALTREE:
+            {
                 (new mxCompactTreeLayout(graph)).execute(parent);
                 break;
+            }
 
             case Constants.LAYOUT_HORIZONTALTREE:
+            {
                 (new mxCompactTreeLayout(graph, true)).execute(parent);
                 break;
+            }
 
             case Constants.LAYOUT_HIERARCHICAL:
+            {
                 (new mxHierarchicalLayout(graph)).execute(parent);
-                break;
-
+                break ;
+            }
+               
             case Constants.LAYOUT_ORGANIC:
+            {
                 (new mxOrganicLayout(graph)).execute(parent);
                 break;
+            }
         }
     }
 

@@ -32,18 +32,17 @@ public class MergeInterfacesOperation extends Operation
      * Process Merge Interfaces.
      * 
      * FistGraph:      
-     *                 I1
-     *                  ^
-     *                  |
-     *            P1 -> T1 -> P2
+     *                N1_I1
+     *                  ↑
+     *           ◯ → N1_T1 → ◯
      * 
      * -------------------------
      * 
      * SecondGraph:
      * 
-     *            P3 -> T2 -> P3
-     *                  |
-     *                  I1
+     *       N2_P1 → N2_T1 → N2_P2
+     *                 ↓
+     *               N2_I1
      * 
      * -------------------------
      * ResultGraph:
