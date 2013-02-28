@@ -41,6 +41,7 @@ public class Constants
     public static final String LAYOUT_ORGANIC               = "Organic";
 
     // Pnml
+    public static final String PNML_TAG                   = "pnml";
     public static final String PNML_PLACE                   = "place";
     public static final String PNML_TRANSITION              = "transition";
     public static final String PNML_ARC                     = "arc";
@@ -55,7 +56,16 @@ public class Constants
     public static final String PNML_GRAPHICS_POSITION       = "position";
     public static final String PNML_GRAPHICS_POSITION_X     = "x";
     public static final String PNML_GRAPHICS_POSITION_Y     = "y";
+    public static final String PNML_TEXT     = "text";
+    // woLFEd
+    public static final String PNML_INTERFACE               = "interface";
+    public static final String PNML_INTERFACES               = "interfaces"; 
+    public static final String PNML_TOOL_SPECIFIC           = "toolspecific";
+    public static final String PNML_TOOL                    = "tool";
+    public static final String PNML_TOOL_VERSION            = "version";
     
+    public static final String WOLFED_EXPORT_DOT            = ".DOT";
+    public static final String WOLFED_EXPORT_PNML           = ".PNML";
 //    public static final String NAMED_TARGET = "namedTarget";
 //    public static final String POSITION = "position";
 //    public static final String RESOURCES = "resources";

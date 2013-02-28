@@ -1,6 +1,7 @@
 
 package it.wolfed.swing;
 
+import it.wolfed.util.Constants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -47,9 +48,17 @@ public class MenuBarController extends JMenuBar
             
             fileMenu.add(openItem);
 
-            // Open
+            // Save
             JMenuItem saveItem = new JMenuItem("Save");
             saveItem.setMnemonic('v');
+            saveItem.addMouseListener(new MouseAdapter() 
+            {
+                @Override
+                public void mousePressed(MouseEvent e)
+                {
+                    editor.saveFile(Constants.WOLFED_EXPORT_DOT);
+                }
+            });
             fileMenu.add(saveItem);	
 
             // Exit
