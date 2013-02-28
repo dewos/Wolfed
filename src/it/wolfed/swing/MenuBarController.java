@@ -11,7 +11,36 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class MenuBarController extends JMenuBar
-{   
+{
+    /**
+     * Available operations (in menu).
+     */
+    private String[] operations =
+    {
+        Constants.OPERATION_ALTERNATION,
+        Constants.OPERATION_DEFFEREDCHOICE,
+        Constants.OPERATION_EXPLICITCHOICE,
+        Constants.OPERATION_ITERATIONONEORMORE,
+        Constants.OPERATION_ITERATIONONESERVEPERTIME,
+        Constants.OPERATION_ITERATIONZEROORMORE,
+        Constants.OPERATION_MUTUALEXCLUSION,
+        Constants.OPERATION_MERGEGRAPHS,
+        Constants.OPERATION_MERGEINTERFACES,
+        Constants.OPERATION_PARALLELISM,
+        Constants.OPERATION_SEQUENCING
+    };
+    
+    /**
+     * Available layouts (in menu).
+     */
+    private String[] layouts =
+    {
+        Constants.LAYOUT_VERTICALTREE,
+        Constants.LAYOUT_HIERARCHICAL,
+        Constants.LAYOUT_ORGANIC,
+    };
+    
+    
     public MenuBarController(final WolfedEditor editor)
     {
         // File
@@ -48,19 +77,29 @@ public class MenuBarController extends JMenuBar
             
             fileMenu.add(openItem);
 
-            // Save
-            JMenuItem saveItem = new JMenuItem("Save");
-            saveItem.setMnemonic('v');
-            saveItem.addMouseListener(new MouseAdapter() 
+            // Save Pnml
+            JMenuItem savePnmlItem = new JMenuItem("Save PNML");
+            savePnmlItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
                 public void mousePressed(MouseEvent e)
                 {
-                    editor.saveFile(Constants.WOLFED_EXPORT_DOT);
-                    editor.saveFile(Constants.WOLFED_EXPORT_PNML);
+                    editor.saveFile(Constants.EDITOR_EXPORT_PNML);
                 }
             });
-            fileMenu.add(saveItem);	
+            fileMenu.add(savePnmlItem);
+            
+            // Save Dot
+            JMenuItem saveDotItem = new JMenuItem("Save DOT");
+            saveDotItem.addMouseListener(new MouseAdapter() 
+            {
+                @Override
+                public void mousePressed(MouseEvent e)
+                {
+                    editor.saveFile(Constants.EDITOR_EXPORT_DOT);
+                }
+            });
+            fileMenu.add(saveDotItem);	
 
             // Exit
             JMenuItem exitItem = new JMenuItem("Exit");
@@ -82,7 +121,7 @@ public class MenuBarController extends JMenuBar
             operationMenu.setMnemonic('p');
             add(operationMenu);
             
-            for(String operation : editor.getOperations())
+            for(String operation : operations)
             {
                 JMenuItem operationItem = new JMenuItem(operation);
                 operationItem.addActionListener(new ActionListener() 
@@ -104,7 +143,7 @@ public class MenuBarController extends JMenuBar
             layoutMenu.setMnemonic('l');
             add(layoutMenu);
 
-            for(String layout : editor.getLayouts())
+            for(String layout : layouts)
             {
                 JMenuItem layoutItem = new JMenuItem(layout);
                 layoutItem.addActionListener(new ActionListener() 

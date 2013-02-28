@@ -29,24 +29,27 @@ public class InterfaceVertex extends Vertex
     }
 
     /**
+     * Export PNML interface
      * 
      * @param doc
      * @return 
      */
-    public Element exportPNML(Document doc) {
-        /**
-         * <interface id="i1">
-         */
-        Element interfaceAsXML = doc.createElement(Constants.PNML_INTERFACE);
-	interfaceAsXML.setAttribute(Constants.PNML_ID, this.getId());
+    public Element exportPNML(Document doc) 
+    {
+        /**<interface id="i1"> */
+        Element interf = doc.createElement(Constants.PNML_INTERFACE);
+	interf.setAttribute(Constants.PNML_ID, getId());
         
-        return interfaceAsXML;
+        return interf;
     }
+    
     /**
+     * Export DOT interface
      * 
      * @return 
      */
-      public String exportDOT() {
+      public String exportDOT() 
+      {
         return "\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=doublecircle, color=\"orange\" ]; ";
     }
 }

@@ -1,42 +1,27 @@
 
 package it.wolfed.model;
 
+import com.mxgraph.model.mxCell;
 import it.wolfed.util.Constants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
  * Arcs are the edges type in a PetriNets.
- * 
- * Note: mxCell superclass force the setup of
- * the arc only AFTER the cell creation,
- * so sourceId and targetId are here only
- * for using them in the PetriNetGraph factory.
- *  
- * {@link PetriNetGraph#factory(org.w3c.dom.Node, java.lang.String)
  */
 public class ArcEdge extends Edge
 {
-    /**
-     * Source mapping of PNML file.
-     */
-    private String sourceId;
-    
-    /**
-     * Target mapping of PNML file.
-     */
-    private String targetId;
-    
     /**
      * {@link ArcEdge} Constructor. 
      * 
      * @param parent
      * @param id
-     * @param value 
+     * @param value
+     * @param source
+     * @param target  
      */
-    public ArcEdge(Object parent, String id, Object value)
+    public ArcEdge(Object parent, String id, Object value, Vertex source, Vertex target)
     {
         super(
             parent,
@@ -45,6 +30,9 @@ public class ArcEdge extends Edge
             null,
             null
         );  
+        
+        setSource(source);
+        setTarget(target);
     }
     
     /**
@@ -64,81 +52,45 @@ public class ArcEdge extends Edge
      * 
      * @param parent
      * @param dom
+     * @param graph 
      * @return ArcEdge
      */
-    public static ArcEdge factory(Object parent, Node dom)
+    public static ArcEdge factory(Object parent, Node dom, PetriNetGraph graph)
     {
-        NamedNodeMap transitionAttributes = dom.getAttributes();
-        String id = transitionAttributes.getNamedItem(Constants.PNML_ID)
-                        .getNodeValue();
+        String id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getNodeValue();
+        String sourceId = dom.getAttributes().getNamedItem(Constants.PNML_SOURCE).getNodeValue();
+        String targetId = dom.getAttributes().getNamedItem(Constants.PNML_TARGET).getNodeValue();
         
-        String sourceId = transitionAttributes.getNamedItem(Constants.PNML_SOURCE)
-                             .getNodeValue();
-
-        String targetId = transitionAttributes.getNamedItem(Constants.PNML_TARGET)
-                        .getNodeValue();
-        
-        ArcEdge arc = new ArcEdge(parent, id, null);
-        
-        arc.setTargetId(targetId);
-        arc.setSourceId(sourceId);
-        return arc;
+        return new ArcEdge(parent, id, null, graph.getVertexById(sourceId), graph.getVertexById(targetId));
     };
     
     /**
-     * Gets Pnml source;
+     * Export PNML.
+     * Static for the edge creation bug.
      * 
-     * @return String
+     * @param doc
+     * @param edge
+     * @return 
      */
-    public String getSourceId()
+    public static Element exportPNML(Document doc, mxCell edge)
     {
-        return sourceId;
+        /** <arc id="a8" source="p4" target="t4"> */         
+        Element arc = doc.createElement(Constants.PNML_ARC);
+        arc.setAttribute(Constants.PNML_ID, edge.getId());
+        arc.setAttribute(Constants.PNML_SOURCE, edge.getSource().getId());
+        arc.setAttribute(Constants.PNML_TARGET, edge.getTarget().getId());
+
+        return arc;
     }
     
     /**
-     * Sets Pnml source.
-     * 
-     * @param sourceId 
+     * Export DOT edge.
+     * Static for the edge creation bug.
+     *
+     * @return
      */
-    public void setSourceId(String sourceId)
+    public static String exportDOT(mxCell edge)
     {
-        this.sourceId = sourceId;
-    }
-
-    /**
-     * Gets Pnml target.
-     * 
-     * @return String
-     */
-    public String getTargetId()
-    {
-        return targetId;
-    }
-
-    /**
-     * Sets Pnml target.
-     * 
-     * @param targetId 
-     */
-    public void setTargetId(String targetId)
-    {
-        this.targetId = targetId;
-    }
-
-    public Element exportPNML(Document doc) {
-        /*
-         * <arc id="a8" source="p4" target="t4">
-         */
-	Element arcAsXML = doc.createElement(Constants.PNML_ARC);
-	arcAsXML.setAttribute(Constants.PNML_ID, getId());
-	arcAsXML.setAttribute(Constants.PNML_SOURCE, getSourceId());
-	arcAsXML.setAttribute(Constants.PNML_TARGET, getTargetId());
-        System.out.println("ExportPNML : "+getId()+" : "+getSourceId()+" : "+getTargetId());
-	return arcAsXML;
-    }
-
-    public String exportDOT() {
-        return "\n" + getSourceId() + " -> " + getTargetId() + ";";
-        
+        return "\n" + edge.getSource().getId() + " -> " + edge.getTarget().getId() + ";";
     }
 }
