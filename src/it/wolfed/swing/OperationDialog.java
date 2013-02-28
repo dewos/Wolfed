@@ -33,7 +33,7 @@ public class OperationDialog extends JDialog
         this.selectedGraphs = new ArrayList<>();
 
         setModal(true);// Stop thread
-        setTitle("Select " + requiredGraphs + " graphs.");
+        setTitle("Select " + requiredGraphs + " Workflow/Petri Net.");
         setSize(300, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -65,7 +65,7 @@ public class OperationDialog extends JDialog
                 box.addItem(graph);
             }
             
-            JLabel label = new JLabel("Graph " + (i));
+            JLabel label = new JLabel(":: Available WF/PN ::");
             label.setLabelFor(box);
 
             boxList.add(box);

@@ -63,7 +63,7 @@ public class ButtonTabComponent extends JPanel {
     private final List<PetriNetGraph> openedGraphs;
     private final GraphViewContainer graphViewContainer;
 
-    public ButtonTabComponent(final JTabbedPane pane, List<PetriNetGraph> openedGraphs, GraphViewContainer graphViewContainer) {
+    public ButtonTabComponent(final JTabbedPane pane, List<PetriNetGraph> openedGraphs, GraphViewContainer graphViewContainer, String tabName) {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
         if (pane == null) {
@@ -75,15 +75,7 @@ public class ButtonTabComponent extends JPanel {
         setOpaque(false);
         
         //make JLabel read titles from JTabbedPane
-        JLabel label = new JLabel() {
-            public String getText() {
-                int i = pane.indexOfTabComponent(ButtonTabComponent.this);
-                if (i != -1) {
-                    return pane.getTitleAt(i);
-                }
-                return null;
-            }
-        };
+        JLabel label = new JLabel(tabName);
         
         add(label);
         //add more space between the label and the button
@@ -101,7 +93,7 @@ public class ButtonTabComponent extends JPanel {
         public TabButton() {
             int size = 17;
             setPreferredSize(new Dimension(size, size));
-            setToolTipText("close this tab");
+            setToolTipText("Close this WF/PN tab");
             //Make the button looks the same for all Laf's
             setUI(new BasicButtonUI());
             //Make it transparent

@@ -152,15 +152,10 @@ public class WolfedEditor extends JFrame
      */
     public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph)
     {
-        
         GraphViewContainer graphViewContainer = new GraphViewContainer(graph);
-        
-        
-        
         tabs.add(tabName, graphViewContainer);
-        tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer));
-        
-//        tabs.add(tabName, new GraphViewContainer(graph, tabs));
+        // for the close tab
+        tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         getOpenedGraphs().add(graph);
 
