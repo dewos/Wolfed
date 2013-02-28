@@ -8,10 +8,14 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import it.wolfed.swing.GraphComponent;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -679,7 +683,7 @@ public class PetriNetGraph extends mxGraph
      * @param exportType
      * @return 
      */
-    public String exportPNML() throws ParserConfigurationException, TransformerConfigurationException, TransformerException 
+    public String exportPNML() throws ParserConfigurationException, TransformerConfigurationException, TransformerException, IOException 
     {
         /** <?xml version="1.0" encoding="UTF-8"?> */
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -757,14 +761,22 @@ public class PetriNetGraph extends mxGraph
         */
         
         // Output
-        doc.getDocumentElement().normalize();
-        DOMSource source = new DOMSource(doc);
-        StringWriter sw = new StringWriter();
-        StreamResult result = new StreamResult(sw);
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.transform(source, result);
-
-        return sw.toString();
+        OutputFormat format = new OutputFormat(doc);
+        format.setLineWidth(65);
+        format.setIndenting(true);
+        format.setIndent(2);
+        Writer out = new StringWriter();
+        XMLSerializer serializer = new XMLSerializer(out, format);
+        serializer.serialize(doc);
+        return out.toString();
+//        doc.getDocumentElement().normalize();
+//        DOMSource source = new DOMSource(doc);
+//        StringWriter sw = new StringWriter();
+//        StreamResult result = new StreamResult(sw);
+//        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+//        transformer.transform(source, result);
+//
+//        return sw.toString();
     }
     
     /**

@@ -1,6 +1,7 @@
 package it.wolfed.operation;
 
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.Vertex;
 
 /**
@@ -52,5 +53,8 @@ public class DefferedChoiceOperation extends Operation
         
         removeVertexAndHisEdges(initialPlaceAsSecond);
         removeVertexAndHisEdges(finalPlaceAsSecond);
+        // set token
+        ((PlaceVertex)initialPlaceAsFirst).setTokens(1);
+        
     }
 }

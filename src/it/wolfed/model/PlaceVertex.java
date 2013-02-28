@@ -3,7 +3,6 @@ package it.wolfed.model;
 
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -181,6 +180,8 @@ public class PlaceVertex extends Vertex
         position.setAttribute(Constants.PNML_GRAPHICS_POSITION_X, String.valueOf(getGeometry().getX()));
         position.setAttribute(Constants.PNML_GRAPHICS_POSITION_Y, String.valueOf(getGeometry().getY()));
 	graphics.appendChild(position);
+        
+        place.appendChild(graphics);
         
         if(tokens > 0)
         {
