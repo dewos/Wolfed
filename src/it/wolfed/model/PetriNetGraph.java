@@ -670,25 +670,17 @@ public class PetriNetGraph extends mxGraph
      */
     public String exportPNML() throws ParserConfigurationException, TransformerConfigurationException, TransformerException 
     {
-        
+        Set<InterfaceVertex> interfacesFound = new HashSet<>();
+
         /** <?xml version="1.0" encoding="UTF-8"?> */
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        
-        /**
-        * <toolspecific tool="WoLFEd" version="currentVersion">
-        *      <interface id="i1" />
-        * </toolspecific>
-        */
-        Set<InterfaceVertex> interfacesFound = new HashSet<>();
         Element toolSpecific = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
-        toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
-        toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
 
-        /**     <pnml> */
+        /** <pnml> */
         Element pnml = doc.createElement(Constants.PNML_TAG);
         doc.appendChild(pnml);
 
-        /**         <net type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb" id="noId"> */
+        /**     <net type="http://www.informatik.hu-berlin.de/top/pntd/ptNetb" id="noId"> */
         Element net = doc.createElement(Constants.PNML_NET);
         net.setAttribute(Constants.PNML_TYPE, getType());
         net.setAttribute(Constants.PNML_ID, getId());
@@ -696,13 +688,13 @@ public class PetriNetGraph extends mxGraph
         
         for (Object cellObj : getChildCells())
         {
-            /** <place id="p1"> ... </place> */
+            /** <place id="p1" name="p1"> ... </place> */
             if(cellObj instanceof PlaceVertex)
             {
                 PlaceVertex place = (PlaceVertex) cellObj;
                 net.appendChild(place.exportPNML(doc));
             }
-            /** <transition id="t1"> ... </transition> */
+            /** <transition id="t1" name="t1"> ... </transition> */
             else if(cellObj instanceof TransitionVertex)
             {
                 TransitionVertex transition = (TransitionVertex) cellObj;
@@ -718,12 +710,20 @@ public class PetriNetGraph extends mxGraph
                     net.appendChild(ArcEdge.exportXML(doc, cell));
                 }
             }
-            /**  <interface id="i1"> ... </interface> */
+            /**  <interface id="i1" name="i1"> ... </interface> */
             else if(cellObj instanceof InterfaceVertex)
             {
                 InterfaceVertex interf = (InterfaceVertex) cellObj;
                 toolSpecific.appendChild(interf.exportPNML(doc));
                 interfacesFound.add(interf);
+                
+                /*
+                 * Interfaces are not PNML complaint.
+                 * A "Place" mirror of the interface will be added to
+                 * the Net node, for compatibility propuose.
+                 */
+                 PlaceVertex mirrorInterf = new PlaceVertex(getDefaultParent(), interf.getId(), interf.getValue(), interf.getGeometry().getX(), interf.getGeometry().getY());
+                 net.appendChild(mirrorInterf.exportPNML(doc));
             }
         }
             
@@ -734,12 +734,14 @@ public class PetriNetGraph extends mxGraph
         // Transform places to interface
         if(interfacesFound.size() > 0)
         {
+            /**
+            * <toolspecific tool="WoLFEd" version="currentVersion">
+            *      <interface id="i1" />
+            * </toolspecific>
+            */
+            toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
+            toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
             net.appendChild(toolSpecific);
-            
-            for(InterfaceVertex interf : interfacesFound)
-            {
-                // @todo
-            }
         }
         
         // Output
