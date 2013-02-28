@@ -135,8 +135,7 @@ public class TransitionVertex extends Vertex
         name.appendChild(text);
        
 	 /**
-         * Ignored for now.
-         * 
+         * The geometric aspect of the Vertex
 	 *              <graphics>
 	 *                  <position x="275" y="140"/>
 	 *                  <dimension x="40" y="40"/>
@@ -147,7 +146,13 @@ public class TransitionVertex extends Vertex
 	 *                  <orientation>1</orientation>
 	 *              </toolspecific>
 	 */
-
+        Element graphics = doc.createElement(Constants.PNML_GRAPHICS);
+        Element position = doc.createElement(Constants.PNML_GRAPHICS_POSITION);
+        position.setAttribute(Constants.PNML_GRAPHICS_POSITION_X, String.valueOf(getGeometry().getX()));
+        position.setAttribute(Constants.PNML_GRAPHICS_POSITION_Y, String.valueOf(getGeometry().getY()));
+	graphics.appendChild(position);
+        
+        transition.appendChild(graphics);
         /**  </transition>  */
         return transition;
     }

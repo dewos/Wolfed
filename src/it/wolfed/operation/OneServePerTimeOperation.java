@@ -38,5 +38,6 @@ public class OneServePerTimeOperation extends Operation
 
         // set tokens
         placeVertex.setTokens(1);
+        this.operationGraph.getInitialPlaces().get(0).setTokens(1);
     }
 }

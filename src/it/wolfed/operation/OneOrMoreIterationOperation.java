@@ -27,5 +27,8 @@ public class OneOrMoreIterationOperation extends Operation
         Vertex finalPlaceAsN0 = getEquivalentVertex(1, this.iterationGraph.getFinalPlaces().get(0));
         getOperationGraph().insertArc(null, finalPlaceAsN0, intermediateTransition);
         getOperationGraph().insertArc(null, intermediateTransition, initialPlaceAsN0);
+        
+        // set token to initial place
+        this.operationGraph.getInitialPlaces().get(0).setTokens(1);
     }
 }

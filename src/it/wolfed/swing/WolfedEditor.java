@@ -21,10 +21,14 @@ import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -35,6 +39,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -72,6 +77,7 @@ public class WolfedEditor extends JFrame
      * AnalysisComponent.
      */
     private JTabbedPane tabs = new JTabbedPane();
+    private JFileChooser fc = new JFileChooser(".");
 
     /**
      * Constructor.
@@ -131,7 +137,7 @@ public class WolfedEditor extends JFrame
             int xSize = ((int) tk.getScreenSize().getWidth());
             int ySize = ((int) tk.getScreenSize().getHeight() - 40);
             this.setSize(xSize, ySize);
-        } 
+        }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
         {
             showErrorMessage(ex);
@@ -173,7 +179,10 @@ public class WolfedEditor extends JFrame
      */
     public void openFile()
     {
-        JFileChooser fc = new JFileChooser(".");
+        if(fc == null)
+        {
+            fc = new JFileChooser(".");
+        }
         fc.setFileFilter(new FileNameExtensionFilter("xml, pnml", "xml", "pnml"));
         fc.setCurrentDirectory(new File("nets"));
 
@@ -207,7 +216,7 @@ public class WolfedEditor extends JFrame
                 String defaultId = filePnml.getName().substring(0, filePnml.getName().lastIndexOf('.'));
                 insertGraph(filePnml.getName(), PetriNetGraph.factory(netNode, defaultId));
             }
-        } 
+        }
         catch (ParserConfigurationException | SAXException | IOException ex)
         {
             showErrorMessage(ex);
@@ -223,6 +232,7 @@ public class WolfedEditor extends JFrame
      */
     public void saveFile(String exportType)
     {
+
         // @todo chooser window
 
         try
@@ -245,8 +255,55 @@ public class WolfedEditor extends JFrame
         } 
         catch (TransformerException | ParserConfigurationException ex)
         {
-            showErrorMessage(ex);
+            fc = new JFileChooser(".");
         }
+        
+        int returnVal = fc.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fc.getSelectedFile();
+            System.out.println("File : "+file.getAbsolutePath());
+            try
+            {
+                String exportedGraph = null; 
+                switch (exportType)
+                {
+                    case Constants.EDITOR_EXPORT_PNML:
+                    {
+                        exportedGraph = getSelectedGraph().exportPNML();
+                        System.out.println(exportedGraph);
+                        break;
+                    }
+                    case Constants.EDITOR_EXPORT_DOT:
+                    {
+                        exportedGraph = getSelectedGraph().exportDOT();
+                        System.out.println(exportedGraph);
+                    }
+                }
+               
+		File pnmlFile = new File(file+".pnml");
+		if(pnmlFile.exists())
+                    pnmlFile.delete();
+		pnmlFile.createNewFile();
+		BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(pnmlFile.getCanonicalPath()));
+		pnmlWriter.write(exportedGraph);
+		pnmlWriter.flush();
+		pnmlWriter.close();
+		
+                
+                
+                
+                
+                
+                
+                
+            }
+            catch (TransformerException | ParserConfigurationException | IOException ex)
+            {
+                showErrorMessage(ex);
+            }           
+        }
+
     }
 
     /**
@@ -345,7 +402,7 @@ public class WolfedEditor extends JFrame
             operationGraph = operation.getOperationGraph();
             insertGraph(operationGraph.getId(), operationGraph);
             executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
-        } 
+        }
         catch (Exception ex)
         {
             showErrorMessage(ex);

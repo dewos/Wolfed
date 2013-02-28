@@ -42,5 +42,8 @@ public class SequencingOperation extends Operation
 
         cloneIncomingEdges(finalPlaceAsFirst, initialPlaceAsSecond);
         removeVertexAndHisEdges(finalPlaceAsFirst);
+        
+        // set token to initial place
+        this.operationGraph.getInitialPlaces().get(0).setTokens(1);
     }
 }
