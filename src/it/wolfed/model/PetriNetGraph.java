@@ -185,6 +185,9 @@ public class PetriNetGraph extends mxGraph
         graph.getModel().beginUpdate();
         Object parent = graph.getDefaultParent();
 
+        // Holds the arcs founds
+        Set<ArcEdge> arcs = new HashSet<>();
+        
         try
         {
             for (final Node elementNode : new IterableNodeList(dom.getChildNodes())) 
@@ -204,11 +207,19 @@ public class PetriNetGraph extends mxGraph
                             break;
 
                         case Constants.PNML_ARC:
-                            graph.addCell(ArcEdge.factory(parent, elementNode, graph));
-                            graph.getSetNextArcId();
+                            arcs.add(ArcEdge.factory(parent, elementNode, graph));             
                             break;
                     }
                 }
+            }
+            
+            /**
+             * Arcs should always be processed AFTER all the vertex.
+             */
+            for(ArcEdge arc : arcs)
+            {
+                graph.addCell(arc);
+                graph.getSetNextArcId();
             }
         }
         finally
