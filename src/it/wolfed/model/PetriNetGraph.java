@@ -733,7 +733,6 @@ public class PetriNetGraph extends mxGraph
                 if (arcEdge.isEdge()) {
                     
                     if(arcEdge instanceof ArcEdge){
-                        System.out.println(arcEdge.toString());
                         netAsXML.appendChild(((ArcEdge)arcEdge).exportPNML(doc));
                     }else{
                         /*
@@ -819,7 +818,6 @@ public class PetriNetGraph extends mxGraph
             for (Object edgeObj : this.getChildEdges()) {
                 mxCell arcEdge = (mxCell)edgeObj;
                 if (arcEdge.isEdge()) {
-                    System.out.println(arcEdge.toString());
                     if(arcEdge instanceof ArcEdge){
                         exportedGraph.append(((ArcEdge)arcEdge).exportDOT());
                     }else{
