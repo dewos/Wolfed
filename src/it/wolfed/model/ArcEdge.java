@@ -65,13 +65,14 @@ public class ArcEdge extends Edge
     };
     
     /**
-     * Static for the edge bug.
+     * Export PNML.
+     * Static for the edge creation bug.
      * 
      * @param doc
      * @param edge
      * @return 
      */
-    public static Element exportXML(Document doc, mxCell edge)
+    public static Element exportPNML(Document doc, mxCell edge)
     {
         /** <arc id="a8" source="p4" target="t4"> */         
         Element arc = doc.createElement(Constants.PNML_ARC);
@@ -80,5 +81,16 @@ public class ArcEdge extends Edge
         arc.setAttribute(Constants.PNML_TARGET, edge.getTarget().getId());
 
         return arc;
+    }
+    
+    /**
+     * Export DOT edge.
+     * Static for the edge creation bug.
+     *
+     * @return
+     */
+    public static String exportDOT(mxCell edge)
+    {
+        return "\n" + edge.getSource().getId() + " -> " + edge.getTarget().getId() + ";";
     }
 }

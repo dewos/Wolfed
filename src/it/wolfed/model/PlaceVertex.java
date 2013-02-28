@@ -195,4 +195,33 @@ public class PlaceVertex extends Vertex
         /**  </place>  */
         return place;
     }
+    
+    /**
+     * Export DOT Place.
+     * 
+     * @param preSet
+     * @param postSet
+     * @return 
+     */
+    public String exportDOT(int preSet, int postSet)
+    {
+        StringBuilder dotBuilder = new StringBuilder();
+        String shape = "";
+        String color = " ]";
+
+        dotBuilder
+            .append("\n ")
+            .append(this.getId())
+            .append(" [label=\"")
+            .append(getValue().toString())
+            .append("\", shape=");
+
+        shape = (preSet != 0 || postSet != 0) ? "doublecircle " : "circle ";
+        color = (preSet > 0) ? ", color=\"green\" ]" : color;
+        color = (postSet > 0) ? ", color=\"red\" ]" : color;
+
+        dotBuilder.append(shape);
+        dotBuilder.append(color);
+        return dotBuilder.toString();
+    }
 }

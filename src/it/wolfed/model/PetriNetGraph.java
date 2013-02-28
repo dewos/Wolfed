@@ -674,15 +674,13 @@ public class PetriNetGraph extends mxGraph
     }
 
     /**
-     * Export net to String.
+     * Export graph to XML String.
      * 
      * @param exportType
      * @return 
      */
     public String exportPNML() throws ParserConfigurationException, TransformerConfigurationException, TransformerException 
     {
-        Set<InterfaceVertex> interfacesFound = new HashSet<>();
-
         /** <?xml version="1.0" encoding="UTF-8"?> */
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         Element toolSpecific = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
@@ -718,7 +716,7 @@ public class PetriNetGraph extends mxGraph
                 
                 if(cell.isEdge())
                 {
-                    net.appendChild(ArcEdge.exportXML(doc, cell));
+                    net.appendChild(ArcEdge.exportPNML(doc, cell));
                 }
             }
             /**  <interface id="i1" name="i1"> ... </interface> */
@@ -726,7 +724,6 @@ public class PetriNetGraph extends mxGraph
             {
                 InterfaceVertex interf = (InterfaceVertex) cellObj;
                 toolSpecific.appendChild(interf.exportPNML(doc));
-                interfacesFound.add(interf);
                 
                 /*
                  * Interfaces are not PNML complaint.
@@ -737,23 +734,21 @@ public class PetriNetGraph extends mxGraph
                  net.appendChild(mirrorInterf.exportPNML(doc));
             }
         }
-            
+
+        if(indexInterfaces > 0)
+        {
+            /**     <toolspecific tool="WoLFEd" version="currentVersion">
+            *            <interface id="i1" />
+            *       </toolspecific>
+            */
+            net.appendChild(toolSpecific);
+            toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
+            toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
+        }
+
         /**     </net>
         * </pnml> 
         */
-        
-        // Transform places to interface
-        if(interfacesFound.size() > 0)
-        {
-            /**
-            * <toolspecific tool="WoLFEd" version="currentVersion">
-            *      <interface id="i1" />
-            * </toolspecific>
-            */
-            toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
-            toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
-            net.appendChild(toolSpecific);
-        }
         
         // Output
         doc.getDocumentElement().normalize();
@@ -764,5 +759,52 @@ public class PetriNetGraph extends mxGraph
         transformer.transform(source, result);
 
         return sw.toString();
+    }
+    
+    /**
+     * Export graph to DOT String.
+     * 
+     * @return 
+     */
+    public String exportDOT() 
+    {
+        StringBuilder dot = new StringBuilder();
+        dot.append("digraph WoLFEdGraph{ \n rankdir=LR;");
+     
+        // Vertex
+        for (Object cellObj : this.getChildVertices())
+        {
+            if (cellObj instanceof InterfaceVertex)
+            {
+                InterfaceVertex interfaceVertex = (InterfaceVertex) cellObj;
+                dot.append(interfaceVertex.exportDOT());
+            }
+            if (cellObj instanceof PlaceVertex)
+            {
+                PlaceVertex placeVertex = (PlaceVertex) cellObj;
+                dot.append(placeVertex.exportDOT(getIncomingEdges(placeVertex).length, getOutgoingEdges(placeVertex).length));
+            }
+            if (cellObj instanceof TransitionVertex)
+            {
+                TransitionVertex transitionVertex = (TransitionVertex) cellObj;
+                dot.append(transitionVertex.exportDOT());
+            }
+        }
+
+        // Edges
+        for (Object edgeObj : this.getChildEdges())
+        {
+            mxCell edge = (mxCell) edgeObj;
+            
+            if (edge.isEdge())
+            {
+                dot.append(ArcEdge.exportDOT(edge));
+            }
+        }
+
+        dot.append("\n }");
+        
+        return dot.toString();
+
     }
 }

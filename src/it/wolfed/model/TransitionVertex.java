@@ -147,4 +147,13 @@ public class TransitionVertex extends Vertex
         /**  </transition>  */
         return transition;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+      public String exportDOT() 
+      {
+        return "\n "+ this.getId() + " [label=\"" + getValue().toString() + "\", shape=box ]; ";
+    }
 }
