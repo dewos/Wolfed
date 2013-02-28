@@ -1,7 +1,7 @@
 package it.wolfed.swing;
 
 import it.wolfed.model.PetriNetGraph;
-import it.wolfed.operations.IterationOperation;
+import it.wolfed.operationsOld.IterationOperation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

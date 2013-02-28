@@ -1,4 +1,4 @@
-package it.wolfed.operationsRefactored;
+package it.wolfed.operations;
 
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;

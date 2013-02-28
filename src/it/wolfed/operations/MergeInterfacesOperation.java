@@ -1,112 +1,96 @@
 package it.wolfed.operations;
 
-import com.mxgraph.model.mxCell;
 import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
-import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
-import java.util.List;
 
+/**
+ * MergeInterfaces Operation.
+ */
 public class MergeInterfacesOperation extends Operation
-{  
-    public MergeInterfacesOperation(List<PetriNetGraph> inputGraphs) throws Exception
-    {
-        super("system", inputGraphs, 2, true);
-    }
+{
+    PetriNetGraph firstGraph;
+    PetriNetGraph secondGraph;
     
+    /**
+     * @param operationGraph
+     * @param firstGraph
+     * @param secondGraph
+     * @throws Exception  
+     */
+    public MergeInterfacesOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph, PetriNetGraph secondGraph) throws Exception
+    {
+        super(operationGraph);
+        this.firstGraph = getIfIsWorkFlow(firstGraph);
+        this.secondGraph = getIfIsWorkFlow(secondGraph);
+        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        execute();
+    }
+   
+    /**
+     * Process Merge Interfaces.
+     * 
+     * FistGraph:      
+     *                 I1
+     *                  ^
+     *                  |
+     *            P1 -> T1 -> P2
+     * 
+     * -------------------------
+     * 
+     * SecondGraph:
+     * 
+     *            P3 -> T2 -> P3
+     *                  |
+     *                  I1
+     * 
+     * -------------------------
+     * ResultGraph:
+     * 
+     */
     @Override
-    void process()
+    void process() throws Exception
     {
-        mergeInterfaces();
+        int countInterfaces = 0;
         
-        // @todo praticamente è il parallelOperation, bisogna decidere un modo
-        // per poter utilizzare le operazioni dentro le operazioni
-        parallel();
-    }
-    
-    private void mergeInterfaces()
-    {
-        PetriNetGraph net0 = getInputGraphs().get(0);
-        PetriNetGraph net1 = getInputGraphs().get(1);
-
-        // Finds all interfaces in n0
-        for(Object cellObj : net0.getChildVertices())
+        // Finds all interfaces in first
+        for(Object cellObj : firstGraph.getChildVertices())
         {
             if(cellObj instanceof InterfaceVertex)
             {
-                InterfaceVertex interfN0 = (InterfaceVertex) cellObj;
-                InterfaceVertex interfN1 = (InterfaceVertex) net1.getVertexByValue(interfN0.getValue());
+                InterfaceVertex interfFirst = (InterfaceVertex) cellObj;
+                InterfaceVertex interfSecond = (InterfaceVertex) secondGraph.getVertexByValue(interfFirst.getValue());
                 
                 // Matching exists?
-                if(interfN1 != null)
+                if(interfSecond != null)
                 {
-                    // Matching n0 and n1 found! Merge the same interface in op
-                    Vertex interfAsN0 = getEquivalentVertex(net0, interfN0);
-                    Vertex interfAsN1 = getEquivalentVertex(net1, interfN1);
+                    countInterfaces++;
+                    
+                    // Matching first and second found! Merge the same interface in op
+                    Vertex interfAsFirst = getEquivalentVertex(1, interfFirst);
+                    Vertex interfAsSecond = getEquivalentVertex(2, interfSecond);
                     
                     // Mirror a place instead the interface
-                    PlaceVertex placeInterf = getOperationGraph().insertPlace((String) interfN0.getValue());
-                    
-                    // Move all the arcs as N0
-                    for(Object edgeOjb : getOperationGraph().getIncomingEdges(interfAsN0))
-                    {
-                        mxCell edge = (mxCell) edgeOjb;
-                        getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), placeInterf);
-                    }
-                    
-                    for(Object edgeOjb : getOperationGraph().getOutgoingEdges(interfAsN0))
-                    {
-                        mxCell edge = (mxCell) edgeOjb;
-                        getOperationGraph().insertArc(edge.getId(), placeInterf, (Vertex) edge.getTarget());
-                    }
-                    
-                    // Move all the arcs as N1
-                    for(Object edgeOjb : getOperationGraph().getIncomingEdges(interfAsN1))
-                    {
-                        mxCell edge = (mxCell) edgeOjb;
-                        getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), placeInterf);
-                    }
-                    
-                    for(Object edgeObj : getOperationGraph().getOutgoingEdges(interfAsN1))
-                    {
-                        mxCell edge = (mxCell) edgeObj;
-                        getOperationGraph().insertArc(edge.getId(), placeInterf, (Vertex) edge.getTarget());
-                    }
-                    
-                    // Remove as N0
-                    removeVertexAndHisEdges(interfAsN0);
-                    removeVertexAndHisEdges(interfAsN1);
+                    PlaceVertex placeInterf = operationGraph.insertPlace((String) interfFirst.getValue());
+                    cloneIncomingEdges(interfAsFirst, placeInterf);
+                    cloneEdges(interfAsSecond, interfAsSecond);
+
+                    // Remove
+                    removeVertexAndHisEdges(interfAsFirst);
+                    removeVertexAndHisEdges(interfAsSecond);
                 }
             }
         }
-    }
-    
-    private void parallel()
-    {
-        PetriNetGraph net0 = getInputGraphs().get(0);
-        PetriNetGraph net1 = getInputGraphs().get(1);
-       
-        // Initial Link pattern
-        PlaceVertex pi = getOperationGraph().insertPlace(null);
-        TransitionVertex ti = getOperationGraph().insertTransition(null);
-        getOperationGraph().insertArc(null, pi, ti);
         
-        Vertex initialPlaceAsN0 = getEquivalentVertex(net0, net0.getInitialPlaces().get(0));
-        Vertex initialPlaceAsN1 = getEquivalentVertex(net1, net1.getInitialPlaces().get(0));
-        
-        getOperationGraph().insertArc(null, ti, initialPlaceAsN0);
-        getOperationGraph().insertArc(null, ti, initialPlaceAsN1);
-        
-        // Final Link pattern
-        PlaceVertex po = getOperationGraph().insertPlace(null);
-        TransitionVertex to = getOperationGraph().insertTransition(null);
-        
-        Vertex finalPlaceAsN0 = getEquivalentVertex(net0, net0.getFinalPlaces().get(0));
-        Vertex finalPlaceAsN1 = getEquivalentVertex(net1, net1.getFinalPlaces().get(0));
-
-        getOperationGraph().insertArc(null, to, po);
-        getOperationGraph().insertArc(null, finalPlaceAsN0, to);
-        getOperationGraph().insertArc(null, finalPlaceAsN1, to);
+        if(countInterfaces > 0)
+        {
+            // Make System
+            operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        }
+        else
+        {
+            throw new Exception("No common interfaces found in the two graphs.");
+        }
     }
 }

@@ -1,159 +1,109 @@
+
 package it.wolfed.operations;
 
 import com.mxgraph.model.mxCell;
-import it.wolfed.model.ArcEdge;
-import it.wolfed.model.InterfaceVertex;
 import it.wolfed.model.PetriNetGraph;
-import it.wolfed.model.PlaceVertex;
-import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
-import java.util.List;
+import it.wolfed.util.Constants;
 
-public abstract class Operation
-{  
-    protected List<PetriNetGraph> inputGraphs;
+/**
+ * Basic Operation Class.
+ * 
+ * A base class that trigger and execute all operation with some handy
+ * shortcut methods for all the common editing actions.
+ */
+abstract public class Operation
+{
+    /**
+     * Holds the graph to edit.
+     */
     protected PetriNetGraph operationGraph;
-
-    public Operation(String name, List<PetriNetGraph> inputGraphs, 
-            int numRequestedGraphs, boolean checkisWorkflow) throws Exception
+    
+    /**
+     * {@link Operation} Constructor.
+     * 
+     * @param operationGraph
+     */
+    public Operation(PetriNetGraph operationGraph)
     {
-        this.inputGraphs = inputGraphs;
+        this.operationGraph = operationGraph;
+    }
+    
+    /**
+     * Execute the specific operation process.
+     * @throws Exception 
+     */
+    protected void execute() throws Exception
+    {
+        operationGraph.getModel().beginUpdate();
 
-        if(inputGraphs.size() != numRequestedGraphs)
+        try
         {
-            throw new Exception(
-                numRequestedGraphs + " input graph required. " + inputGraphs.size() + " found."
-            );
+            process();
+        }     
+        finally
+        {
+            operationGraph.getModel().endUpdate();
+        }
+    }
+    
+    /**
+     * Abstract definition for process in subclass.
+     */
+    abstract void process() throws Exception;
+    
+    /**
+     * Return the graph if is a Graph is a valid workflow.
+     * 
+     * @param graph
+     * @return PetriNetGraph
+     * @throws Exception 
+     */
+    protected PetriNetGraph getIfIsWorkFlow(PetriNetGraph graph) throws Exception
+    {
+        if (graph.isWorkFlow() == false)
+        {
+            throw new Exception("WorkFlow required! " + graph.getId() + " failed!");
         }
         
-        for (PetriNetGraph net : inputGraphs)
-        {
-            if (checkisWorkflow == true)
-            {
-                if(! net.isWorkFlow())
-                {
-                    throw new Exception("WorkFlow required! " + net.getId() + " failed!");
-                }
-            }
-
-            name += "_" + net.getId().toLowerCase();
-        }
-
-        this.operationGraph = new PetriNetGraph(name);
-        execute();
+        return graph;
     }
-
+    
+    /**
+     * Returns current operationGraph.
+     * 
+     * @return PetriNetGraph
+     */
     public PetriNetGraph getOperationGraph()
     {
         return operationGraph;
     }
-
-    public List<PetriNetGraph> getInputGraphs()
+    
+    /**
+     * Returns a prefixed id per input net.
+     * 
+     * @param id
+     * @return prefixed id 
+     */
+    protected String getPrefix(int id)
     {
-        return inputGraphs;
+        return Constants.OPERATION_PREFIX + id + "_";
     }
     
     /**
-     * Esegue l'operazione sul grafo dell'operazione.
+     * Search, in the {@link Operation#operationGraph}, the equivalent vertex from another graph.
      * 
-     * @return void
-     */
-    private void execute()
-    {
-        getOperationGraph().getModel().beginUpdate();
-
-        try
-        {
-            merge();
-            process();
-        }
-        catch (CloneNotSupportedException ex)        
-        {
-            ex.printStackTrace();
-        }        
-        finally
-        {
-            getOperationGraph().getModel().endUpdate();
-        }
-    };
-    
-    /**
-     * Il processo che modifica il grafo dell'operazione.
-     * 
-     * @return void
-     */
-    abstract void process();
-
-    /**
-     * Effettua l'unione disgiunta di n Petri Net.
-     * 
-     * Aggiunge un prefisso a tutti gli id in base
-     * alla chiave del grafo di input
-     */
-    private void merge() throws CloneNotSupportedException
-    {
-        mxCell clone;
-        Object parent = getOperationGraph().getDefaultParent();
-        
-        for (int i = 0; i < getInputGraphs().size(); i++)
-        {
-            PetriNetGraph net = getInputGraphs().get(i);
-
-            for (Object cellObj : net.getChildCells(net.getDefaultParent()))
-            {
-                mxCell cell = (mxCell) cellObj;
-
-                if(cell instanceof PlaceVertex)
-                {
-                    clone = new PlaceVertex(parent, getPrefix(net) + cell.getId(), cell.getValue(), 0, 0);
-                } 
-                else if(cell instanceof TransitionVertex)
-                {
-                    clone = new TransitionVertex(parent, getPrefix(net) + cell.getId(), cell.getValue(), 0, 0);
-                }
-                else if(cell instanceof InterfaceVertex)
-                {
-                    clone = new InterfaceVertex(parent, getPrefix(net) + cell.getId(), cell.getValue());
-                }
-                // @todo check instanceof Arc when the mouserelease creation of arcs will be type-zed
-                // ArcEdge e mxCell.isEdge()
-                else if(cell.isEdge())
-                {
-                    // Get
-                    Vertex source = getOperationGraph().getVertexById(getPrefix(net) + cell.getSource().getId());
-                    Vertex target = getOperationGraph().getVertexById(getPrefix(net) + cell.getTarget().getId());
-
-                    // Clone
-                    clone = new ArcEdge(parent, getPrefix(net) + cell.getId(), cell.getValue());
-
-                    clone.setSource(source);
-                    clone.setTarget(target);
-                    clone.setId(getPrefix(net) + cell.getId());
-                }
-                else
-                {
-                    clone = (mxCell) cell.clone();
-                }
-
-                getOperationGraph().addCell(clone);
-            }
-        }
-    }
-    
-    /**
-     * Cerca, nella rete operazionale, un vertice con lo stesso id 
-     * di quello di una rete diversa (valutando il prefisso).
-     * 
-     * @param sameGraph     il grafo che contiene il vertice
-     * @param sameVertex    il vertice da cercare
+     * @param id            input graph prefix (first = 1, second = 2 etc...)
+     * @param sameVertex    vertex to search
      * @return 
      */
-    public Vertex getEquivalentVertex(PetriNetGraph sameGraph, Vertex sameVertex)
+    public Vertex getEquivalentVertex(int id, Vertex sameVertex)
     {
-        return getOperationGraph().getVertexById(getPrefix(sameGraph) + sameVertex.getId());
+        return operationGraph.getVertexById(getPrefix(id) + sameVertex.getId());
     }
     
-    /**
+     /**
+     * Remove, in {@link Operation#operationGraph}, a vertex and his edges.
      * 
      * @param vertex 
      */
@@ -161,32 +111,51 @@ public abstract class Operation
     {
         for(Object edgeObj : getOperationGraph().getEdges(vertex))
         {
-            getOperationGraph().getModel().remove(edgeObj);
+            operationGraph.getModel().remove(edgeObj);
         }
 
-        getOperationGraph().getModel().remove(vertex);
+        operationGraph.getModel().remove(vertex);
     }
     
     /**
-     * Ottiene il prefisso del grafo di input.
+     * Clone, in {@link Operation#operationGraph}, all incoming edges from a vertex to another.
      * 
-     * @param inputGraph
-     * @return String
+     * @param from
+     * @param to 
      */
-    public String getPrefix(PetriNetGraph inputGraph)
+    protected void cloneIncomingEdges(Vertex from, Vertex to)
     {
-        String prefix = "?_";
-        
-        for (int i = 0; i < getInputGraphs().size(); i++)
+        for(Object edgeOjb : operationGraph.getIncomingEdges(from))
         {
-            PetriNetGraph graph = getInputGraphs().get(i);
-
-            if(inputGraph == graph)
-            {
-                return "n" + String.valueOf(i) + "_";
-            }
+            mxCell edge = (mxCell) edgeOjb;
+            operationGraph.insertArc(edge.getId(), (Vertex) edge.getSource(), to);
         }
-        
-        return prefix;
+    }
+    
+    /**
+     * Clone, in {@link Operation#operationGraph}, all outgoing edges from a vertex to another.
+     * 
+     * @param from
+     * @param to 
+     */
+    protected void cloneOutgoingEdges(Vertex from, Vertex to)
+    {
+        for(Object edgeOjb : operationGraph.getOutgoingEdges(from))
+        {
+            mxCell edge = (mxCell) edgeOjb;
+            operationGraph.insertArc(edge.getId(), to, (Vertex) edge.getTarget());
+        }
+    }
+    
+    /**
+     * Clone, in {@link Operation#operationGraph}, all edges from a vertex to another.
+     * 
+     * @param from
+     * @param to 
+     */
+    protected void cloneEdges(Vertex from, Vertex to)
+    {
+        cloneIncomingEdges(from, to);
+        cloneOutgoingEdges(from, to);
     }
 }

@@ -1,33 +1,46 @@
 package it.wolfed.operations;
 
-import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
-import java.util.List;
 
+/**
+ * Sequencing Operation.
+ */
 public class SequencingOperation extends Operation
-{  
-    public SequencingOperation(List<PetriNetGraph> inputGraphs) throws Exception
-    {
-        super("seq", inputGraphs, 2, true);
-    }
+{
+    PetriNetGraph firstGraph;
+    PetriNetGraph secondGraph;
     
+    /**
+     * @param operationGraph
+     * @param firstGraph
+     * @param secondGraph
+     * @throws Exception  
+     */
+    public SequencingOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph, PetriNetGraph secondGraph) throws Exception
+    {
+        super(operationGraph);
+        this.firstGraph = getIfIsWorkFlow(firstGraph);
+        this.secondGraph = getIfIsWorkFlow(secondGraph);
+        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        execute();
+    }
+   
+    /**
+     * Process Sequencing.
+     * 
+     * firstGraph = P1 -> T1 -> P2
+     * secondGraph = P3 -> T2 -> P4
+     * 
+     * result = P1 -> T1 -> (P2 + P3) -> T2 -> P4
+     */
     @Override
     void process()
     {
-        PetriNetGraph net0 = getInputGraphs().get(0);
-        PetriNetGraph net1 = getInputGraphs().get(1);
+        Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
+        Vertex initialPlaceAsSecond = getEquivalentVertex(2, secondGraph.getInitialPlaces().get(0));
 
-        Vertex finalPlaceAsN0 = getEquivalentVertex(net0, net0.getFinalPlaces().get(0));
-        Vertex initialPlaceAsN1 = getEquivalentVertex(net1, net1.getInitialPlaces().get(0));
-
-        // Sposta tutti gli archi
-        for(Object edgeOjb : getOperationGraph().getIncomingEdges(finalPlaceAsN0))
-        {
-            mxCell edge = (mxCell) edgeOjb;
-            getOperationGraph().insertArc(edge.getId(), (Vertex) edge.getSource(), (Vertex) initialPlaceAsN1);
-        }
-        
-        removeVertexAndHisEdges(finalPlaceAsN0);
+        cloneIncomingEdges(finalPlaceAsFirst, initialPlaceAsSecond);
+        removeVertexAndHisEdges(finalPlaceAsFirst);
     }
 }

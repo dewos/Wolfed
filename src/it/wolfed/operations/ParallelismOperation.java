@@ -4,17 +4,33 @@ import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.PlaceVertex;
 import it.wolfed.model.TransitionVertex;
 import it.wolfed.model.Vertex;
-import java.util.List;
 
+/**
+ * Sequencing Operation.
+ */
 public class ParallelismOperation extends Operation
 {
-    public ParallelismOperation(List<PetriNetGraph> inputGraphs) throws Exception
-    {
-        super("parr", inputGraphs, 2, true);
-    }
+    PetriNetGraph firstGraph;
+    PetriNetGraph secondGraph;
     
-    /*
-     * Parallelism
+    /**
+     * @param operationGraph
+     * @param firstGraph
+     * @param secondGraph
+     * @throws Exception  
+     */
+    public ParallelismOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph, PetriNetGraph secondGraph) throws Exception
+    {
+        super(operationGraph);
+        this.firstGraph = getIfIsWorkFlow(firstGraph);
+        this.secondGraph = getIfIsWorkFlow(secondGraph);
+        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        execute();
+    }
+   
+    /**
+     * Parallelism.
+     * 
      * (AND-split + AND-join)
      * A and B are both executed in no particular order
      *       			-> p1 -> A -> p3 ->  
@@ -30,8 +46,10 @@ public class ParallelismOperation extends Operation
         insertInitialPattern();
         insertFinalPattern();
     }
-
-    /*
+    
+    /**
+     * Insert initial pattern.
+     * 
      *        			-> p1 -> A -> p3 ->  
      *  i -> AND-split						AND-join -> o
      *       			-> p2 -> B -> p4 ->
@@ -41,18 +59,22 @@ public class ParallelismOperation extends Operation
         PlaceVertex pi = getOperationGraph().insertPlace("initial");
         TransitionVertex andSplit = getOperationGraph().insertTransition("AND-split");
 
-        PetriNetGraph net0 = getInputGraphs().get(0);
-        PetriNetGraph net1 = getInputGraphs().get(1);
-        Vertex initialPlaceAsN0 = getEquivalentVertex(net0, net0.getInitialPlaces().get(0));
-        Vertex initialPlaceAsN1 = getEquivalentVertex(net1, net1.getInitialPlaces().get(0));
-
+        PlaceVertex initialPlaceAsFirst =  (PlaceVertex) getEquivalentVertex(1, firstGraph.getInitialPlaces().get(0));
+        PlaceVertex initialPlaceAsSecond = (PlaceVertex)getEquivalentVertex(2, secondGraph.getInitialPlaces().get(0));
 
         getOperationGraph().insertArc(null, pi, andSplit);
-        getOperationGraph().insertArc(null, andSplit, initialPlaceAsN0);
-        getOperationGraph().insertArc(null, andSplit, initialPlaceAsN1);
+        getOperationGraph().insertArc(null, andSplit, initialPlaceAsFirst);
+        getOperationGraph().insertArc(null, andSplit, initialPlaceAsSecond);
+        
+        // Sets tokens
+        pi.setTokens(1);
+        initialPlaceAsFirst.setTokens(0);
+        initialPlaceAsSecond.setTokens(0);
     }
     
-    /*
+    /**
+     * Insert final pattern.
+     * 
      *        			-> p1 -> A -> p3 ->  
      *  i -> AND-split						AND-join -> o
      *       			-> p2 -> B -> p4 ->
@@ -60,16 +82,13 @@ public class ParallelismOperation extends Operation
     private void insertFinalPattern()
     {
         PlaceVertex po = getOperationGraph().insertPlace("final");
-        TransitionVertex andJoin = getOperationGraph().insertTransition("AND-join");
+        TransitionVertex andJoin = getOperationGraph().insertTransition("and-join");
 
-        PetriNetGraph net0 = getInputGraphs().get(0);
-        PetriNetGraph net1 = getInputGraphs().get(1);
-        Vertex finalPlaceAsN0 = getEquivalentVertex(net0, net0.getFinalPlaces().get(0));
-        Vertex finalPlaceAsN1 = getEquivalentVertex(net1, net1.getFinalPlaces().get(0));
+        Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
+        Vertex finalPlaceAsSecond = getEquivalentVertex(2, secondGraph.getFinalPlaces().get(0));
 
         getOperationGraph().insertArc(null, andJoin, po);
-        getOperationGraph().insertArc(null, finalPlaceAsN0, andJoin);
-        getOperationGraph().insertArc(null, finalPlaceAsN1, andJoin);
-
+        getOperationGraph().insertArc(null, finalPlaceAsFirst, andJoin);
+        getOperationGraph().insertArc(null, finalPlaceAsSecond, andJoin);
     }
 }
