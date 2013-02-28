@@ -42,12 +42,12 @@ import org.w3c.dom.Node;
  * transitions (i.e. events that may occur, signified by bars) and places 
  * (i.e. conditions, signified by circles). 
  * 
- * A Petri graph consists of places, transitions, arcs and interfacesFound. 
+ * A Petri graph consists of places, transitions, arcsNodes and interfacesFound. 
  * Arcs run from a place to a transition or vice versa, never between places
  * or between transitions. 
  * 
  * The places from which an arc runs to a transition are called the input places
- * of the transition; the places to which arcs run from a transition are called
+ * of the transition; the places to which arcsNodes run from a transition are called
  * the output places of the transition.
  * 
  * @see <a href="http://en.wikipedia.org/wiki/Petri_net">Wikipedia PetriNet</a>
@@ -82,7 +82,7 @@ public class PetriNetGraph extends mxGraph
     private int indexTransitions;
     
     /**
-     * Index of the arcs of the graph.
+     * Index of the arcsNodes of the graph.
      * 
      * Must be in sync with any new arc creation.
      */
@@ -185,8 +185,8 @@ public class PetriNetGraph extends mxGraph
         graph.getModel().beginUpdate();
         Object parent = graph.getDefaultParent();
 
-        // Holds the arcs founds
-        Set<ArcEdge> arcs = new HashSet<>();
+        // Holds the arcsNodes founds
+        Set<Node> arcsNodes = new HashSet<>();
         
         try
         {
@@ -207,7 +207,7 @@ public class PetriNetGraph extends mxGraph
                             break;
 
                         case Constants.PNML_ARC:
-                            arcs.add(ArcEdge.factory(parent, elementNode, graph));             
+                            arcsNodes.add(elementNode);             
                             break;
                     }
                 }
@@ -216,9 +216,9 @@ public class PetriNetGraph extends mxGraph
             /**
              * Arcs should always be processed AFTER all the vertex.
              */
-            for(ArcEdge arc : arcs)
+            for(Node arcNode : arcsNodes)
             {
-                graph.addCell(arc);
+                graph.addCell(ArcEdge.factory(parent, arcNode, graph));
                 graph.getSetNextArcId();
             }
         }
@@ -291,7 +291,7 @@ public class PetriNetGraph extends mxGraph
     }
     
     /**
-     * Increments and returns the current arcs index (with prefix).
+     * Increments and returns the current arcsNodes index (with prefix).
      * 
      * @return String
      */
@@ -460,8 +460,8 @@ public class PetriNetGraph extends mxGraph
      * 
      * An initial place is a place with:
      * 
-     * #Preset arcs : 0
-     * #Postset arcs: > 1
+     * #Preset arcsNodes : 0
+     * #Postset arcsNodes: > 1
      * 
      * @return List<PlaceVertex>
      */
@@ -492,8 +492,8 @@ public class PetriNetGraph extends mxGraph
      * 
      * A final place is a place with:
      * 
-     * #Preset arcs : > 1
-     * #Postset arcs: 0
+     * #Preset arcsNodes : > 1
+     * #Postset arcsNodes: 0
      * 
      * @return List<PlaceVertex>
      */
