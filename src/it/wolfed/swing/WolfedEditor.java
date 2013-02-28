@@ -3,6 +3,8 @@ package it.wolfed.swing;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.layout.mxCompactTreeLayout;
 import com.mxgraph.layout.mxOrganicLayout;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operation.AlternationOperation;
@@ -27,8 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -159,7 +159,7 @@ public class WolfedEditor extends JFrame
     {
         tabs.add(tabName, new GraphViewContainer(graph));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
-        getOpenedGraphs().add(graph);
+        openedGraphs.add(graph);
 
         return graph;
     }

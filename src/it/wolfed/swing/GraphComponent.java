@@ -5,6 +5,8 @@ import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.handler.mxConnectionHandler;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource;
 import com.mxgraph.util.mxPoint;
 import it.wolfed.event.AutoUpdateStyleListener;
 import it.wolfed.model.InterfaceVertex;
@@ -46,7 +48,9 @@ public class GraphComponent extends mxGraphComponent
         getConnectionHandler().setCreateTarget(true);
         
         // Autoupdate Style cells on Change
-        graph.getModel().addListener(mxEvent.CHANGE, new AutoUpdateStyleListener(graph));
+        AutoUpdateStyleListener autoupdateGraph = new AutoUpdateStyleListener(graph);
+        graph.getModel().addListener(mxEvent.CHANGE, autoupdateGraph);
+        autoupdateGraph.invoke(null, null);
     }
     
     @Override
