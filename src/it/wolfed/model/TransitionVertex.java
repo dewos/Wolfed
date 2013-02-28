@@ -164,6 +164,6 @@ public class TransitionVertex extends Vertex
      */
       public String exportDOT() 
       {
-        return "\n "+ this.getId() + " [label=\"" + getValue().toString() + "\", shape=box ]; ";
+        return "\n "+ this.getId() + " [label=\"" + getValue().toString() + "\", shape=\"box\" ];";
     }
 }

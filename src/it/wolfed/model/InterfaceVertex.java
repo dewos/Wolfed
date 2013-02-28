@@ -50,6 +50,6 @@ public class InterfaceVertex extends Vertex
      */
       public String exportDOT() 
       {
-        return "\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=doublecircle, color=\"orange\" ]; ";
+        return "\n "+this.getId()+" [label=\""+getValue().toString()+"\", shape=\"doublecircle\", color=\"orange\" ];";
     }
 }

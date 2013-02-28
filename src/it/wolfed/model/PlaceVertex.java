@@ -218,25 +218,25 @@ public class PlaceVertex extends Vertex
                 .append(this.getId())
                 .append(" [label=\"")
                 .append(getValue().toString())
-                .append("\", shape=");
+                .append("\", shape=\"");
 
         switch (getStyle())
         {
             case Constants.STYLE_PLACE_VALID:
             {
-                shape = "circle , color=\"green\" ]";
+                shape = "circle\", color=\"green\" ];";
                 break;
             }
                 
             case Constants.STYLE_PLACE_SPECIAL_VALID:
             {
-                shape = "doublecircle , color=\"green\" ]";
+                shape = "doublecircle\", color=\"green\" ];";
                 break;
             }
                 
             default:
             {
-                shape = "circle , color=\"green\" ]";
+                shape = "circle\", color=\"green\" ];";
                 break;
             }
         }
