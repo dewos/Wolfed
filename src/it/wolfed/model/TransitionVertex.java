@@ -3,7 +3,6 @@ package it.wolfed.model;
 
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -118,11 +117,11 @@ public class TransitionVertex extends Vertex
     
     public Element exportPNML(Document doc ) throws ParserConfigurationException 
     {
-        /**  <transition id="t3"> */
+        /** <transition id="t3"> */
 	Element transition = doc.createElement(Constants.PNML_TRANSITION);
 	transition.setAttribute(Constants.PNML_ID, getId());
 
-        /**     <name> */
+        /**    <name> */
 	Element name = doc.createElement(Constants.PNML_NAME);
         transition.appendChild(name);
 

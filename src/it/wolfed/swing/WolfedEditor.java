@@ -19,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -31,7 +29,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -72,33 +69,7 @@ public class WolfedEditor extends JFrame
      */
     private JTabbedPane tabs = new JTabbedPane();
     
-    /**
-     * Available operations (in menu).
-     */
-    private String[] operations =
-    {
-        Constants.OPERATION_ALTERNATION,
-        Constants.OPERATION_DEFFEREDCHOICE,
-        Constants.OPERATION_EXPLICITCHOICE,
-        Constants.OPERATION_ITERATIONONEORMORE,
-        Constants.OPERATION_ITERATIONONESERVEPERTIME,
-        Constants.OPERATION_ITERATIONZEROORMORE,
-        Constants.OPERATION_MUTUALEXCLUSION,
-        Constants.OPERATION_MERGEGRAPHS,
-        Constants.OPERATION_MERGEINTERFACES,
-        Constants.OPERATION_PARALLELISM,
-        Constants.OPERATION_SEQUENCING
-    };
-    
-    /**
-     * Available layouts (in menu).
-     */
-    private String[] layouts =
-    {
-        Constants.LAYOUT_VERTICALTREE,
-        Constants.LAYOUT_HIERARCHICAL,
-        Constants.LAYOUT_ORGANIC,
-    };
+
 
     /**
      * Constructor.
@@ -110,26 +81,6 @@ public class WolfedEditor extends JFrame
         setJMenuBar(new MenuBarController(this));
         getContentPane().add(tabs);
         setLookAndFeel();
-    }
-    
-    /**
-     * Returns all the available operations.
-     *
-     * @return String[]
-     */
-    public String[] getOperations()
-    {
-        return operations;
-    }
-
-    /**
-     * Returns all the available layouts.
-     *
-     * @return String[]
-     */
-    public String[] getLayouts()
-    {
-        return layouts;
     }
 
     /**
@@ -272,10 +223,25 @@ public class WolfedEditor extends JFrame
      */
     public void saveFile(String exportType)
     {
+        // @todo chooser window
+        
         try
         {   
-            String exportedGraph = getSelectedGraph().exportPNML();
-            System.out.println(exportedGraph);
+            switch(exportType)
+            {
+                case Constants.EDITOR_EXPORT_PNML:
+                {
+                    String exportedGraph = getSelectedGraph().exportPNML();
+                    System.out.println(exportedGraph);
+                    break;
+                }
+                    
+                case Constants.EDITOR_EXPORT_DOT:
+                {
+                    // @ todo
+                }
+            }
+
         } 
         catch (TransformerException  | ParserConfigurationException ex)
         {
