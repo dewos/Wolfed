@@ -242,6 +242,8 @@ public class WolfedEditor extends JFrame
         {
             JFileChooser fileChooser = new JFileChooser(".");
             fileChooser.setFileFilter(new FileNameExtensionFilter("pnml or dot", "pnml", "dot"));
+            fileChooser.setSelectedFile(new File(getSelectedGraph().getId() + exportType));
+            
             int returnVal = fileChooser.showSaveDialog(this);
             
             // @todo check if file exist
