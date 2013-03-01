@@ -48,8 +48,10 @@ public class MergeGraphsOperation extends Operation
 
                 if(cell instanceof PlaceVertex)
                 {
+                    PlaceVertex place = (PlaceVertex) cell;
                     clone = new PlaceVertex(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), 0, 0);
-                } 
+                    ((PlaceVertex)clone).setTokens(place.getTokens());
+                }
                 else if(cell instanceof TransitionVertex)
                 {
                     clone = new TransitionVertex(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), 0, 0);
