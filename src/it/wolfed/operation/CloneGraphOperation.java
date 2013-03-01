@@ -18,7 +18,7 @@ public class CloneGraphOperation extends Operation
     public CloneGraphOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph) throws Exception
     {
         super(operationGraph);
-        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph)).getOperationGraph();
+        this.operationGraph = (new FullMergeOperation(operationGraph, firstGraph)).getOperationGraph();
         execute();
     }
    

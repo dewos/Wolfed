@@ -9,8 +9,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 
 public class MenuBarController extends JMenuBar
 {
@@ -23,12 +21,11 @@ public class MenuBarController extends JMenuBar
         Constants.OPERATION_CLONEGRAPH,
         Constants.OPERATION_DEFFEREDCHOICE,
         Constants.OPERATION_EXPLICITCHOICE,
+        Constants.OPERATION_FULLMERGE,
         Constants.OPERATION_ITERATIONONEORMORE,
         Constants.OPERATION_ITERATIONONESERVEPERTIME,
         Constants.OPERATION_ITERATIONZEROORMORE,
         Constants.OPERATION_MUTUALEXCLUSION,
-        Constants.OPERATION_MERGEGRAPHS,
-        Constants.OPERATION_MERGEINTERFACES,
         Constants.OPERATION_PARALLELISM,
         Constants.OPERATION_SEQUENCING
     };
@@ -40,7 +37,7 @@ public class MenuBarController extends JMenuBar
     {
         Constants.LAYOUT_VERTICALTREE,
         Constants.LAYOUT_HIERARCHICAL,
-        Constants.LAYOUT_ORGANIC,
+        //Constants.LAYOUT_ORGANIC,
     };
     
     

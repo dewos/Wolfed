@@ -21,7 +21,7 @@ public class IterationPatternOperation extends Operation
     {
         super(operationGraph);
         this.firstGraph = getIfIsWorkFlow(firstGraph);
-        this.operationGraph = (new MergeGraphsOperation(operationGraph, firstGraph)).getOperationGraph();
+        this.operationGraph = (new FullMergeOperation(operationGraph, firstGraph)).getOperationGraph();
         execute();
     }
    

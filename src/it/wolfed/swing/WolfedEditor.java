@@ -9,8 +9,7 @@ import it.wolfed.operation.AlternationOperation;
 import it.wolfed.operation.CloneGraphOperation;
 import it.wolfed.operation.DefferedChoiceOperation;
 import it.wolfed.operation.ExplicitChoiceOperation;
-import it.wolfed.operation.MergeGraphsOperation;
-import it.wolfed.operation.MergeInterfacesOperation;
+import it.wolfed.operation.FullMergeOperation;
 import it.wolfed.operation.Operation;
 import it.wolfed.operation.MutualExclusionOperation;
 import it.wolfed.operation.OneOrMoreIterationOperation;
@@ -380,22 +379,12 @@ public class WolfedEditor extends JFrame
                     break;
                 }
 
-                case Constants.OPERATION_MERGEGRAPHS:
+                case Constants.OPERATION_FULLMERGE:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
-                        operation = new MergeGraphsOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
-                    }
-                    break;
-                }
-
-                case Constants.OPERATION_MERGEINTERFACES:
-                {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    if(selectionBox.getSelectedGraphs().size() > 0)
-                    {
-                        operation = new MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                        operation = new FullMergeOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     }
                     break;
                 }

@@ -13,7 +13,7 @@ public class Constants
            + "- Prof. Roberto Bruni";
     
     // Editor
-    public static final String EDITOR_VERSION                       = "0.9.9.9";
+    public static final String EDITOR_VERSION                       = "1.0.0.0";
     public static final String EDITOR_NAME                          = "WoLFEd";
     public static final String EDITOR_EXPORT_DOT                    = ".dot";
     public static final String EDITOR_EXPORT_PNML                   = ".pnml";
@@ -41,8 +41,7 @@ public class Constants
     public static final String OPERATION_ITERATIONONEORMORE         = "IterationOneOrMore";
     public static final String OPERATION_ITERATIONONESERVEPERTIME   = "IterationOneServePerTime";
     public static final String OPERATION_ITERATIONZEROORMORE        = "IterationZeroOrMore";
-    public static final String OPERATION_MERGEGRAPHS                = "MergeGraphs";
-    public static final String OPERATION_MERGEINTERFACES            = "MergeInterfaces";
+    public static final String OPERATION_FULLMERGE                  = "FullMerge";
     public static final String OPERATION_MUTUALEXCLUSION            = "MutualExclusion";
     public static final String OPERATION_PARALLELISM                = "Parallelism";
     
