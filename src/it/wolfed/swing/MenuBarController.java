@@ -162,31 +162,22 @@ public class MenuBarController extends JMenuBar
             }
         }
         
-        // About
+        // Help
         {
-            JMenu aboutMenu = new JMenu("About");
-            aboutMenu.addMenuListener(new MenuListener()
-            {
+            JMenu helpMenu = new JMenu("Help");
+            JMenuItem aboutItem = new JMenuItem("About");
+            aboutItem.addActionListener(new ActionListener() 
+            {  
                 @Override
-                public void menuSelected(MenuEvent e)
+                public void actionPerformed(ActionEvent e)
                 {
                     editor.showAbout();
                 }
-
-                @Override
-                public void menuDeselected(MenuEvent e)
-                {
-                    // do nothing    
-                }
-
-                @Override
-                public void menuCanceled(MenuEvent e)
-                {
-                    // do nothing
-                }
             });
+
+            helpMenu.add(aboutItem);
             
-            add(aboutMenu); 
+            add(helpMenu); 
         }
     }
 }
