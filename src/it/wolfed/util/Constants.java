@@ -2,6 +2,16 @@ package it.wolfed.util;
 
 public class Constants 
 {
+    // About Message
+   public static final String EDITOR_ABOUT = 
+    Constants.EDITOR_NAME + " Workflow Light Fast Editor.\n"
+    + "Version:" + Constants.EDITOR_VERSION +"\n\n"
+    +  "Authors: \n"
+        + "- Fabio Piro\n"
+        + "- Said Daoudagh\n\n"
+    + "Supervisor:\n"
+           + "- Prof. Roberto Bruni";
+    
     // Editor
     public static final String EDITOR_VERSION                       = "0.9.9.9";
     public static final String EDITOR_NAME                          = "WoLFEd";

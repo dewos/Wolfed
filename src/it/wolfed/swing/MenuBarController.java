@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 public class MenuBarController extends JMenuBar
 {
@@ -163,7 +165,27 @@ public class MenuBarController extends JMenuBar
         // About
         {
             JMenu aboutMenu = new JMenu("About");
-            aboutMenu.setMnemonic('a');
+            aboutMenu.addMenuListener(new MenuListener()
+            {
+                @Override
+                public void menuSelected(MenuEvent e)
+                {
+                    editor.showAbout();
+                }
+
+                @Override
+                public void menuDeselected(MenuEvent e)
+                {
+                    // do nothing    
+                }
+
+                @Override
+                public void menuCanceled(MenuEvent e)
+                {
+                    // do nothing
+                }
+            });
+            
             add(aboutMenu); 
         }
     }

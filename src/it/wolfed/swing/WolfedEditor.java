@@ -459,6 +459,18 @@ public class WolfedEditor extends JFrame
             }
         }
     }
+    
+    /**
+     * Show About Message
+     */
+    public void showAbout()
+    {
+        JOptionPane.showMessageDialog(this,
+            Constants.EDITOR_ABOUT,
+            "About",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
     /**
      * Shows an error message.
