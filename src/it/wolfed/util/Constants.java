@@ -3,7 +3,7 @@ package it.wolfed.util;
 public class Constants 
 {
     // Editor
-    public static final String EDITOR_VERSION                       = "0.9.9.7";
+    public static final String EDITOR_VERSION                       = "0.9.9.9";
     public static final String EDITOR_NAME                          = "WoLFEd";
     public static final String EDITOR_EXPORT_DOT                    = ".dot";
     public static final String EDITOR_EXPORT_PNML                   = ".pnml";
