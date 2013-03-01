@@ -6,6 +6,7 @@ import com.mxgraph.layout.mxOrganicLayout;
 import com.mxgraph.view.mxGraph;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.operation.AlternationOperation;
+import it.wolfed.operation.CloneGraphOperation;
 import it.wolfed.operation.DefferedChoiceOperation;
 import it.wolfed.operation.ExplicitChoiceOperation;
 import it.wolfed.operation.MergeGraphsOperation;
@@ -74,9 +75,7 @@ public class WolfedEditor extends JFrame
      * AnalysisComponent.
      */
     private JTabbedPane tabs = new JTabbedPane();
-    
-
-
+ 
     /**
      * Constructor.
      */
@@ -153,12 +152,23 @@ public class WolfedEditor extends JFrame
     {
         GraphViewContainer graphViewContainer = new GraphViewContainer(graph);
         tabs.add(tabName, graphViewContainer);
+        
         // for the close tab
         tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         openedGraphs.add(graph);
 
         return graph;
+    }
+    
+    /**
+     * Removes an openedgraph\tab from the editor.
+     * 
+     * @param graph 
+     */
+    public void removeGraph(PetriNetGraph graph)
+    {
+         openedGraphs.remove(graph);
     }
 
     /**
@@ -259,11 +269,13 @@ public class WolfedEditor extends JFrame
                         break;
                     }
                 }
-
-                BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(exportedFile.getCanonicalPath()));
-                pnmlWriter.write(exportedGraph);
-                pnmlWriter.flush();
-                pnmlWriter.close();
+                
+                if(exportType != null)
+                {
+                    BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(exportedFile.getCanonicalPath()));
+                    pnmlWriter.write(exportedGraph);
+                    pnmlWriter.flush();
+                }
             }
         }
         catch (TransformerException | ParserConfigurationException | IOException ex)
@@ -298,6 +310,13 @@ public class WolfedEditor extends JFrame
                     }
                     break;
                 }
+                    
+                case Constants.OPERATION_CLONEGRAPH:
+                {
+                    operation = new CloneGraphOperation(operationGraph, getSelectedGraph());
+                    break;
+                }
+
 
                 case Constants.OPERATION_DEFFEREDCHOICE:
                 {

@@ -25,6 +25,7 @@ public class Constants
     public static final String OPERATION_PREFIX                     = "n";
     public static final String OPERATION_SEQUENCING                 = "Sequencing";
     public static final String OPERATION_ALTERNATION                = "Alternation";
+    public static final String OPERATION_CLONEGRAPH                 = "CloneGraph";
     public static final String OPERATION_DEFFEREDCHOICE             = "DefferedChoice";
     public static final String OPERATION_EXPLICITCHOICE             = "ExplicitChoice";
     public static final String OPERATION_ITERATIONONEORMORE         = "IterationOneOrMore";
