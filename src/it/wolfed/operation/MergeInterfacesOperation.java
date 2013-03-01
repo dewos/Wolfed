@@ -23,9 +23,8 @@ public class MergeInterfacesOperation extends Operation
     public MergeInterfacesOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph, PetriNetGraph secondGraph) throws Exception
     {
         super(operationGraph);
-        this.firstGraph = getIfIsWorkFlow(firstGraph);
-        this.secondGraph = getIfIsWorkFlow(secondGraph);
-        this.operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+        this.firstGraph = firstGraph;
+        this.secondGraph = secondGraph;
         execute();
     }
    
@@ -55,9 +54,11 @@ public class MergeInterfacesOperation extends Operation
     @Override
     void process() throws Exception
     {
-        int countInterfaces = 0;
-        
+        // Add Parralelism pattern
+        operationGraph = (new ParallelismOperation(operationGraph, firstGraph, secondGraph)).getOperationGraph();
+
         // Finds all interfaces in first
+        int countInterfaces = 0;
         for(Object cellObj : firstGraph.getChildVertices())
         {
             if(cellObj instanceof InterfaceVertex)
