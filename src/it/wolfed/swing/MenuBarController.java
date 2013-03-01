@@ -18,6 +18,7 @@ public class MenuBarController extends JMenuBar
     private String[] operations =
     {
         Constants.OPERATION_ALTERNATION,
+        Constants.OPERATION_CLONEGRAPH,
         Constants.OPERATION_DEFFEREDCHOICE,
         Constants.OPERATION_EXPLICITCHOICE,
         Constants.OPERATION_ITERATIONONEORMORE,
