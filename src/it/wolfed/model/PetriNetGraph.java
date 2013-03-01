@@ -4,7 +4,6 @@ package it.wolfed.model;
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
@@ -161,6 +160,7 @@ public class PetriNetGraph extends mxGraph
     /**
      * Imports a pnmlXML node in a new {@link PetriNetGraph}.
      * 
+     * @todo refactor this in "divide et impera"
      * @param dom
      * @param defaultId
      * @return PetriNetGraph
@@ -223,10 +223,18 @@ public class PetriNetGraph extends mxGraph
                             if(elementNode.getAttributes().getNamedItem(Constants.PNML_TOOL)
                                     .getTextContent().trim().equals(Constants.EDITOR_NAME))
                             {
-                                // Add Interface
-                                for (final Node interfNode : new IterableNodeList(elementNode.getChildNodes())) 
+                                for(final Node toolNode : new IterableNodeList(elementNode.getChildNodes()))
                                 {
-                                       interfacesNodes.add(interfNode);
+                                    switch (toolNode.getNodeName())
+                                    {
+                                        case Constants.PNML_INTERFACES:
+                                        {
+                                            for(final Node interfNode : new IterableNodeList(toolNode.getChildNodes()))
+                                            {
+                                                interfacesNodes.add(interfNode);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -248,7 +256,6 @@ public class PetriNetGraph extends mxGraph
              */
             for(Node interfNode : interfacesNodes)
             {
-
                 InterfaceVertex interf = InterfaceVertex.factory(parent, interfNode);
                 PlaceVertex placeMirror = (PlaceVertex) graph.getVertexByValue(interf.getValue());
                 interf.setGeometry(placeMirror.getGeometry());
@@ -740,7 +747,7 @@ public class PetriNetGraph extends mxGraph
     {
         /** <?xml version="1.0" encoding="UTF-8"?> */
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element toolSpecific = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
+        Element interfaces = doc.createElement(Constants.PNML_INTERFACES);
 
         /** <pnml> */
         Element pnml = doc.createElement(Constants.PNML_TAG);
@@ -770,7 +777,7 @@ public class PetriNetGraph extends mxGraph
             else if(cellObj instanceof InterfaceVertex)
             {
                 InterfaceVertex interf = (InterfaceVertex) cellObj;
-                toolSpecific.appendChild(interf.exportPNML(doc));
+                interfaces.appendChild(interf.exportPNML(doc));
                 
                 /**
                  * Interfaces are not PNML complaint.
@@ -806,9 +813,11 @@ public class PetriNetGraph extends mxGraph
             *            <interface id="i1" />
             *       </toolspecific>
             */
-            net.appendChild(toolSpecific);
+            Element toolSpecific = doc.createElement(Constants.PNML_TOOL_SPECIFIC);
             toolSpecific.setAttribute(Constants.PNML_TOOL, Constants.EDITOR_NAME);
             toolSpecific.setAttribute(Constants.PNML_TOOL_VERSION, Constants.EDITOR_VERSION);
+            toolSpecific.appendChild(interfaces);
+            net.appendChild(toolSpecific);
         }
 
         /**     </net>
