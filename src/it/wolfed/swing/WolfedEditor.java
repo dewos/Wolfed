@@ -152,8 +152,6 @@ public class WolfedEditor extends JFrame
     {
         GraphViewContainer graphViewContainer = new GraphViewContainer(graph);
         tabs.add(tabName, graphViewContainer);
-        
-        // for the close tab
         tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         openedGraphs.add(graph);

@@ -109,7 +109,7 @@ abstract public class Operation
      */
     protected void removeVertexAndHisEdges(Vertex vertex)
     {
-        for(Object edgeObj : getOperationGraph().getEdges(vertex))
+        for(Object edgeObj : operationGraph.getEdges(vertex))
         {
             operationGraph.getModel().remove(edgeObj);
         }
