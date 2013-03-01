@@ -1,6 +1,7 @@
 package it.wolfed.swing;
 
 import it.wolfed.model.PetriNetGraph;
+import it.wolfed.util.SpringUtilities;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import layout.SpringUtilities;
+
 
 public class OperationDialog extends JDialog
 {
@@ -32,7 +33,7 @@ public class OperationDialog extends JDialog
         this.selectedGraphs = new ArrayList<>();
 
         setModal(true);// Stop thread
-        setTitle("Select " + requiredGraphs + " graphs.");
+        setTitle("Select " + requiredGraphs + " Workflow/Petri Net.");
         setSize(300, 200);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
@@ -64,7 +65,7 @@ public class OperationDialog extends JDialog
                 box.addItem(graph);
             }
             
-            JLabel label = new JLabel("Graph " + (i));
+            JLabel label = new JLabel(":: Available WF/PN ::");
             label.setLabelFor(box);
 
             boxList.add(box);

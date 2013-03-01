@@ -151,7 +151,10 @@ public class WolfedEditor extends JFrame
      */
     public PetriNetGraph insertGraph(String tabName, PetriNetGraph graph)
     {
-        tabs.add(tabName, new GraphViewContainer(graph));
+        GraphViewContainer graphViewContainer = new GraphViewContainer(graph);
+        tabs.add(tabName, graphViewContainer);
+        // for the close tab
+        tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         openedGraphs.add(graph);
 
@@ -290,21 +293,28 @@ public class WolfedEditor extends JFrame
                 case Constants.OPERATION_ALTERNATION:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new AlternationOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0){
+                        operation = new AlternationOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_DEFFEREDCHOICE:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new DefferedChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0){
+                        operation = new DefferedChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_EXPLICITCHOICE:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new ExplicitChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new ExplicitChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
@@ -329,42 +339,60 @@ public class WolfedEditor extends JFrame
                 case Constants.OPERATION_MUTUALEXCLUSION:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new MutualExclusionOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new MutualExclusionOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_MERGEGRAPHS:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new MergeGraphsOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new MergeGraphsOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_MERGEINTERFACES:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new MergeInterfacesOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_PARALLELISM:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new ParallelismOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new ParallelismOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
 
                 case Constants.OPERATION_SEQUENCING:
                 {
                     OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
-                    operation = new SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    if(selectionBox.getSelectedGraphs().size() > 0)
+                    {
+                        operation = new SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
+                    }
                     break;
                 }
             }
-
-            operationGraph = operation.getOperationGraph();
-            insertGraph(operationGraph.getId(), operationGraph);
-            executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
+            
+            if(operation != null)
+            {
+                operationGraph = operation.getOperationGraph();
+                insertGraph(operationGraph.getId(), operationGraph);
+                executeLayout(operationGraph, Constants.LAYOUT_VERTICALTREE);
+            }
         }
         catch (Exception ex)
         {
