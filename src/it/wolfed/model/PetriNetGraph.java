@@ -1,6 +1,7 @@
 
 package it.wolfed.model;
 
+import it.wolfed.manipulation.GraphManipulation;
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
 import com.mxgraph.model.mxCell;
@@ -256,6 +257,7 @@ public class PetriNetGraph extends mxGraph
              */
             for(Node interfNode : interfacesNodes)
             {
+                // Tranform place into interface
                 InterfaceVertex interf = InterfaceVertex.factory(parent, interfNode);
                 PlaceVertex placeMirror = (PlaceVertex) graph.getVertexByValue(interf.getValue());
                 interf.setGeometry(placeMirror.getGeometry());
@@ -263,27 +265,8 @@ public class PetriNetGraph extends mxGraph
                 graph.addCell(interf);
                 graph.getSetNextInterfaceId();
                 
-                // Incoming
-                for(Object edgeOjb : graph.getIncomingEdges(placeMirror))
-                {
-                    mxCell edge = (mxCell) edgeOjb;
-                    graph.insertArc(edge.getId(), (Vertex) edge.getSource(), interf);
-                }
-                
-                // Outcoming
-                for(Object edgeOjb : graph.getOutgoingEdges(placeMirror))
-                {
-                    mxCell edge = (mxCell) edgeOjb;
-                    graph.insertArc(edge.getId(), interf, (Vertex) edge.getTarget());
-                }
-                
-                // Remove
-                for(Object edgeObj : graph.getEdges(placeMirror))
-                {
-                    graph.getModel().remove(edgeObj);
-                }
-
-                graph.getModel().remove(placeMirror);
+                GraphManipulation.cloneEdges(graph, placeMirror, interf);
+                GraphManipulation.removeVertexAndHisEdges(graph, placeMirror);
             }
         }
         finally

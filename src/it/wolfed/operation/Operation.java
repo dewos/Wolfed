@@ -1,6 +1,7 @@
 
 package it.wolfed.operation;
 
+import it.wolfed.manipulation.GraphManipulation;
 import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
@@ -109,12 +110,7 @@ abstract public class Operation
      */
     protected void removeVertexAndHisEdges(Vertex vertex)
     {
-        for(Object edgeObj : operationGraph.getEdges(vertex))
-        {
-            operationGraph.getModel().remove(edgeObj);
-        }
-
-        operationGraph.getModel().remove(vertex);
+        GraphManipulation.removeVertexAndHisEdges(operationGraph, vertex);
     }
     
     /**
@@ -125,11 +121,7 @@ abstract public class Operation
      */
     protected void cloneIncomingEdges(Vertex from, Vertex to)
     {
-        for(Object edgeOjb : operationGraph.getIncomingEdges(from))
-        {
-            mxCell edge = (mxCell) edgeOjb;
-            operationGraph.insertArc(edge.getId(), (Vertex) edge.getSource(), to);
-        }
+         GraphManipulation.cloneIncomingEdges(operationGraph, from, to);
     }
     
     /**
@@ -140,11 +132,7 @@ abstract public class Operation
      */
     protected void cloneOutgoingEdges(Vertex from, Vertex to)
     {
-        for(Object edgeOjb : operationGraph.getOutgoingEdges(from))
-        {
-            mxCell edge = (mxCell) edgeOjb;
-            operationGraph.insertArc(edge.getId(), to, (Vertex) edge.getTarget());
-        }
+        GraphManipulation.cloneOutgoingEdges(operationGraph, from, to);
     }
     
     /**
@@ -155,7 +143,6 @@ abstract public class Operation
      */
     protected void cloneEdges(Vertex from, Vertex to)
     {
-        cloneIncomingEdges(from, to);
-        cloneOutgoingEdges(from, to);
+        GraphManipulation.cloneEdges(operationGraph, from, to);
     }
 }
