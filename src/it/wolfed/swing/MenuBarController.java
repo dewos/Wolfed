@@ -49,12 +49,12 @@ public class MenuBarController extends JMenuBar
         // File
         {
             JMenu fileMenu = new JMenu("File");
-            fileMenu.setMnemonic('F');
+            fileMenu.setMnemonic('f');
             add(fileMenu);
 
             // New
             JMenuItem newItem = new JMenuItem("New");
-            newItem.setMnemonic('N');
+            newItem.setMnemonic('n');
             newItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
@@ -68,7 +68,7 @@ public class MenuBarController extends JMenuBar
 
             // Open
             JMenuItem openItem = new JMenuItem("Open");
-            openItem.setMnemonic('O');
+            openItem.setMnemonic('p');
             openItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
@@ -121,7 +121,7 @@ public class MenuBarController extends JMenuBar
         // Operations
         {
             JMenu operationMenu = new JMenu("Operations");
-            operationMenu.setMnemonic('p');
+            operationMenu.setMnemonic('o');
             add(operationMenu);
             
             for(String operation : operations)
@@ -165,6 +165,7 @@ public class MenuBarController extends JMenuBar
         // Help
         {
             JMenu helpMenu = new JMenu("Help");
+            helpMenu.setMnemonic('h');
             JMenuItem aboutItem = new JMenuItem("About");
             aboutItem.addActionListener(new ActionListener() 
             {  
