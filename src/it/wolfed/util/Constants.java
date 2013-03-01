@@ -7,8 +7,8 @@ public class Constants
     Constants.EDITOR_NAME + " Workflow Light Fast Editor.\n"
     + "Version:" + Constants.EDITOR_VERSION +"\n\n"
     +  "Authors: \n"
-        + "- Said Daoudagh\n\n"
-        + "- Fabio Piro\n"
+        + "- Said Daoudagh\n"
+        + "- Fabio Piro\n\n"
     + "Supervisor:\n"
            + "- Prof. Roberto Bruni";
     
