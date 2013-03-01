@@ -241,41 +241,56 @@ public class WolfedEditor extends JFrame
         try
         {
             JFileChooser fileChooser = new JFileChooser(".");
-            fileChooser.setFileFilter(new FileNameExtensionFilter("pnml or dot", "pnml", "dot"));
             fileChooser.setSelectedFile(new File(getSelectedGraph().getId() + exportType));
             
             int returnVal = fileChooser.showSaveDialog(this);
-            
-            // @todo check if file exist
             if (returnVal == JFileChooser.APPROVE_OPTION)
-            {
-                File exportedFile = null;
+            {                
+                if (fileChooser.getSelectedFile().exists())
+                {
+                    int overrideFile = JOptionPane.showConfirmDialog(
+                            this,
+                            "The file exists, overwrite?",
+                            "Existing file",
+                            JOptionPane.YES_NO_CANCEL_OPTION
+                    );
+
+                    switch (overrideFile)
+                    {
+                        case JOptionPane.NO_OPTION:
+                        {   
+                            saveFile(exportType);
+                            break;
+                        }
+                        case JOptionPane.CANCEL_OPTION: 
+                        case JOptionPane.CLOSED_OPTION:
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                File exportedFile = fileChooser.getSelectedFile();
                 String exportedGraph = "";
-                File file = fileChooser.getSelectedFile();
 
                 switch (exportType)
                 {
                     case Constants.EDITOR_EXPORT_PNML:
                     {
-                        exportedFile = new File(file + Constants.EDITOR_EXPORT_PNML);
                         exportedGraph = getSelectedGraph().exportPNML();
                         break;
                     }
 
                     case Constants.EDITOR_EXPORT_DOT:
                     {
-                        exportedFile = new File(file + Constants.EDITOR_EXPORT_DOT);
                         exportedGraph = getSelectedGraph().exportDOT();
                         break;
                     }
                 }
-                
-                if(exportType != null)
-                {
-                    BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(exportedFile.getCanonicalPath()));
-                    pnmlWriter.write(exportedGraph);
-                    pnmlWriter.flush();
-                }
+
+                BufferedWriter pnmlWriter = new BufferedWriter(new FileWriter(exportedFile.getCanonicalPath()));
+                pnmlWriter.write(exportedGraph);
+                pnmlWriter.flush();
             }
         }
         catch (TransformerException | ParserConfigurationException | IOException ex)
