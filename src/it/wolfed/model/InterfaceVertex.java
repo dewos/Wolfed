@@ -2,8 +2,10 @@
 package it.wolfed.model;
 
 import it.wolfed.util.Constants;
+import it.wolfed.util.IterableNodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Interface.
@@ -27,6 +29,23 @@ public class InterfaceVertex extends Vertex
             Constants.STYLE_INTERFACE
         );
     }
+    
+    /**
+     * Generate a new {@link InterfaceVertex} from a pnml valid dom node.
+     * From toolSpecific
+     * 
+     * 
+     * <interface id="p2" /> 
+
+     * @param parent
+     * @param dom
+     * @return  InterfaceVertex
+     */  
+    public static InterfaceVertex factory(Object parent, Node dom)
+    {
+        String id = dom.getAttributes().getNamedItem(Constants.PNML_ID).getNodeValue();
+        return new InterfaceVertex(parent, id, id);
+    };
 
     /**
      * Export PNML interface

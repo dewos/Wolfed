@@ -4,6 +4,7 @@ package it.wolfed.model;
 import com.mxgraph.analysis.mxDistanceCostFunction;
 import com.mxgraph.analysis.mxGraphAnalysis;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
@@ -187,6 +188,7 @@ public class PetriNetGraph extends mxGraph
 
         // Holds the arcsNodes founds
         Set<Node> arcsNodes = new HashSet<>();
+        Set<Node> interfacesNodes = new HashSet<>();
         
         try
         {
@@ -197,18 +199,37 @@ public class PetriNetGraph extends mxGraph
                     switch (elementNode.getNodeName())
                     {
                         case Constants.PNML_PLACE:
+                        {
                             graph.addCell(PlaceVertex.factory(parent, elementNode));
                             graph.getSetNextPlaceId();
                             break;
+                        }
 
                         case Constants.PNML_TRANSITION:
+                        {
                             graph.addCell(TransitionVertex.factory(parent, elementNode));
                             graph.getSetNextTransitionId();
                             break;
+                        }
 
                         case Constants.PNML_ARC:
+                        {
                             arcsNodes.add(elementNode);             
                             break;
+                        }
+                            
+                        case Constants.PNML_TOOL_SPECIFIC:
+                        {
+                            if(elementNode.getAttributes().getNamedItem(Constants.PNML_TOOL)
+                                    .getTextContent().trim().equals(Constants.EDITOR_NAME))
+                            {
+                                // Add Interface
+                                for (final Node interfNode : new IterableNodeList(elementNode.getChildNodes())) 
+                                {
+                                       interfacesNodes.add(interfNode);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -220,6 +241,42 @@ public class PetriNetGraph extends mxGraph
             {
                 graph.addCell(ArcEdge.factory(parent, arcNode, graph));
                 graph.getSetNextArcId();
+            }
+            
+            /**
+             * Casting place to interface
+             */
+            for(Node interfNode : interfacesNodes)
+            {
+
+                InterfaceVertex interf = InterfaceVertex.factory(parent, interfNode);
+                PlaceVertex placeMirror = (PlaceVertex) graph.getVertexByValue(interf.getValue());
+                interf.setGeometry(placeMirror.getGeometry());
+
+                graph.addCell(interf);
+                graph.getSetNextInterfaceId();
+                
+                // Incoming
+                for(Object edgeOjb : graph.getIncomingEdges(placeMirror))
+                {
+                    mxCell edge = (mxCell) edgeOjb;
+                    graph.insertArc(edge.getId(), (Vertex) edge.getSource(), interf);
+                }
+                
+                // Outcoming
+                for(Object edgeOjb : graph.getOutgoingEdges(placeMirror))
+                {
+                    mxCell edge = (mxCell) edgeOjb;
+                    graph.insertArc(edge.getId(), interf, (Vertex) edge.getTarget());
+                }
+                
+                // Remove
+                for(Object edgeObj : graph.getEdges(placeMirror))
+                {
+                    graph.getModel().remove(edgeObj);
+                }
+
+                graph.getModel().remove(placeMirror);
             }
         }
         finally

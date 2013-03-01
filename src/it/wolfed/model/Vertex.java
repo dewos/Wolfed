@@ -8,7 +8,7 @@ import com.mxgraph.model.mxGeometry;
  * Vertices are the node elements of the graph model. 
  */
 abstract public class Vertex extends mxCell
-{
+{   
     /**
      * Vertex Constructor.
      *
