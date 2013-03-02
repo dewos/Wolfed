@@ -1,5 +1,6 @@
 package it.wolfed.operation;
 
+import it.wolfed.manipulation.GraphManipulation;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
 
@@ -52,8 +53,8 @@ public class SequencingOperation extends Operation
         Vertex finalPlaceAsFirst = getEquivalentVertex(1, firstGraph.getFinalPlaces().get(0));
         Vertex initialPlaceAsSecond = getEquivalentVertex(2, secondGraph.getInitialPlaces().get(0));
 
-        cloneIncomingEdges(finalPlaceAsFirst, initialPlaceAsSecond);
-        removeVertexAndHisEdges(finalPlaceAsFirst);
+        GraphManipulation.cloneIncomingEdges(operationGraph, finalPlaceAsFirst, initialPlaceAsSecond);
+        GraphManipulation.removeVertexAndHisEdges(operationGraph, finalPlaceAsFirst);
         
         // set token to initial place
         operationGraph.getInitialPlaces().get(0).setTokens(1);

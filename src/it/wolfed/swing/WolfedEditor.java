@@ -62,10 +62,6 @@ public class WolfedEditor extends JFrame
         Component editor = new WolfedEditor();
         editor.setVisible(true);
     }
-    /**
-     * Holds opened graphs available in editor tabs.
-     */
-    private List<PetriNetGraph> openedGraphs = new ArrayList<>();
     
     /**
      * Tabs controller.
@@ -94,9 +90,19 @@ public class WolfedEditor extends JFrame
      */
     public List<PetriNetGraph> getOpenedGraphs()
     {
+        List<PetriNetGraph> openedGraphs = new ArrayList<>();
+        
+        for(Component graphComponent : tabs.getComponents())
+        {
+            if(graphComponent instanceof GraphViewContainer)
+            {
+                openedGraphs.add(((GraphViewContainer) graphComponent).getGraph());
+            }
+        }
+        
         return openedGraphs;
     }
-
+    
     /**
      * Returns the selected graph.
      *
@@ -104,8 +110,7 @@ public class WolfedEditor extends JFrame
      */
     public PetriNetGraph getSelectedGraph()
     {
-        GraphViewContainer view = (GraphViewContainer) tabs.getSelectedComponent();
-        return view.getGraph();
+        return ((GraphViewContainer) tabs.getSelectedComponent()).getGraph();
     }
 
     /**
@@ -153,19 +158,8 @@ public class WolfedEditor extends JFrame
         tabs.add(tabName, graphViewContainer);
         tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, getOpenedGraphs(), graphViewContainer, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
-        openedGraphs.add(graph);
 
         return graph;
-    }
-    
-    /**
-     * Removes an openedgraph\tab from the editor.
-     * 
-     * @param graph 
-     */
-    public void removeGraph(PetriNetGraph graph)
-    {
-         openedGraphs.remove(graph);
     }
 
     /**
@@ -176,10 +170,7 @@ public class WolfedEditor extends JFrame
     public PetriNetGraph newFile()
     {
         String name = "new_" + String.valueOf(tabs.getTabCount() + 1);
-        PetriNetGraph graph = new PetriNetGraph(name);
-        insertGraph(name, graph);
-
-        return graph;
+        return insertGraph(name, new PetriNetGraph(name));
     }
 
     /**
@@ -310,7 +301,7 @@ public class WolfedEditor extends JFrame
     public void executeOperation(String operationName)
     {
         Operation operation = null;
-        PetriNetGraph operationGraph = new PetriNetGraph("new_" + (openedGraphs.size() + 1));
+        PetriNetGraph operationGraph = new PetriNetGraph("new_" + (getOpenedGraphs().size() + 1));
 
         try
         {
@@ -318,7 +309,7 @@ public class WolfedEditor extends JFrame
             {
                 case Constants.OPERATION_ALTERNATION:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0){
                         operation = new AlternationOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     }
@@ -334,7 +325,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_DEFFEREDCHOICE:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0){
                         operation = new DefferedChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     }
@@ -343,7 +334,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_EXPLICITCHOICE:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
                         operation = new ExplicitChoiceOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
@@ -371,7 +362,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_MUTUALEXCLUSION:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
                         operation = new MutualExclusionOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
@@ -381,7 +372,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_FULLMERGE:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
                         operation = new FullMergeOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
@@ -391,7 +382,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_PARALLELISM:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
                         operation = new ParallelismOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
@@ -401,7 +392,7 @@ public class WolfedEditor extends JFrame
 
                 case Constants.OPERATION_SEQUENCING:
                 {
-                    OperationDialog selectionBox = new OperationDialog(openedGraphs, 1);
+                    OperationDialog selectionBox = new OperationDialog(getOpenedGraphs(), 1);
                     if(selectionBox.getSelectedGraphs().size() > 0)
                     {
                         operation = new SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
