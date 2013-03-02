@@ -59,8 +59,7 @@ public class WolfedEditor extends JFrame
      */
     public static void main(String[] args)
     {
-        Component editor = new WolfedEditor();
-        editor.setVisible(true);
+        (new WolfedEditor()).setVisible(true);
     }
     
     /**
