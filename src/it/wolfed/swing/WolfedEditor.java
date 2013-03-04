@@ -306,7 +306,7 @@ public class WolfedEditor extends JFrame
     public void executeOperation(String operationName)
     {
         Operation operation = null;
-        PetriNetGraph operationGraph = new PetriNetGraph("new_" + (getOpenedGraphs().size() + 1));
+        PetriNetGraph operationGraph = new PetriNetGraph("new_" + (indexOpenedGraphs + 1));
 
         try
         {
