@@ -60,7 +60,6 @@ public class MenuBarController extends JMenuBar
                     editor.newFile();
                 }
             });
-            
             fileMenu.add(newItem);
 
             // Open
@@ -174,7 +173,6 @@ public class MenuBarController extends JMenuBar
             });
 
             helpMenu.add(aboutItem);
-            
             add(helpMenu); 
         }
     }

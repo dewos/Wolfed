@@ -30,7 +30,6 @@
  */
 package it.wolfed.swing;
 
-import it.wolfed.model.PetriNetGraph;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -43,7 +42,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
