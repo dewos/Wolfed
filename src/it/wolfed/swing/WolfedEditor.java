@@ -63,6 +63,13 @@ public class WolfedEditor extends JFrame
     }
     
     /**
+     * Index of the graphs opened in the editor.
+     * 
+     * Must be in sync with any new graph inserts.
+     */
+    private int indexOpenedGraphs;
+    
+    /**
      * Tabs controller.
      *
      * A tab contains an GraphContainer with the GraphComponent and
@@ -156,6 +163,7 @@ public class WolfedEditor extends JFrame
         tabs.add(tabName, new GraphViewContainer(graph));
         tabs.setTabComponentAt(tabs.getTabCount() - 1, new ButtonTabComponent(tabs, tabName));
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
+        indexOpenedGraphs++;
         return graph;
     }
 
@@ -166,7 +174,7 @@ public class WolfedEditor extends JFrame
      */
     public PetriNetGraph newFile()
     {
-        String name = "new_" + String.valueOf(tabs.getTabCount() + 1);
+        String name = "new_" + String.valueOf(indexOpenedGraphs + 1);
         return insertGraph(name, new PetriNetGraph(name));
     }
 
