@@ -13,7 +13,7 @@ public class Constants
            + "- Prof. Roberto Bruni";
     
     // Editor
-    public static final String EDITOR_VERSION                       = "1.0.0.0";
+    public static final String EDITOR_VERSION                       = "1.0.1.5";
     public static final String EDITOR_NAME                          = "WoLFEd";
     public static final String EDITOR_EXPORT_DOT                    = ".dot";
     public static final String EDITOR_EXPORT_PNML                   = ".pnml";
