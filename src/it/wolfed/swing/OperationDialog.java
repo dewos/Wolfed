@@ -54,11 +54,11 @@ public class OperationDialog extends JDialog
     {
         SpringLayout layout = new SpringLayout();
         JPanel window = new JPanel(layout);
-        final List<JComboBox> boxList = new ArrayList<>();
+        final List<JComboBox<PetriNetGraph>> boxList = new ArrayList<>();
 
         for (int i = 0; i < requiredGraphs; i++)
         {
-            JComboBox box = new JComboBox();
+            JComboBox<PetriNetGraph> box = new JComboBox<>();
             
             for (PetriNetGraph graph : avaiableGraphs)
             {
