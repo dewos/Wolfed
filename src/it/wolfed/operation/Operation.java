@@ -2,7 +2,6 @@
 package it.wolfed.operation;
 
 import it.wolfed.manipulation.GraphManipulation;
-import com.mxgraph.model.mxCell;
 import it.wolfed.model.PetriNetGraph;
 import it.wolfed.model.Vertex;
 import it.wolfed.util.Constants;

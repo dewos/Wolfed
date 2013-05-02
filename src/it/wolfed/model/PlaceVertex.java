@@ -214,8 +214,8 @@ public class PlaceVertex extends Vertex
         
         StringBuilder dotBuilder = new StringBuilder();
         dotBuilder
-                .append("\n ")
-                .append(this.getId())
+                .append("\n")
+                .append(this.getId().replaceAll("-", ""))
                 .append(" [label=\"")
                 .append(getValue().toString())
                 .append("\", shape=\"");

@@ -91,6 +91,6 @@ public class ArcEdge extends Edge
      */
     public static String exportDOT(mxCell edge)
     {
-        return "\n" + edge.getSource().getId() + " -> " + edge.getTarget().getId() + ";";
+        return "\n" + edge.getSource().getId().replaceAll("-", "") + " -> " + edge.getTarget().getId().replaceAll("-", "") + ";";
     }
 }

@@ -826,7 +826,7 @@ public class PetriNetGraph extends mxGraph
     public String exportDOT() 
     {
         StringBuilder dot = new StringBuilder();
-        dot.append("digraph WoLFEdGraph{ \n rankdir=LR;");
+        dot.append("digraph WoLFEdGraph{\nrankdir=LR;");
      
         // Vertex
         for (Object cellObj : this.getChildVertices())
