@@ -277,7 +277,7 @@ public class WolfedEditor extends JFrame
                         break;
                     }
 
-                    case Constants.EDITOR_EXPORT_DOT:
+                    case Constants.EDITOR_EXPORT_GV:
                     {
                         exportedGraph = getSelectedGraph().exportDOT();
                         break;
