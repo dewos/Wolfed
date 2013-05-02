@@ -27,7 +27,8 @@ public class MenuBarController extends JMenuBar
         Constants.OPERATION_ITERATIONZEROORMORE,
         Constants.OPERATION_MUTUALEXCLUSION,
         Constants.OPERATION_PARALLELISM,
-        Constants.OPERATION_SEQUENCING
+        Constants.OPERATION_SEQUENCING,
+        Constants.OPERATION_WRAP
     };
     
     /**

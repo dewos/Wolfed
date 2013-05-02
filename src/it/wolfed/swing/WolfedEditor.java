@@ -16,6 +16,7 @@ import it.wolfed.operation.OneOrMoreIterationOperation;
 import it.wolfed.operation.OneServePerTimeOperation;
 import it.wolfed.operation.ParallelismOperation;
 import it.wolfed.operation.SequencingOperation;
+import it.wolfed.operation.WrapGraphOperation;
 import it.wolfed.operation.ZeroOrMoreIterationOperation;
 import it.wolfed.util.Constants;
 import it.wolfed.util.IterableNodeList;
@@ -402,6 +403,12 @@ public class WolfedEditor extends JFrame
                     {
                         operation = new SequencingOperation(operationGraph, getSelectedGraph(), selectionBox.getSelectedGraphs().get(0));
                     }
+                    break;
+                }
+                // new operation 
+                case Constants.OPERATION_WRAP:
+                {
+                    operation = new WrapGraphOperation(operationGraph, getSelectedGraph());
                     break;
                 }
             }

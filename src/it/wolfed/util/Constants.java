@@ -44,6 +44,7 @@ public class Constants
     public static final String OPERATION_FULLMERGE                  = "FullMerge";
     public static final String OPERATION_MUTUALEXCLUSION            = "MutualExclusion";
     public static final String OPERATION_PARALLELISM                = "Parallelism";
+    public static final String OPERATION_WRAP                       = "Wrap";
     
     // Layouts
     public static final String LAYOUT_VERTICALTREE                  = "VerticalTree";
