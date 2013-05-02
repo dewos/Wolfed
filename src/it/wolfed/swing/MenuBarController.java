@@ -15,7 +15,7 @@ public class MenuBarController extends JMenuBar
     /**
      * Available operations (in menu).
      */
-    private String[] operations =
+    private final String[] operations =
     {
         Constants.OPERATION_ALTERNATION,
         Constants.OPERATION_CLONEGRAPH,
@@ -34,7 +34,7 @@ public class MenuBarController extends JMenuBar
     /**
      * Available layouts (in menu).
      */
-    private String[] layouts =
+    private final String[] layouts =
     {
         Constants.LAYOUT_VERTICALTREE,
         Constants.LAYOUT_HIERARCHICAL,
@@ -78,7 +78,7 @@ public class MenuBarController extends JMenuBar
             fileMenu.add(openItem);
 
             // Save Pnml
-            JMenuItem savePnmlItem = new JMenuItem("Save PNML");
+            JMenuItem savePnmlItem = new JMenuItem("Save " + Constants.EDITOR_EXPORT_PNML);
             savePnmlItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
@@ -90,13 +90,13 @@ public class MenuBarController extends JMenuBar
             fileMenu.add(savePnmlItem);
             
             // Save Dot
-            JMenuItem saveDotItem = new JMenuItem("Save DOT");
+            JMenuItem saveDotItem = new JMenuItem("Save " + Constants.EDITOR_EXPORT_GV);
             saveDotItem.addMouseListener(new MouseAdapter() 
             {
                 @Override
                 public void mousePressed(MouseEvent e)
                 {
-                    editor.saveFile(Constants.EDITOR_EXPORT_DOT);
+                    editor.saveFile(Constants.EDITOR_EXPORT_GV);
                 }
             });
             fileMenu.add(saveDotItem);	
