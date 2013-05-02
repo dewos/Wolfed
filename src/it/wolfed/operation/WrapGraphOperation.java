@@ -14,7 +14,6 @@ public class WrapGraphOperation extends Operation
     /**
      * @param operationGraph
      * @param firstGraph
-     * @param secondGraph
      * @throws Exception  
      */
     public WrapGraphOperation(PetriNetGraph operationGraph, PetriNetGraph firstGraph) throws Exception
@@ -41,7 +40,6 @@ public class WrapGraphOperation extends Operation
     
     /**
      * And-Split for initial places
-     * @param operationGraph 
      */
     private void andSplitPattern()
     {
@@ -63,7 +61,6 @@ public class WrapGraphOperation extends Operation
     }
     /**
      * And-Join for final places
-     * @param operationGraph 
      */
     private void andJoinPattern()
     {
