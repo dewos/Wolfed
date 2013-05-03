@@ -125,31 +125,11 @@ public class WolfedEditor extends JFrame
      */
     private void setLookAndFeel()
     {
-        try
-        {
-            // Sets system look
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-            // Force Numbus (for Said happiness )
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-
-            // Force fullScreen
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            int xSize = ((int) tk.getScreenSize().getWidth());
-            int ySize = ((int) tk.getScreenSize().getHeight() - 40);
-            this.setSize(xSize, ySize);
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
-        {
-            showErrorMessage(ex);
-        }
+        // Force fullScreen
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        int xSize = ((int) tk.getScreenSize().getWidth());
+        int ySize = ((int) tk.getScreenSize().getHeight() - 40);
+        this.setSize(xSize, ySize);
     }
 
     /**
