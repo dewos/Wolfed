@@ -36,6 +36,9 @@ public class FullMergeOperation extends Operation
         execute();
     }
     
+    /**
+     * @todo Change getSetNextId() elements with insert{Element}()
+     */
     @Override
     void process()
     {
@@ -57,14 +60,17 @@ public class FullMergeOperation extends Operation
                     PlaceVertex place = (PlaceVertex) cell;
                     clone = new PlaceVertex(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), 0, 0);
                     ((PlaceVertex)clone).setTokens(place.getTokens());
+                    operationGraph.getSetNextPlaceId();
                 }
                 else if(cell instanceof TransitionVertex)
                 {
                     clone = new TransitionVertex(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), 0, 0);
+                    operationGraph.getSetNextTransitionId();
                 }
                 else if(cell instanceof InterfaceVertex)
                 {
                     clone = new InterfaceVertex(parent, getPrefix(i + 1) + cell.getId(), cell.getValue());
+                    operationGraph.getSetNextInterfaceId();
                     
                     if(interfacesFound.containsKey(clone.getValue()))
                     {
@@ -87,13 +93,12 @@ public class FullMergeOperation extends Operation
 
                     // Clone
                     clone = new ArcEdge(parent, getPrefix(i + 1) + cell.getId(), cell.getValue(), source, target);
+                    operationGraph.getSetNextArcId();
                 }
 
                 operationGraph.addCell(clone);
             }
         }
-        
-        
         
         // Merge Interfaces
         if(interfacesFound.size() > 0)
@@ -104,7 +109,6 @@ public class FullMergeOperation extends Operation
 
                 for(int i = 1; i < interfList.size(); i++)
                 {
-
                     Vertex currentInterf =(Vertex) interfList.get(i);
                     GraphManipulation.cloneEdges(operationGraph, currentInterf, firstInterface);
                     GraphManipulation.removeVertexAndHisEdges(operationGraph, currentInterf);
@@ -120,6 +124,8 @@ public class FullMergeOperation extends Operation
                             firstInterface.getGeometry().getX(),
                             firstInterface.getGeometry().getY()
                     );
+                    
+                    operationGraph.getSetNextPlaceId();
 
                     GraphManipulation.cloneEdges(operationGraph, firstInterface, placeMirror);
                     GraphManipulation.removeVertexAndHisEdges(operationGraph, firstInterface);
